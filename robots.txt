@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kuapilangkenceng.github.io/sitemap.xml
+
+# Blok akses ke halaman admin & API internal
+Disallow: /ptsp/admin.html
+Disallow: /ptsp/api/

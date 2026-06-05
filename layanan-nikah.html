@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layanan Nikah — KUA Kecamatan Pilangkenceng</title>
+  <meta name="description" content="12 sub-layanan pernikahan KUA Kecamatan Pilangkenceng: pendaftaran nikah, bimwin, SK belum/pernah nikah, itsbat, wali nikah, dan lainnya.">
+  <meta name="keywords" content="layanan nikah, KUA Pilangkenceng, pendaftaran nikah, bimwin, itsbat nikah, wali nikah, SK nikah">
+  <meta property="og:title" content="Layanan Nikah — KUA Pilangkenceng">
+  <meta property="og:description" content="12 sub-layanan pernikahan lengkap, daftar online melalui PTSP Digital KUA Pilangkenceng.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://kuapilangkenceng.github.io/layanan-nikah.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --hijau-tua:#1b5e35;--hijau:#237a3e;--hijau-muda:#2ea04f;
+      --hijau-terang:#eaf5ee;--hijau-border:#c3dfc9;
+      --emas:#c9a030;--emas-muda:#fdf3dc;
+      --putih:#ffffff;--abu:#f4f6f4;--teks:#1a2b1e;
+      --teks-abu:#536356;--teks-ringan:#8fa392;
+      --font:'Plus Jakarta Sans',sans-serif;
+      --font-display:'Playfair Display',serif;
+      --radius:10px;--radius-lg:14px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);color:var(--teks);background:var(--putih);font-size:14px;line-height:1.65}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{background:var(--hijau-tua);position:sticky;top:0;z-index:1000;border-bottom:2px solid rgba(201,160,48,.4)}
+    .navbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px}
+    .nav-brand{display:flex;align-items:center;gap:10px}
+    .nav-logo{width:42px;height:42px;border-radius:50%;background:var(--emas);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .nav-brand-text strong{display:block;font-size:13px;font-weight:700;color:#fff;line-height:1.25}
+    .nav-brand-text span{font-size:10px;color:rgba(255,255,255,.6)}
+    .nav-links{display:flex;align-items:center;gap:1.25rem}
+    .nav-links a{color:rgba(255,255,255,.8);font-size:13px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--emas);border-bottom-color:var(--emas)}
+    .btn-ptsp{background:var(--emas);color:var(--hijau-tua);padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;border:none;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+    .btn-ptsp:hover{opacity:.88}
+
+    /* HERO MINI */
+    .hero-mini{background:var(--hijau-tua);padding:2.5rem 1.5rem;position:relative;overflow:hidden}
+    .hero-mini::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--hijau-tua) 0%,#1f6b38 60%,rgba(35,122,62,.9) 100%)}
+    .hero-mini::after{content:'';position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:20px 20px}
+    .hero-mini-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+    .breadcrumb{display:flex;align-items:center;gap:6px;margin-bottom:.75rem;font-size:12px;color:rgba(255,255,255,.6)}
+    .breadcrumb a{color:rgba(255,255,255,.6);transition:color .2s}
+    .breadcrumb a:hover{color:var(--emas)}
+    .breadcrumb span{color:rgba(255,255,255,.35)}
+    .hero-mini h1{font-family:var(--font-display);color:#fff;font-size:2rem;line-height:1.25;margin-bottom:.5rem}
+    .hero-mini p{color:rgba(255,255,255,.75);font-size:13.5px;max-width:560px}
+    .hero-mini-stats{display:flex;gap:2rem;margin-top:1.5rem}
+    .hm-stat strong{display:block;font-size:1.4rem;font-weight:700;color:var(--emas)}
+    .hm-stat span{font-size:11px;color:rgba(255,255,255,.6)}
+
+    /* LAYOUT */
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    section{padding:2.5rem 1.5rem}
+    .section-title{font-size:1.15rem;font-weight:700;color:var(--teks);padding-bottom:.4rem;position:relative;margin-bottom:1.25rem}
+    .section-title::after{content:'';position:absolute;left:0;bottom:0;width:32px;height:3px;background:var(--hijau);border-radius:2px}
+
+    /* FILTER TABS */
+    .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.75rem}
+    .ftab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--hijau-border);color:var(--teks-abu);background:var(--putih);transition:all .2s}
+    .ftab:hover{border-color:var(--hijau-muda);color:var(--hijau)}
+    .ftab.active{background:var(--hijau);color:#fff;border-color:var(--hijau)}
+
+    /* LAYANAN GRID */
+    .layanan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .lcard{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);overflow:hidden;background:var(--putih);transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+    .lcard:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(27,94,53,.1)}
+    .lcard-head{padding:1.125rem 1.125rem .75rem;display:flex;align-items:flex-start;gap:12px}
+    .lcard-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .lcard-num{font-size:10px;font-weight:700;color:var(--teks-ringan);letter-spacing:.5px}
+    .lcard-head h3{font-size:13.5px;font-weight:700;color:var(--hijau-tua);line-height:1.35;margin-top:2px}
+    .lcard-body{padding:0 1.125rem 1.125rem;flex:1;display:flex;flex-direction:column;gap:.75rem}
+    .lcard-desc{font-size:12.5px;color:var(--teks-abu);line-height:1.55}
+    .syarat-label{font-size:10.5px;font-weight:700;color:var(--hijau);letter-spacing:.3px;margin-bottom:4px}
+    .syarat-list{list-style:none}
+    .syarat-list li{font-size:11.5px;color:var(--teks-abu);display:flex;align-items:baseline;gap:5px;padding:2px 0}
+    .syarat-list li::before{content:'•';color:var(--hijau-muda);font-weight:700;flex-shrink:0}
+    .lcard-footer{margin-top:auto;padding-top:.75rem;border-top:1px solid var(--hijau-border)}
+    .badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}
+    .badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px}
+    .badge-free{background:var(--hijau-terang);color:var(--hijau)}
+    .badge-doc{background:var(--emas-muda);color:#92680a}
+    .badge-online{background:#e8f0fb;color:#1a56b0}
+    .btn-daftar{background:var(--hijau);color:#fff;border:none;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;width:100%;transition:background .2s;display:block;text-align:center}
+    .btn-daftar:hover{background:var(--hijau-tua)}
+
+    /* INFO BOX */
+    .info-box{background:var(--emas-muda);border:1px solid #e8c96a;border-radius:var(--radius-lg);padding:1.25rem 1.5rem;margin-bottom:2rem;display:flex;align-items:flex-start;gap:12px}
+    .info-box-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+    .info-box h4{font-size:13px;font-weight:700;color:#7a5200;margin-bottom:.25rem}
+    .info-box p{font-size:12.5px;color:#8a6010;line-height:1.55}
+
+    /* PERSYARATAN UMUM */
+    .syarat-umum{background:var(--abu);border-radius:var(--radius-lg);padding:1.5rem;margin-top:2rem}
+    .syarat-umum h3{font-size:14px;font-weight:700;color:var(--hijau-tua);margin-bottom:1rem}
+    .syarat-umum-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    .syarat-item{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--hijau-border);font-size:12.5px;color:var(--teks-abu)}
+    .syarat-item:last-child{border-bottom:none}
+    .syarat-item::before{content:'✓';color:var(--hijau-muda);font-weight:700;flex-shrink:0}
+
+    /* KONTAK CTA */
+    .cta-section{background:var(--hijau-tua);color:#fff;padding:2.5rem 1.5rem;text-align:center}
+    .cta-section h2{font-family:var(--font-display);font-size:1.6rem;color:#fff;margin-bottom:.5rem}
+    .cta-section p{color:rgba(255,255,255,.75);font-size:13px;margin-bottom:1.5rem}
+    .cta-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+    .btn-cta-primary{background:var(--emas);color:var(--hijau-tua);padding:11px 24px;border-radius:8px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:7px;transition:opacity .2s}
+    .btn-cta-primary:hover{opacity:.88}
+    .btn-cta-wa{background:#25D366;color:#fff;padding:11px 24px;border-radius:8px;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:7px;transition:opacity .2s}
+    .btn-cta-wa:hover{opacity:.88}
+
+    /* FOOTER */
+    footer{background:var(--hijau-tua);color:#fff;padding:1.5rem}
+    .footer-bottom-simple{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+    footer p{font-size:11px;opacity:.45}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+    .reveal.visible{opacity:1;transform:none}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🕌</div>
+      <div class="nav-brand-text">
+        <strong>KUA PILANGKENCENG</strong>
+        <span>Kantor Urusan Agama — Kab. Madiun</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <a href="layanan-nikah.html" class="active">Layanan</a>
+      <a href="index.html#informasi">Informasi</a>
+      <a href="index.html#kontak">Kontak</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp">🔒 Login Petugas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO MINI -->
+<div class="hero-mini">
+  <div class="hero-mini-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Beranda</a>
+      <span>›</span>
+      <span style="color:var(--emas)">Layanan Nikah</span>
+    </div>
+    <h1>Layanan Pernikahan</h1>
+    <p>KUA Pilangkenceng menyediakan 12 sub-layanan pernikahan yang dapat diakses secara digital melalui sistem PTSP Online.</p>
+    <div class="hero-mini-stats">
+      <div class="hm-stat"><strong>12</strong><span>Sub-Layanan</span></div>
+      <div class="hm-stat"><strong>100%</strong><span>Gratis</span></div>
+      <div class="hm-stat"><strong>Digital</strong><span>PTSP Online</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<section>
+  <div class="container">
+
+    <!-- INFO BOX -->
+    <div class="info-box">
+      <div class="info-box-icon">ℹ️</div>
+      <div>
+        <h4>Semua layanan pernikahan di KUA Pilangkenceng tidak dipungut biaya (GRATIS)</h4>
+        <p>Pendaftaran dapat dilakukan secara online melalui PTSP Digital. Untuk akad nikah di luar kantor pada hari & jam kerja, biaya transport diatur sesuai ketentuan PNBP. Hubungi kami jika ada kendala: <strong>085119505451</strong></p>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="section-title">12 Sub-Layanan Pernikahan</div>
+    <div class="filter-bar">
+      <div class="ftab active" onclick="filterLayanan('semua',this)">Semua (12)</div>
+      <div class="ftab" onclick="filterLayanan('administrasi',this)">Administrasi Nikah</div>
+      <div class="ftab" onclick="filterLayanan('bimbingan',this)">Bimbingan & Konsultasi</div>
+      <div class="ftab" onclick="filterLayanan('surat',this)">Surat Keterangan</div>
+      <div class="ftab" onclick="filterLayanan('wali',this)">Wali Nikah</div>
+    </div>
+
+    <!-- GRID 12 LAYANAN -->
+    <div class="layanan-grid reveal" id="layananGrid">
+
+      <!-- 1. PENDAFTARAN PERNIKAHAN -->
+      <div class="lcard" data-kat="administrasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">💒</div>
+          <div>
+            <div class="lcard-num">LAYANAN 01</div>
+            <h3>Pendaftaran Pernikahan</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Pendaftaran rencana pernikahan secara online lengkap dengan data calon pengantin dan jadwal akad.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>N1 (Surat Pengantar dari Desa)</li>
+              <li>N4 (Surat Keterangan Asal-Usul)</li>
+              <li>Fotokopi KTP & KK calon pengantin</li>
+              <li>Pas foto 2×3 dan 3×4</li>
+              <li>Akta kelahiran / ijazah terakhir</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-online">Online</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Daftar Online →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. PELAKSANAAN PERNIKAHAN -->
+      <div class="lcard" data-kat="administrasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">💍</div>
+          <div>
+            <div class="lcard-num">LAYANAN 02</div>
+            <h3>Pelaksanaan Pernikahan</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Pelaksanaan akad nikah di dalam kantor KUA maupun di luar kantor (rumah, masjid, atau tempat lain).</p>
+          <div>
+            <div class="syarat-label">KETERANGAN</div>
+            <ul class="syarat-list">
+              <li>Dalam kantor: hari & jam kerja (gratis)</li>
+              <li>Luar kantor hari kerja: biaya transport</li>
+              <li>Luar kantor di luar jam kerja: PNBP Rp 600.000</li>
+              <li>Termasuk form Ecotheology untuk luar kantor</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis (Dalam Kantor)</span>
+              <span class="badge badge-doc">PNBP (Luar Kantor)</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Daftar Online →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. BIMWIN -->
+      <div class="lcard" data-kat="bimbingan">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#e8f0fb">📖</div>
+          <div>
+            <div class="lcard-num">LAYANAN 03</div>
+            <h3>Bimbingan Calon Pengantin (Bimwin)</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Bimbingan pra-nikah untuk mempersiapkan calon pengantin membangun keluarga sakinah mawaddah warahmah.</p>
+          <div>
+            <div class="syarat-label">MATERI BIMWIN</div>
+            <ul class="syarat-list">
+              <li>Fikih munakahat & hak kewajiban suami istri</li>
+              <li>Kesehatan reproduksi & KB</li>
+              <li>Ekonomi keluarga & manajemen konflik</li>
+              <li>Pengasuhan anak berbasis nilai Islam</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-online">Wajib Catin</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Daftar Bimwin →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. ECOTHEOLOGY -->
+      <div class="lcard" data-kat="bimbingan">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">🌿</div>
+          <div>
+            <div class="lcard-num">LAYANAN 04</div>
+            <h3>Pelaksanaan Ecotheology</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Penanaman pohon sebagai simbol komitmen menjaga lingkungan, dilaksanakan bersamaan dengan akad nikah di luar kantor.</p>
+          <div>
+            <div class="syarat-label">PROSEDUR</div>
+            <ul class="syarat-list">
+              <li>Khusus akad nikah di luar kantor KUA</li>
+              <li>Isi form ecotheology secara digital</li>
+              <li>Dokumentasi foto penanaman pohon</li>
+              <li>Pohon disediakan/disiapkan oleh catin</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-online">Form Digital</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank" class="btn-daftar">Form Ecotheology →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. DUPLIKAT BUKU NIKAH -->
+      <div class="lcard" data-kat="administrasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#fef3e2">📔</div>
+          <div>
+            <div class="lcard-num">LAYANAN 05</div>
+            <h3>Permohonan Duplikat Buku Nikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Penerbitan buku nikah duplikat bagi pasangan yang buku nikah aslinya hilang atau rusak.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>Surat keterangan kehilangan dari kepolisian</li>
+              <li>Fotokopi KTP kedua pasangan</li>
+              <li>Fotokopi KK terbaru</li>
+              <li>Surat permohonan bermaterai</li>
+              <li>Pas foto terbaru 2×3 (suami & istri)</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-doc">Butuh Dokumen Asli</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. SK BELUM MENIKAH -->
+      <div class="lcard" data-kat="surat">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">📋</div>
+          <div>
+            <div class="lcard-num">LAYANAN 06</div>
+            <h3>SK Belum Pernah Menikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat Keterangan Belum Pernah Menikah yang diterbitkan KUA untuk berbagai keperluan administratif.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>Surat pengantar dari desa/kelurahan</li>
+              <li>Fotokopi KTP pemohon</li>
+              <li>Fotokopi KK terbaru</li>
+              <li>Akta kelahiran / ijazah</li>
+              <li>Keterangan keperluan surat</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-doc">Generate Otomatis</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. SK PERNAH MENIKAH -->
+      <div class="lcard" data-kat="surat">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">📄</div>
+          <div>
+            <div class="lcard-num">LAYANAN 07</div>
+            <h3>SK Pernah Menikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat Keterangan Pernah Menikah untuk keperluan administrasi, hukum, atau pernikahan kembali.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>Surat pengantar dari desa/kelurahan</li>
+              <li>Fotokopi buku nikah / akta nikah</li>
+              <li>Akta cerai (jika sudah cerai)</li>
+              <li>Fotokopi KTP & KK terbaru</li>
+              <li>Nomor akta nikah</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-doc">Generate Otomatis</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. ITSBAT NIKAH -->
+      <div class="lcard" data-kat="surat">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#f0ecfb">⚖️</div>
+          <div>
+            <div class="lcard-num">LAYANAN 08</div>
+            <h3>Permohonan Itsbat Nikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat keterangan pendukung itsbat nikah (pengesahan pernikahan di luar pencatatan) untuk proses di Pengadilan Agama.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>Surat pengantar dari desa/kelurahan</li>
+              <li>Fotokopi KTP suami & istri</li>
+              <li>Keterangan saksi nikah (2 orang)</li>
+              <li>Tanggal pernikahan lama</li>
+              <li>Alasan belum tercatat</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-doc">Proses PA</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. REKOMENDASI NIKAH -->
+      <div class="lcard" data-kat="surat">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">📩</div>
+          <div>
+            <div class="lcard-num">LAYANAN 09</div>
+            <h3>Permohonan Rekomendasi Nikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat rekomendasi nikah untuk calon pengantin yang akan menikah di luar wilayah KUA Pilangkenceng.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>N1 dari desa asal pemohon</li>
+              <li>Fotokopi KTP & KK</li>
+              <li>Keterangan KUA tujuan</li>
+              <li>Surat pengantar calon pasangan</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-online">Online</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. TAUKIL WALI -->
+      <div class="lcard" data-kat="wali">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#fef3e2">🤝</div>
+          <div>
+            <div class="lcard-num">LAYANAN 10</div>
+            <h3>Taukil Wali bil Kitabah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat pelimpahan perwalian nikah secara tertulis dari wali nasab kepada wali lain yang dikuasakan.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list">
+              <li>Identitas wali nasab (KTP & KK)</li>
+              <li>Identitas penerima kuasa wali</li>
+              <li>Hubungan nasab dengan calon istri</li>
+              <li>Alasan taukil wali</li>
+              <li>Data calon pengantin perempuan</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-doc">Generate Otomatis</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11. SAKSI AHLI PA -->
+      <div class="lcard" data-kat="bimbingan">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#f0ecfb">🏛️</div>
+          <div>
+            <div class="lcard-num">LAYANAN 11</div>
+            <h3>Saksi Ahli Pengadilan Agama</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Penghulu KUA Pilangkenceng bersedia menjadi saksi ahli dalam persidangan di Pengadilan Agama terkait perkara pernikahan.</p>
+          <div>
+            <div class="syarat-label">PROSEDUR</div>
+            <ul class="syarat-list">
+              <li>Surat panggilan resmi dari Pengadilan Agama</li>
+              <li>Surat permohonan ke KUA Pilangkenceng</li>
+              <li>Keterangan perkara yang disidangkan</li>
+              <li>Koordinasi jadwal dengan penghulu KUA</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-doc">Butuh Surat Resmi</span>
+            </div>
+            <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-daftar">Ajukan Permohonan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 12. KONSULTASI WALI NIKAH -->
+      <div class="lcard" data-kat="wali">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#e3f4f1">💬</div>
+          <div>
+            <div class="lcard-num">LAYANAN 12</div>
+            <h3>Konsultasi Wali Nikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Konsultasi penentuan wali nikah (nasab, hakim, atau taukil) bersama penghulu KUA Pilangkenceng.</p>
+          <div>
+            <div class="syarat-label">TOPIK KONSULTASI</div>
+            <ul class="syarat-list">
+              <li>Urutan & hak wali nasab (17 urutan)</li>
+              <li>Kondisi wali yang berhak & tidak berhak</li>
+              <li>Prosedur wali hakim (6 sebab)</li>
+              <li>Tata cara taukil wali bil kitabah</li>
+            </ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row">
+              <span class="badge badge-free">Gratis</span>
+              <span class="badge badge-online">Tatap Muka / WA</span>
+            </div>
+            <a href="https://wa.me/6285119505451?text=Assalamu'alaikum%2C%20saya%20ingin%20konsultasi%20tentang%20wali%20nikah." target="_blank" class="btn-daftar">Konsultasi via WA →</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /layanan-grid -->
+
+    <!-- SYARAT UMUM -->
+    <div class="syarat-umum reveal">
+      <h3>📋 Persyaratan Umum Pendaftaran Nikah</h3>
+      <div class="syarat-umum-grid">
+        <div class="syarat-item">Surat pengantar RT/RW → Desa/Kelurahan</div>
+        <div class="syarat-item">Formulir N1, N2, N4 dari desa asal</div>
+        <div class="syarat-item">Fotokopi KTP calon pengantin (PA & PI)</div>
+        <div class="syarat-item">Fotokopi Kartu Keluarga terbaru</div>
+        <div class="syarat-item">Akta kelahiran / ijazah terakhir</div>
+        <div class="syarat-item">Pas foto 2×3 cm (4 lembar)</div>
+        <div class="syarat-item">Pas foto 3×4 cm (2 lembar)</div>
+        <div class="syarat-item">Surat izin orang tua (jika di bawah 21 tahun)</div>
+        <div class="syarat-item">Akta cerai / surat kematian (jika duda/janda)</div>
+        <div class="syarat-item">Surat dispensasi nikah dari PA (jika di bawah umur)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="container">
+    <h2>Siap Mendaftar?</h2>
+    <p>Daftarkan pernikahan Anda secara online melalui PTSP Digital KUA Pilangkenceng atau hubungi kami langsung.</p>
+    <div class="cta-btns">
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-cta-primary">📋 Daftar Online via PTSP →</a>
+      <a href="https://wa.me/6285119505451?text=Assalamu'alaikum%2C%20saya%20ingin%20bertanya%20tentang%20pendaftaran%20nikah%20di%20KUA%20Pilangkenceng." target="_blank" class="btn-cta-wa">💬 Tanya via WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom-simple">
+    <p>© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun</p>
+    <p><a href="index.html" style="color:rgba(255,255,255,.5);font-size:11px">← Kembali ke Beranda</a></p>
+  </div>
+</footer>
+
+<script>
+  /* FILTER */
+  function filterLayanan(kat, el) {
+    document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.lcard').forEach(card => {
+      const show = kat === 'semua' || card.dataset.kat === kat;
+      card.style.display = show ? 'flex' : 'none';
+    });
+  }
+
+  /* REVEAL */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

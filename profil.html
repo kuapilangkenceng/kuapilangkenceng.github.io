@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil KUA — KUA Kecamatan Pilangkenceng</title>
+  <meta name="description" content="Profil resmi KUA Kecamatan Pilangkenceng: visi misi, sejarah, struktur organisasi, wilayah pelayanan 18 desa, dan data statistik.">
+  <meta name="keywords" content="profil KUA Pilangkenceng, visi misi KUA, sejarah KUA, struktur organisasi KUA Madiun">
+  <link rel="canonical" href="https://kuapilangkenceng.github.io/profil.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --hijau-tua:#1b5e35;--hijau:#237a3e;--hijau-muda:#2ea04f;
+      --hijau-terang:#eaf5ee;--hijau-border:#c3dfc9;
+      --emas:#c9a030;--emas-muda:#fdf3dc;
+      --putih:#ffffff;--abu:#f4f6f4;--teks:#1a2b1e;
+      --teks-abu:#536356;--teks-ringan:#8fa392;
+      --font:'Plus Jakarta Sans',sans-serif;
+      --font-display:'Playfair Display',serif;
+      --radius:10px;--radius-lg:14px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);color:var(--teks);background:var(--putih);font-size:14px;line-height:1.65}
+    a{text-decoration:none;color:inherit}
+
+    /* NAVBAR */
+    .navbar{background:var(--hijau-tua);position:sticky;top:0;z-index:1000;border-bottom:2px solid rgba(201,160,48,.4)}
+    .navbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px}
+    .nav-brand{display:flex;align-items:center;gap:10px}
+    .nav-logo{width:42px;height:42px;border-radius:50%;background:var(--emas);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .nav-brand-text strong{display:block;font-size:13px;font-weight:700;color:#fff;line-height:1.25}
+    .nav-brand-text span{font-size:10px;color:rgba(255,255,255,.6)}
+    .nav-links{display:flex;align-items:center;gap:1.25rem}
+    .nav-links a{color:rgba(255,255,255,.8);font-size:13px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--emas);border-bottom-color:var(--emas)}
+    .btn-ptsp{background:var(--emas);color:var(--hijau-tua);padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+
+    /* HERO MINI */
+    .hero-mini{background:var(--hijau-tua);padding:2.5rem 1.5rem;position:relative;overflow:hidden}
+    .hero-mini::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--hijau-tua) 0%,#1f6b38 60%,rgba(35,122,62,.9) 100%)}
+    .hero-mini::after{content:'';position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:20px 20px}
+    .hero-mini-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+    .breadcrumb{display:flex;align-items:center;gap:6px;margin-bottom:.75rem;font-size:12px;color:rgba(255,255,255,.6)}
+    .breadcrumb a{color:rgba(255,255,255,.6)}
+    .breadcrumb a:hover{color:var(--emas)}
+    .breadcrumb span{color:rgba(255,255,255,.35)}
+    .hero-mini h1{font-family:var(--font-display);color:#fff;font-size:2rem;line-height:1.25;margin-bottom:.5rem}
+    .hero-mini p{color:rgba(255,255,255,.75);font-size:13.5px;max-width:560px}
+
+    /* LAYOUT */
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    section{padding:2.5rem 1.5rem}
+    .section-title{font-size:1.15rem;font-weight:700;color:var(--teks);padding-bottom:.4rem;position:relative;margin-bottom:1.25rem}
+    .section-title::after{content:'';position:absolute;left:0;bottom:0;width:32px;height:3px;background:var(--hijau);border-radius:2px}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+    .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+
+    /* IDENTITAS CARD */
+    .identitas-card{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);overflow:hidden}
+    .identitas-head{background:var(--hijau-tua);padding:1.25rem;display:flex;align-items:center;gap:12px}
+    .id-avatar{width:56px;height:56px;border-radius:50%;background:var(--emas);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+    .id-head-text h3{color:#fff;font-size:15px;font-weight:700;margin-bottom:2px}
+    .id-head-text span{color:rgba(255,255,255,.65);font-size:11.5px}
+    .identitas-body{padding:1.125rem}
+    .id-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--hijau-border);font-size:12.5px}
+    .id-row:last-child{border-bottom:none}
+    .id-label{color:var(--teks-ringan);min-width:110px;flex-shrink:0;font-size:11.5px;font-weight:500;padding-top:1px}
+    .id-val{color:var(--teks);font-weight:500;line-height:1.5}
+
+    /* VISI MISI */
+    .vm-section{background:var(--hijau-tua)}
+    .vm-inner{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem}
+    .vm-section .section-title{color:#fff}
+    .vm-section .section-title::after{background:var(--emas)}
+    .visi-box{background:rgba(201,160,48,.12);border:1px solid rgba(201,160,48,.35);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem}
+    .visi-box .label{color:var(--emas);font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:.5rem}
+    .visi-box p{color:rgba(255,255,255,.88);font-size:14px;font-style:italic;line-height:1.7}
+    .misi-list{list-style:none}
+    .misi-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+    .misi-item:last-child{border-bottom:none}
+    .misi-num{width:24px;height:24px;border-radius:50%;background:var(--hijau-muda);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+    .misi-item span{color:rgba(255,255,255,.82);font-size:13px;line-height:1.6}
+
+    /* STRUKTUR ORG */
+    .struktur-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    .s-card{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);padding:1.125rem;text-align:center;background:var(--putih);transition:transform .2s}
+    .s-card:hover{transform:translateY(-3px);background:var(--hijau-terang)}
+    .s-avatar{width:52px;height:52px;border-radius:50%;background:var(--hijau-terang);display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto .75rem}
+    .s-card h4{font-size:13px;font-weight:700;color:var(--hijau-tua);margin-bottom:3px}
+    .s-card .jabatan{font-size:11px;color:var(--teks-abu);margin-bottom:4px}
+    .s-card .nip{font-size:10.5px;color:var(--teks-ringan)}
+    .s-head{grid-column:1/-1;background:var(--hijau-tua);border-radius:var(--radius-lg);padding:1.125rem;text-align:center;color:#fff}
+    .s-head h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+    .s-head .jabatan{font-size:11.5px;color:rgba(255,255,255,.7)}
+    .s-head .nip{font-size:11px;color:var(--emas);margin-top:3px}
+
+    /* WILAYAH */
+    .wilayah-section{background:var(--abu)}
+    .desa-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:.625rem}
+    .desa-chip{background:var(--putih);border:1px solid var(--hijau-border);border-radius:8px;padding:8px 10px;text-align:center;font-size:12px;font-weight:500;color:var(--teks-abu);transition:all .2s;cursor:default}
+    .desa-chip:hover{background:var(--hijau-terang);border-color:var(--hijau-muda);color:var(--hijau)}
+
+    /* STATISTIK */
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+    .stat-card{background:var(--putih);border:1px solid var(--hijau-border);border-radius:var(--radius-lg);padding:1.25rem;text-align:center}
+    .stat-card strong{display:block;font-family:var(--font-display);font-size:2rem;color:var(--hijau);margin-bottom:.25rem}
+    .stat-card span{font-size:12px;color:var(--teks-abu)}
+
+    /* KONTAK */
+    .kontak-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+    .kontak-card{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);padding:1.25rem;background:var(--putih)}
+    .kontak-card h4{font-size:13px;font-weight:700;color:var(--hijau-tua);margin-bottom:.875rem}
+    .kontak-row{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--hijau-border);font-size:12.5px}
+    .kontak-row:last-child{border-bottom:none}
+    .kontak-row .ic{font-size:16px;flex-shrink:0;margin-top:1px}
+    .kontak-row span{color:var(--teks-abu);line-height:1.5}
+    .kontak-row strong{color:var(--teks)}
+    .jam-table{width:100%;border-collapse:collapse}
+    .jam-table tr{border-bottom:1px solid var(--hijau-border)}
+    .jam-table tr:last-child{border-bottom:none}
+    .jam-table td{padding:6px 0;font-size:12.5px;color:var(--teks-abu)}
+    .jam-table td:last-child{text-align:right;font-weight:600;color:var(--teks)}
+    .jam-table tr.tutup td{color:var(--teks-ringan)}
+
+    /* MAP PLACEHOLDER */
+    .map-placeholder{background:var(--hijau-terang);border:1px solid var(--hijau-border);border-radius:var(--radius-lg);height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--teks-abu)}
+    .map-placeholder span{font-size:40px}
+    .map-placeholder p{font-size:13px}
+
+    /* FOOTER */
+    footer{background:var(--hijau-tua);color:#fff;padding:1.5rem}
+    .footer-bottom-simple{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+    footer p{font-size:11px;opacity:.45}
+
+    /* REVEAL */
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+    .reveal.visible{opacity:1;transform:none}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🕌</div>
+      <div class="nav-brand-text">
+        <strong>KUA PILANGKENCENG</strong>
+        <span>Kantor Urusan Agama — Kab. Madiun</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="profil.html" class="active">Profil</a>
+      <a href="layanan-nikah.html">Layanan</a>
+      <a href="index.html#informasi">Informasi</a>
+      <a href="index.html#kontak">Kontak</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp">🔒 Login Petugas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO MINI -->
+<div class="hero-mini">
+  <div class="hero-mini-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Beranda</a>
+      <span>›</span>
+      <span style="color:var(--emas)">Profil KUA</span>
+    </div>
+    <h1>Profil KUA Pilangkenceng</h1>
+    <p>Mengenal lebih dekat Kantor Urusan Agama Kecamatan Pilangkenceng — lembaga pelayanan keagamaan di bawah Kemenag Kabupaten Madiun.</p>
+  </div>
+</div>
+
+<!-- IDENTITAS & PIMPINAN -->
+<section>
+  <div class="container">
+    <div class="two-col reveal">
+      <div>
+        <div class="section-title">Identitas Kantor</div>
+        <div class="identitas-card">
+          <div class="identitas-head">
+            <div class="id-avatar">👨‍💼</div>
+            <div class="id-head-text">
+              <h3>Moh. Sadikul Anam, S.H., M.Si.</h3>
+              <span>Kepala KUA Kecamatan Pilangkenceng</span>
+            </div>
+          </div>
+          <div class="identitas-body">
+            <div class="id-row"><span class="id-label">Nama KUA</span><span class="id-val">KUA Kecamatan Pilangkenceng</span></div>
+            <div class="id-row"><span class="id-label">Instansi Induk</span><span class="id-val">Kementerian Agama Kabupaten Madiun</span></div>
+            <div class="id-row"><span class="id-label">Alamat</span><span class="id-val">Jl. Tirtotejo, Ds. Kenongorejo, Kec. Pilangkenceng, Kab. Madiun 63154</span></div>
+            <div class="id-row"><span class="id-label">Telepon / WA</span><span class="id-val">085119505451</span></div>
+            <div class="id-row"><span class="id-label">Email</span><span class="id-val">kuapilangkenceng@gmail.com</span></div>
+            <div class="id-row"><span class="id-label">Website</span><span class="id-val">kuapilangkenceng.github.io</span></div>
+            <div class="id-row"><span class="id-label">PTSP Digital</span><span class="id-val">kuapilangkenceng.github.io/ptsp</span></div>
+            <div class="id-row"><span class="id-label">Kode Pos</span><span class="id-val">63154</span></div>
+            <div class="id-row"><span class="id-label">Wilayah</span><span class="id-val">18 Desa di Kecamatan Pilangkenceng</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">Lokasi KUA</div>
+        <div class="map-placeholder">
+          <span>🗺️</span>
+          <p>Jl. Tirtotejo, Ds. Kenongorejo</p>
+          <a href="https://maps.google.com/?q=KUA+Pilangkenceng+Madiun" target="_blank" style="background:var(--hijau);color:#fff;padding:8px 18px;border-radius:7px;font-size:12px;font-weight:700;margin-top:4px">
+            Buka di Google Maps →
+          </a>
+        </div>
+        <div style="margin-top:1rem">
+          <div class="section-title">Jam Pelayanan</div>
+          <div class="kontak-card" style="margin-top:.5rem">
+            <table class="jam-table">
+              <tr><td>Senin – Kamis</td><td>08.00 – 16.00 WIB</td></tr>
+              <tr><td>Jumat</td><td>08.00 – 16.30 WIB</td></tr>
+              <tr><td>Istirahat</td><td>12.00 – 13.00 WIB</td></tr>
+              <tr class="tutup"><td>Sabtu</td><td>Tutup</td></tr>
+              <tr class="tutup"><td>Minggu & Hari Libur</td><td>Tutup</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISI MISI -->
+<div class="vm-section">
+  <div class="vm-inner">
+    <div class="two-col reveal">
+      <div>
+        <div class="section-title" style="color:#fff">Visi</div>
+        <div class="visi-box">
+          <div class="label">VISI KUA PILANGKENCENG</div>
+          <p>"Terwujudnya Masyarakat Kecamatan Pilangkenceng yang Taat Beragama, Rukun, Cerdas, dan Sejahtera Lahir Batin dalam Kehidupan Berbangsa dan Bernegara dalam Wadah NKRI yang Berdasarkan Pancasila."</p>
+        </div>
+        <div class="visi-box" style="margin-top:1rem">
+          <div class="label">MOTTO PELAYANAN</div>
+          <p>"Pelayanan Prima, Keluarga Harmonis, Masyarakat Sejahtera"</p>
+        </div>
+      </div>
+      <div>
+        <div class="section-title" style="color:#fff">Misi</div>
+        <ul class="misi-list">
+          <li class="misi-item"><div class="misi-num">1</div><span>Meningkatkan kualitas pelayanan administrasi nikah dan pencatatan perkawinan yang tertib, akurat, dan transparan</span></li>
+          <li class="misi-item"><div class="misi-num">2</div><span>Mewujudkan keluarga sakinah mawaddah warahmah melalui bimbingan dan konseling perkawinan</span></li>
+          <li class="misi-item"><div class="misi-num">3</div><span>Meningkatkan pemberdayaan dan pengelolaan masjid, wakaf, dan lembaga keagamaan Islam</span></li>
+          <li class="misi-item"><div class="misi-num">4</div><span>Mengembangkan produk halal, arah kiblat, dan penyuluhan agama yang inovatif dan berdampak</span></li>
+          <li class="misi-item"><div class="misi-num">5</div><span>Mewujudkan tata kelola pemerintahan yang bersih, transparan, akuntabel, dan berorientasi pelayanan publik</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STRUKTUR ORGANISASI -->
+<section>
+  <div class="container">
+    <div class="section-title">Struktur Organisasi</div>
+    <div class="struktur-grid reveal">
+      <div class="s-head">
+        <div style="font-size:30px;margin-bottom:.5rem">👨‍💼</div>
+        <h4>Moh. Sadikul Anam, S.H., M.Si.</h4>
+        <div class="jabatan">Kepala KUA Kecamatan Pilangkenceng</div>
+        <div class="nip">Penghulu Ahli Muda</div>
+      </div>
+      <div class="s-card">
+        <div class="s-avatar">📋</div>
+        <h4>Staf Administrasi</h4>
+        <div class="jabatan">Pelaksana Tata Usaha</div>
+        <div class="nip">Administrasi & Kearsipan</div>
+      </div>
+      <div class="s-card">
+        <div class="s-avatar">🎤</div>
+        <h4>Penyuluh Agama Islam</h4>
+        <div class="jabatan">Penyuluh Agama Ahli Pertama</div>
+        <div class="nip">Muhamad Rozif Abdulloh, S.H.I.</div>
+      </div>
+      <div class="s-card">
+        <div class="s-avatar">💒</div>
+        <h4>Penghulu</h4>
+        <div class="jabatan">Penghulu KUA</div>
+        <div class="nip">Pencatatan Pernikahan</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATISTIK -->
+<section style="background:var(--abu)">
+  <div class="container">
+    <div class="section-title">Data & Statistik Pelayanan</div>
+    <div class="stat-grid reveal">
+      <div class="stat-card">
+        <strong id="s-nikah">187</strong>
+        <span>Pernikahan Tercatat (2025)</span>
+      </div>
+      <div class="stat-card">
+        <strong>18</strong>
+        <span>Desa Wilayah Pelayanan</span>
+      </div>
+      <div class="stat-card">
+        <strong>12</strong>
+        <span>Sub-Layanan Nikah Tersedia</span>
+      </div>
+      <div class="stat-card">
+        <strong>100%</strong>
+        <span>Layanan Gratis & Transparan</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WILAYAH PELAYANAN -->
+<section class="wilayah-section">
+  <div class="container">
+    <div class="section-title">Wilayah Pelayanan — 18 Desa</div>
+    <p style="font-size:13px;color:var(--teks-abu);margin-bottom:1.25rem">KUA Kecamatan Pilangkenceng melayani seluruh warga dari 18 desa berikut di Kecamatan Pilangkenceng, Kabupaten Madiun, Jawa Timur.</p>
+    <div class="desa-grid reveal">
+      <div class="desa-chip">Pilangkenceng</div>
+      <div class="desa-chip">Kenongorejo</div>
+      <div class="desa-chip">Sareng</div>
+      <div class="desa-chip">Purworejo</div>
+      <div class="desa-chip">Kedungbanteng</div>
+      <div class="desa-chip">Jogodowo</div>
+      <div class="desa-chip">Pandean</div>
+      <div class="desa-chip">Dawung</div>
+      <div class="desa-chip">Nglandung</div>
+      <div class="desa-chip">Kranggan</div>
+      <div class="desa-chip">Krebet</div>
+      <div class="desa-chip">Broto</div>
+      <div class="desa-chip">Ngrandu</div>
+      <div class="desa-chip">Sangen</div>
+      <div class="desa-chip">Sukorejo</div>
+      <div class="desa-chip">Bulu</div>
+      <div class="desa-chip">Lembah</div>
+      <div class="desa-chip">Sidorejo</div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAK LENGKAP -->
+<section>
+  <div class="container">
+    <div class="section-title">Informasi Kontak</div>
+    <div class="kontak-grid reveal">
+      <div class="kontak-card">
+        <h4>📍 Alamat & Kontak</h4>
+        <div class="kontak-row"><span class="ic">🏛️</span><span><strong>KUA Kecamatan Pilangkenceng</strong><br>Jl. Tirtotejo, Desa Kenongorejo<br>Kecamatan Pilangkenceng<br>Kabupaten Madiun, Jawa Timur 63154</span></div>
+        <div class="kontak-row"><span class="ic">📱</span><span><strong>085119505451</strong><br>WA Center & Konsultasi</span></div>
+        <div class="kontak-row"><span class="ic">✉️</span><span>kuapilangkenceng@gmail.com</span></div>
+        <div class="kontak-row"><span class="ic">🌐</span><span>kuapilangkenceng.github.io</span></div>
+        <div style="margin-top:1rem">
+          <a href="https://wa.me/6285119505451?text=Assalamu'alaikum%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20KUA%20Pilangkenceng." target="_blank" style="background:#25D366;color:#fff;padding:9px 18px;border-radius:7px;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:7px">
+            💬 Chat WhatsApp
+          </a>
+        </div>
+      </div>
+      <div class="kontak-card">
+        <h4>⏰ Jam Pelayanan</h4>
+        <table class="jam-table">
+          <tr><td>Senin</td><td>08.00 – 16.00 WIB</td></tr>
+          <tr><td>Selasa</td><td>08.00 – 16.00 WIB</td></tr>
+          <tr><td>Rabu</td><td>08.00 – 16.00 WIB</td></tr>
+          <tr><td>Kamis</td><td>08.00 – 16.00 WIB</td></tr>
+          <tr><td>Jumat</td><td>08.00 – 16.30 WIB</td></tr>
+          <tr><td>Istirahat (Senin–Kamis)</td><td>12.00 – 13.00 WIB</td></tr>
+          <tr class="tutup"><td>Sabtu</td><td>Tutup</td></tr>
+          <tr class="tutup"><td>Minggu & Hari Libur Nasional</td><td>Tutup</td></tr>
+        </table>
+        <div style="margin-top:1rem;background:var(--emas-muda);border:1px solid #e8c96a;border-radius:8px;padding:10px 12px">
+          <p style="font-size:11.5px;color:#7a5200;font-weight:600">💡 Catatan Akad Nikah di Luar Kantor</p>
+          <p style="font-size:11px;color:#8a6010;margin-top:3px;line-height:1.55">Akad di luar jam/hari kerja: PNBP Rp 600.000 dibayarkan ke Kas Negara via bank. Akad pada hari & jam kerja di luar kantor: biaya transport sesuai ketentuan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom-simple">
+    <p>© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun</p>
+    <p><a href="index.html" style="color:rgba(255,255,255,.5);font-size:11px">← Kembali ke Beranda</a></p>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
