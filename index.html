@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
@@ -215,7 +215,7 @@
 
     /* ── MENU CEPAT ── */
     .menu-cepat { background: var(--putih); padding: 2rem 1.5rem 1.5rem; }
-    .menu-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: .75rem; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: .75rem; }
     .menu-item {
       background: var(--abu); border: 1px solid var(--hijau-border);
       border-radius: var(--radius); padding: .875rem .5rem;
@@ -507,23 +507,29 @@
               <span>Ikrar Wakaf (e-AIW) & Nadzir</span>
             </div>
           </a>
+          <a href="layanan-kiblat.html" class="dd-item">
+            <span class="dd-item-icon">🌙</span>
+            <div class="dd-item-text">
+              <strong>Pengukuran Kiblat</strong>
+              <span>BA & Sertifikat Arah Kiblat</span>
+            </div>
+          </a>
+          <a href="layanan-konseling.html" class="dd-item">
+            <span class="dd-item-icon">🤝</span>
+            <div class="dd-item-text">
+              <strong>Konseling & Rekomendasi</strong>
+              <span>9 sub-layanan bimbingan & surat</span>
+            </div>
+          </a>
           <div class="dd-divider"></div>
           <div class="dd-section-label">Segera Hadir</div>
           <div class="dd-item" style="opacity:.65;cursor:default">
-            <span class="dd-item-icon">🌙</span>
+            <span class="dd-item-icon">🥩</span>
             <div class="dd-item-text">
-              <strong>Kiblat & Halal</strong>
-              <span>Pengukuran & sertifikasi</span>
+              <strong>Sertifikasi Halal</strong>
+              <span>Pendampingan produk halal</span>
             </div>
             <span class="dd-badge-soon">Fase 8</span>
-          </div>
-          <div class="dd-item" style="opacity:.65;cursor:default">
-            <span class="dd-item-icon">👨‍👩‍👧</span>
-            <div class="dd-item-text">
-              <strong>Konseling & Rekomendasi</strong>
-              <span>8 sub-layanan</span>
-            </div>
-            <span class="dd-badge-soon">Fase 9</span>
           </div>
         </div>
       </div>
@@ -547,14 +553,14 @@
       <p class="hero-tagline">"Pelayanan Prima, Keluarga Harmonis, Masyarakat Sejahtera"</p>
       <p>Hadir memberikan pelayanan terbaik dalam urusan pernikahan, kepenghuluan, penyuluhan agama, dan keagamaan untuk masyarakat Kecamatan Pilangkenceng, Kabupaten Madiun.</p>
       <div class="hero-btns">
-        <a href="https://kuapilangkenceng.github.io/ptsp" class="btn-hero-primary" target="_blank">
+        <a href="layanan-nikah.html" class="btn-hero-primary">
           📋 Daftar Layanan Online →
         </a>
-        <a href="#layanan" class="btn-hero-outline">Lihat Layanan</a>
+        <a href="layanan-konseling.html" class="btn-hero-outline">🤝 Konseling & Rekomendasi</a>
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>18</strong><span>Desa Wilayah</span></div>
-        <div class="hero-stat"><strong>12</strong><span>Sub-Layanan Nikah</span></div>
+        <div class="hero-stat"><strong>35+</strong><span>Sub-Layanan Aktif</span></div>
         <div class="hero-stat"><strong>PTSP</strong><span>Pelayanan Digital</span></div>
       </div>
     </div>
@@ -600,26 +606,32 @@
       <p class="section-title">Menu Cepat</p>
     </div>
     <div class="menu-grid">
-      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="menu-item">
-        <div class="menu-icon mi-g">💒</div><p>Daftar Nikah Online</p>
+      <a href="layanan-nikah.html" class="menu-item">
+        <div class="menu-icon mi-g">💒</div><p>Daftar Nikah</p>
       </a>
-      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="menu-item">
-        <div class="menu-icon mi-b">📋</div><p>Cek Status Berkas</p>
-      </a>
-      <a href="#layanan" class="menu-item">
-        <div class="menu-icon mi-a">🤝</div><p>Konsultasi Wali Nikah</p>
-      </a>
-      <a href="#layanan" class="menu-item">
-        <div class="menu-icon mi-t">👨‍👩‍👧</div><p>Konseling Keluarga</p>
-      </a>
-      <a href="#layanan" class="menu-item">
-        <div class="menu-icon mi-p">📜</div><p>Permohonan Surat</p>
-      </a>
-      <a href="#layanan" class="menu-item">
+      <a href="layanan-wakaf.html" class="menu-item">
         <div class="menu-icon mi-r">🕌</div><p>Layanan Wakaf</p>
+      </a>
+      <a href="layanan-kiblat.html" class="menu-item">
+        <div class="menu-icon mi-t">🌙</div><p>Kiblat</p>
+      </a>
+      <a href="layanan-konseling.html" class="menu-item">
+        <div class="menu-icon mi-p">🤝</div><p>Konseling</p>
+      </a>
+      <a href="layanan-konseling.html" class="menu-item">
+        <div class="menu-icon mi-a">📜</div><p>Surat Rekomendasi</p>
+      </a>
+      <a href="layanan-konseling.html#rekomendasi_skt_masjid" class="menu-item">
+        <div class="menu-icon mi-r">🕌</div><p>SKT Masjid</p>
+      </a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="menu-item">
+        <div class="menu-icon mi-b">📋</div><p>Cek Status</p>
       </a>
       <a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank" class="menu-item">
         <div class="menu-icon mi-g">🌿</div><p>Ecotheology</p>
+      </a>
+      <a href="https://kuapilangkenceng.github.io/ptsp/admin.html" target="_blank" class="menu-item">
+        <div class="menu-icon mi-b">🔒</div><p>Login Petugas</p>
       </a>
     </div>
   </div>
@@ -647,7 +659,7 @@
             <li>Pantau status pendaftaran real-time</li>
             <li>Generate surat keterangan otomatis</li>
           </ul>
-          <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-lcard">Daftar Sekarang →</a>
+          <a href="layanan-nikah.html" class="btn-lcard">Daftar Sekarang →</a>
           <a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank" class="btn-lcard-outline">🌿 Form Ecotheology Luar Kantor</a>
         </div>
       </div>
@@ -690,7 +702,7 @@
             <li>Konsultasi langsung dengan penghulu</li>
             <li>Persiapan administrasi nikah lengkap</li>
           </ul>
-          <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-lcard">Daftar Bimwin →</a>
+          <a href="layanan-konseling.html" class="btn-lcard">Daftar Bimwin Online →</a>
         </div>
       </div>
     </div>
@@ -742,16 +754,16 @@
       <p class="section-title">Layanan Lainnya</p>
     </div>
     <div class="layanan-lain-grid reveal">
-      <div class="ll-card">
+      <a href="layanan-wakaf.html" class="ll-card" style="text-decoration:none">
         <div class="ll-icon mi-r">🕌</div>
         <div>
           <h4>Layanan Wakaf</h4>
           <p>Ikrar Wakaf (e-AIW) dan Penggantian Nadzir untuk pengelolaan aset wakaf.</p>
-          <span class="ll-badge-soon">Segera Hadir</span>
+          <span style="display:inline-block;background:var(--hijau-terang);color:var(--hijau);border:1px solid var(--hijau-border);font-size:10px;font-weight:600;padding:1px 8px;border-radius:20px;margin-top:4px">✓ Aktif</span>
         </div>
-      </div>
-      <div class="ll-card">
-        <div class="ll-icon mi-t">📋</div>
+      </a>
+      <a href="layanan-konseling.html#rekomendasi_skt_masjid" class="ll-card" style="text-decoration:none">
+        <div class="ll-icon mi-t">🕌</div>
         <div>
           <h4>SKT Masjid & Musholla</h4>
           <p>Surat Keterangan Terdaftar untuk masjid dan musholla di wilayah Pilangkenceng.</p>
@@ -979,20 +991,20 @@
       <div>
         <h4>PTSP DIGITAL</h4>
         <ul>
+          <li><a href="layanan-nikah.html">Layanan Nikah</a></li>
           <li><a href="layanan-wakaf.html">Layanan Wakaf</a></li>
-          <li><a href="layanan-wakaf.html">Layanan Wakaf</a></li>
-          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Daftar Nikah Online</a></li>
-          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Cek Status Berkas</a></li>
-          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Permohonan SK</a></li>
-          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Form Legalisir</a></li>
+          <li><a href="layanan-kiblat.html">Pengukuran Kiblat</a></li>
+          <li><a href="layanan-konseling.html">Konseling & Rekomendasi</a></li>
+          <li><a href="layanan-konseling.html#rekomendasi_skt_masjid">SKT Masjid/Musholla</a></li>
           <li><a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank">Ecotheology</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Cek Status Berkas</a></li>
           <li><a href="https://kuapilangkenceng.github.io/ptsp/admin.html" target="_blank">Login Admin</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun. All rights reserved.</p>
-      <p>v1.0 — Fase 6 PTSP Digital</p>
+      <p>v2.0 — Fase 9 PTSP Digital</p>
     </div>
   </div>
 </footer>
@@ -1019,9 +1031,9 @@
     fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(nomor))
       .then(r => r.json())
       .then(d => {
-        if (d.status === 'ok' && d.data) {
-          const rec = d.data;
-          hasil.innerHTML = `<span style="color:var(--hijau);font-weight:600">✓ Ditemukan</span> — ${rec.jenis_label || rec.jenis_layanan} | Status: <strong>${rec.status || 'Diproses'}</strong>`;
+        if ((d.ok || d.status === 'ok') && (d.record || d.data)) {
+          const rec = d.record || d.data;
+          hasil.innerHTML = `<span style="color:var(--hijau);font-weight:600">✓ Ditemukan</span> — ${rec.jenis_label || rec.jenis_layanan} | Status: <strong>${rec.status_layanan || rec.status || 'Diproses'}</strong>`;
         } else {
           hasil.textContent = 'Nomor tidak ditemukan. Periksa kembali nomor registrasi Anda.';
         }
@@ -1036,9 +1048,10 @@
     fetch(API_URL + '?action=getartikel&status=Published&limit=3')
       .then(r => r.json())
       .then(d => {
-        if (d.status === 'ok' && d.data && d.data.length > 0) {
+        if ((d.ok || d.status === 'ok') && (d.results || d.data) && (d.results || d.data).length > 0) {
           const container = document.getElementById('artikelContainer');
-          container.innerHTML = d.data.map(a => `
+          const artikelData = d.results || d.data;
+          container.innerHTML = artikelData.map(a => `
             <div class="acard">
               <div class="acard-thumb">${getEmoji(a.kategori)}</div>
               <div class="acard-body">
@@ -1058,7 +1071,7 @@
     fetch(API_URL + '?action=getstats')
       .then(r => r.json())
       .then(d => {
-        if (d.status === 'ok' && d.data) {
+        if ((d.ok || d.status === 'ok') && (d.record || d.data)) {
           if (d.data.totalNikah !== undefined) {
             document.getElementById('totalNikah').textContent = d.data.totalNikah || '–';
           }
@@ -1098,7 +1111,7 @@
 
   /* ── HELPERS ── */
   function getEmoji(kat) {
-    const map = { Nikah:'💒', Wakaf:'🕌', Keluarga:'👨‍👩‍👧', Ecotheology:'🌿', Penyuluhan:'🎤', Kiblat:'🌙', Halal:'🥩' };
+    const map = { Nikah:'💒', Wakaf:'🕌', Keluarga:'👨‍👩‍👧', Ecotheology:'🌿', Penyuluhan:'🎤', Kiblat:'🌙', Halal:'🥩', Konseling:'🤝', Rekomendasi:'📜' };
     return map[kat] || '📋';
   }
   function formatTgl(str) {
