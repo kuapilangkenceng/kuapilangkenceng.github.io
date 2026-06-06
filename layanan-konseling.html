@@ -53,46 +53,85 @@ body {
 }
 
 /* ============================================================
-   HEADER
+   NAVBAR STANDAR (konsisten dengan semua halaman)
    ============================================================ */
-.site-header {
+.navbar {
   background: var(--hijau);
-  color: #fff;
-  padding: 0 24px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: sticky; top: 0; z-index: 1000;
+  border-bottom: 2px solid rgba(181,136,42,.4);
   box-shadow: var(--shadow-md);
 }
-.header-inner {
-  max-width: 960px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  height: 58px;
+.navbar-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 64px;
 }
-.header-logo {
-  width: 38px; height: 38px;
-  background: rgba(255,255,255,.15);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+.nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--emas); display: flex; align-items: center; justify-content: center;
   font-size: 20px; flex-shrink: 0;
 }
-.header-title { font-family: var(--font-disp); font-size: 15px; font-weight: 700; line-height: 1.2; }
-.header-sub   { font-size: 11px; opacity: .75; font-weight: 300; letter-spacing: .3px; }
-.header-back  {
-  margin-left: auto;
-  font-size: 12px;
-  color: rgba(255,255,255,.8);
+.nav-brand-text strong { display: block; font-size: 13px; font-weight: 700; color: #fff; line-height: 1.25; }
+.nav-brand-text span   { font-size: 10px; color: rgba(255,255,255,0.6); }
+.nav-links { display: flex; align-items: center; gap: 1.25rem; }
+.nav-links a {
+  color: rgba(255,255,255,.8); font-size: 13px; font-weight: 500;
+  padding: 4px 0; border-bottom: 2px solid transparent; transition: all .2s;
   text-decoration: none;
-  border: 1px solid rgba(255,255,255,.3);
-  padding: 4px 10px;
-  border-radius: 20px;
-  transition: all .2s var(--ease);
-  white-space: nowrap;
 }
-.header-back:hover { background: rgba(255,255,255,.15); color: #fff; }
+.nav-links a:hover, .nav-links a.active { color: var(--emas); border-bottom-color: var(--emas); }
+.nav-dropdown { position: relative; }
+.nav-dropdown-toggle {
+  color: rgba(255,255,255,.8); font-size: 13px; font-weight: 500;
+  padding: 4px 0; border-bottom: 2px solid transparent; transition: all .2s;
+  background: none; border-top: none; border-left: none; border-right: none;
+  cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: inherit;
+}
+.nav-dropdown-toggle:hover, .nav-dropdown.open .nav-dropdown-toggle {
+  color: var(--emas); border-bottom-color: var(--emas);
+}
+.dd-arrow { font-size: 9px; transition: transform .2s; display: inline-block; }
+.nav-dropdown.open .dd-arrow { transform: rotate(180deg); }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 14px); left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18); min-width: 240px;
+  border: 1px solid #c3dfc9; overflow: hidden;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 200;
+}
+.nav-dropdown.open .nav-dropdown-menu {
+  opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+}
+.dd-section-label {
+  font-size: 9.5px; font-weight: 700; color: #8fa392;
+  letter-spacing: .6px; padding: 8px 14px 4px; text-transform: uppercase;
+}
+.dd-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px; font-size: 12.5px; font-weight: 500; color: #1a2b1e;
+  transition: background .15s; text-decoration: none; border-bottom: none;
+}
+.dd-item:hover { background: #eaf5ee; color: #1b5e35; }
+.dd-item.dd-active { color: #237a3e; font-weight: 600; }
+.dd-item-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+.dd-item-text strong { display: block; font-size: 12px; font-weight: 600; color: inherit; line-height: 1.2; }
+.dd-item-text span   { font-size: 10.5px; color: #536356; }
+.dd-badge-soon {
+  margin-left: auto; font-size: 9px; font-weight: 700;
+  background: #fff3e0; color: #b45309; border: 1px solid #fbbf24;
+  padding: 1px 6px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+}
+.dd-divider { height: 1px; background: #c3dfc9; margin: 4px 0; }
+.btn-ptsp {
+  background: var(--emas); color: var(--hijau);
+  padding: 8px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px;
+  border: none; cursor: pointer; transition: opacity .2s;
+  white-space: nowrap; text-decoration: none;
+}
+.btn-ptsp:hover { opacity: .88; }
 
 /* ============================================================
    HERO STRIP
@@ -509,16 +548,55 @@ footer {
 <body>
 
 <!-- ── HEADER ── -->
-<header class="site-header">
-  <div class="header-inner">
-    <div class="header-logo">🕌</div>
-    <div>
-      <div class="header-title">KUA Kecamatan Pilangkenceng</div>
-      <div class="header-sub">Kabupaten Madiun · Konseling & Rekomendasi</div>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🕌</div>
+      <div class="nav-brand-text">
+        <strong>KUA PILANGKENCENG</strong>
+        <span>Kantor Urusan Agama — Kab. Madiun</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <div class="nav-dropdown" id="navDropdown">
+        <button class="nav-dropdown-toggle" onclick="toggleDropdown()">
+          Layanan <span class="dd-arrow">▼</span>
+        </button>
+        <div class="nav-dropdown-menu">
+          <div class="dd-section-label">Layanan Aktif</div>
+          <a href="layanan-nikah.html" class="dd-item">
+            <span class="dd-item-icon">💒</span>
+            <div class="dd-item-text"><strong>Layanan Nikah</strong><span>12 sub-layanan pernikahan</span></div>
+          </a>
+          <a href="layanan-wakaf.html" class="dd-item">
+            <span class="dd-item-icon">🕌</span>
+            <div class="dd-item-text"><strong>Layanan Wakaf</strong><span>Ikrar Wakaf (e-AIW) &amp; Nadzir</span></div>
+          </a>
+          <a href="layanan-kiblat.html" class="dd-item">
+            <span class="dd-item-icon">🌙</span>
+            <div class="dd-item-text"><strong>Pengukuran Kiblat</strong><span>BA &amp; Sertifikat Arah Kiblat</span></div>
+          </a>
+          <a href="layanan-konseling.html" class="dd-item dd-active">
+            <span class="dd-item-icon">🤝</span>
+            <div class="dd-item-text"><strong>Konseling &amp; Rekomendasi</strong><span>9 sub-layanan bimbingan &amp; surat</span></div>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-section-label">Segera Hadir</div>
+          <div class="dd-item" style="opacity:.65;cursor:default">
+            <span class="dd-item-icon">🥩</span>
+            <div class="dd-item-text"><strong>Sertifikasi Halal</strong><span>Pendampingan produk halal</span></div>
+            <span class="dd-badge-soon">Segera</span>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#informasi">Informasi</a>
+      <a href="index.html#kontak">Kontak</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" class="btn-ptsp" target="_blank">🔒 Login Petugas</a>
     </div>
-    <a href="index.html" class="header-back">← Beranda</a>
   </div>
-</header>
+</nav>
 
 <!-- ── HERO ── -->
 <section class="hero">
@@ -572,10 +650,46 @@ footer {
 
 </main>
 
-<footer>
-  © 2025 KUA Kecamatan Pilangkenceng, Kabupaten Madiun &nbsp;·&nbsp;
-  PTSP Digital Fase 9 &nbsp;·&nbsp;
-  <a href="index.html" style="color:var(--hijau);text-decoration:none">kuapilangkenceng.github.io</a>
+<footer style="background:#1b5e35;color:#fff;padding:2.5rem 1.5rem 1.5rem;font-family:var(--font-body)">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;margin-bottom:1.5rem">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:.875rem">
+          <div style="width:38px;height:38px;border-radius:50%;background:#b5882a;display:flex;align-items:center;justify-content:center;font-size:18px">🕌</div>
+          <div>
+            <div style="font-size:13px;font-weight:700">KUA Kecamatan Pilangkenceng</div>
+            <div style="font-size:10px;opacity:.6">Kantor Urusan Agama — Kemenag Kab. Madiun</div>
+          </div>
+        </div>
+        <p style="font-size:12px;opacity:.7;line-height:1.65;margin-bottom:.35rem">Jl. Tirtotejo, Ds. Kenongorejo<br>Kec. Pilangkenceng, Kab. Madiun 63154</p>
+        <p style="font-size:12px;opacity:.7;margin-top:.5rem">📱 085119505451<br>✉️ kuapilangkenceng@gmail.com</p>
+      </div>
+      <div>
+        <h4 style="font-size:11.5px;font-weight:700;color:#b5882a;margin-bottom:.75rem;letter-spacing:.4px">TAUTAN CEPAT</h4>
+        <ul style="list-style:none">
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="index.html" style="color:inherit;text-decoration:none">Beranda</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="profil.html" style="color:inherit;text-decoration:none">Profil KUA</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="index.html#informasi" style="color:inherit;text-decoration:none">Informasi</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="index.html#kontak" style="color:inherit;text-decoration:none">Kontak</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-size:11.5px;font-weight:700;color:#b5882a;margin-bottom:.75rem;letter-spacing:.4px">PTSP DIGITAL</h4>
+        <ul style="list-style:none">
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-nikah.html" style="color:inherit;text-decoration:none">Layanan Nikah</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-wakaf.html" style="color:inherit;text-decoration:none">Layanan Wakaf</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-kiblat.html" style="color:inherit;text-decoration:none">Pengukuran Kiblat</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-konseling.html" style="color:inherit;text-decoration:none">Konseling &amp; Rekomendasi</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" style="color:inherit;text-decoration:none">Cek Status Berkas</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="https://kuapilangkenceng.github.io/ptsp/admin.html" target="_blank" style="color:inherit;text-decoration:none">Login Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
+      <p style="font-size:11px;opacity:.45;margin:0">© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun. All rights reserved.</p>
+      <p style="font-size:11px;opacity:.45;margin:0">v2.0 — Fase 9 PTSP Digital</p>
+    </div>
+  </div>
 </footer>
 
 <script>

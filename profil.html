@@ -155,7 +155,37 @@
     <div class="nav-links">
       <a href="index.html">Beranda</a>
       <a href="profil.html" class="active">Profil</a>
-      <a href="layanan-nikah.html">Layanan</a>
+      <div class="nav-dropdown" id="navDropdown">
+        <button class="nav-dropdown-toggle" onclick="toggleDropdown()">
+          Layanan <span class="dd-arrow">▼</span>
+        </button>
+        <div class="nav-dropdown-menu">
+          <div class="dd-section-label">Layanan Aktif</div>
+          <a href="layanan-nikah.html" class="dd-item">
+            <span class="dd-item-icon">💒</span>
+            <div class="dd-item-text"><strong>Layanan Nikah</strong><span>12 sub-layanan pernikahan</span></div>
+          </a>
+          <a href="layanan-wakaf.html" class="dd-item">
+            <span class="dd-item-icon">🕌</span>
+            <div class="dd-item-text"><strong>Layanan Wakaf</strong><span>Ikrar Wakaf (e-AIW) &amp; Nadzir</span></div>
+          </a>
+          <a href="layanan-kiblat.html" class="dd-item">
+            <span class="dd-item-icon">🌙</span>
+            <div class="dd-item-text"><strong>Pengukuran Kiblat</strong><span>BA &amp; Sertifikat Arah Kiblat</span></div>
+          </a>
+          <a href="layanan-konseling.html" class="dd-item">
+            <span class="dd-item-icon">🤝</span>
+            <div class="dd-item-text"><strong>Konseling &amp; Rekomendasi</strong><span>9 sub-layanan bimbingan &amp; surat</span></div>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-section-label">Segera Hadir</div>
+          <div class="dd-item" style="opacity:.65;cursor:default">
+            <span class="dd-item-icon">🥩</span>
+            <div class="dd-item-text"><strong>Sertifikasi Halal</strong><span>Pendampingan produk halal</span></div>
+            <span class="dd-badge-soon">Segera</span>
+          </div>
+        </div>
+      </div>
       <a href="index.html#informasi">Informasi</a>
       <a href="index.html#kontak">Kontak</a>
       <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp">🔒 Login Petugas</a>
