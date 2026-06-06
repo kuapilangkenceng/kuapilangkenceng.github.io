@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengukuran Arah Kiblat — KUA Kecamatan Pilangkenceng</title>
+<meta name="description" content="Layanan pengukuran dan sertifikasi arah kiblat masjid/musholla oleh Tim Hisab Rukyat KUA Kecamatan Pilangkenceng, Kabupaten Madiun.">
+<meta name="keywords" content="kiblat, pengukuran kiblat, sertifikasi kiblat, KUA Pilangkenceng, Madiun, masjid, musholla, hisab rukyat">
+<link rel="canonical" href="https://kuapilangkenceng.github.io/layanan-kiblat.html">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Pengukuran Arah Kiblat — KUA Pilangkenceng">
+<meta property="og:description" content="Layanan sertifikasi arah kiblat resmi oleh Tim Hisab Rukyat KUA Kecamatan Pilangkenceng.">
+<meta property="og:type" content="website">
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+<style>
+  /* ── Reset & Base ───────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --hijau:       #1D6A3B;
+    --hijau-mid:   #2B8A52;
+    --hijau-light: #E8F5EE;
+    --hijau-pale:  #F2FAF5;
+    --emas:        #C8962A;
+    --emas-light:  #FBF3E0;
+    --teks:        #1A1A1A;
+    --teks-mid:    #444;
+    --teks-redup:  #6B7280;
+    --border:      #D1D5DB;
+    --putih:       #FFFFFF;
+    --bg-halaman:  #F7F8FA;
+    --radius:      10px;
+    --radius-lg:   16px;
+    --shadow:      0 1px 4px rgba(0,0,0,0.08);
+    --shadow-md:   0 4px 16px rgba(0,0,0,0.10);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--teks);
+    background: var(--bg-halaman);
+  }
+
+  a { color: var(--hijau-mid); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  img { max-width: 100%; display: block; }
+
+  h1, h2, h3, h4 { line-height: 1.3; font-weight: 600; }
+
+  /* ── Topbar ─────────────────────────────────────────────── */
+  .topbar {
+    background: var(--hijau);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 0;
+    text-align: center;
+    letter-spacing: .3px;
+  }
+
+  /* ── Navbar ─────────────────────────────────────────────── */
+  .navbar {
+    background: var(--putih);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 900;
+    box-shadow: var(--shadow);
+  }
+  .navbar-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+    padding: 10px 20px;
+  }
+  .navbar-brand {
+    display: flex; align-items: center; gap: 10px;
+    font-weight: 700; font-size: 15px; color: var(--hijau);
+    text-decoration: none;
+  }
+  .navbar-brand .lambang {
+    width: 38px; height: 38px;
+    background: var(--hijau-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .navbar-brand small { display: block; font-size: 11px; font-weight: 400; color: var(--teks-redup); }
+  .navbar-links { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+  .navbar-links a {
+    padding: 6px 12px; border-radius: 6px;
+    font-size: 13px; color: var(--teks-mid);
+    transition: background .15s;
+  }
+  .navbar-links a:hover { background: var(--hijau-light); color: var(--hijau); text-decoration: none; }
+  .navbar-links a.aktif { background: var(--hijau-light); color: var(--hijau); font-weight: 600; }
+  .btn-daftar {
+    background: var(--hijau); color: #fff !important;
+    padding: 7px 16px !important; border-radius: 8px !important;
+    font-weight: 600 !important; font-size: 13px !important;
+    transition: background .15s !important;
+  }
+  .btn-daftar:hover { background: var(--hijau-mid) !important; text-decoration: none !important; }
+
+  /* ── Hero ───────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, var(--hijau) 0%, #0F4826 100%);
+    color: #fff;
+    padding: 56px 20px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner {
+    max-width: 800px; margin: 0 auto; text-align: center;
+    position: relative;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px; font-size: 12px; margin-bottom: 20px;
+    letter-spacing: .5px;
+  }
+  .hero h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 700; margin-bottom: 14px; }
+  .hero p { font-size: 16px; opacity: .85; max-width: 560px; margin: 0 auto 28px; }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-hero-utama {
+    background: var(--emas); color: #1A0F00;
+    padding: 12px 28px; border-radius: 8px;
+    font-weight: 700; font-size: 14px;
+    transition: transform .15s, box-shadow .15s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-hero-utama:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(200,150,42,0.35); text-decoration: none; color: #1A0F00; }
+  .btn-hero-outline {
+    border: 2px solid rgba(255,255,255,0.6); color: #fff;
+    padding: 11px 24px; border-radius: 8px;
+    font-size: 14px; transition: background .15s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-hero-outline:hover { background: rgba(255,255,255,0.12); text-decoration: none; color: #fff; }
+
+  /* Stat strip */
+  .hero-stats {
+    display: flex; gap: 32px; justify-content: center;
+    margin-top: 36px; flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .angka { font-size: 24px; font-weight: 700; }
+  .hero-stat .label { font-size: 12px; opacity: .7; margin-top: 2px; }
+
+  /* ── Container ──────────────────────────────────────────── */
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── Breadcrumb ─────────────────────────────────────────── */
+  .breadcrumb {
+    padding: 14px 0; font-size: 13px; color: var(--teks-redup);
+    display: flex; gap: 6px; align-items: center; flex-wrap: wrap;
+  }
+  .breadcrumb a { color: var(--teks-redup); }
+  .breadcrumb a:hover { color: var(--hijau); }
+  .breadcrumb .sep { opacity: .5; }
+
+  /* ── Section Title ──────────────────────────────────────── */
+  .section-title {
+    text-align: center; margin-bottom: 36px;
+  }
+  .section-title .label {
+    display: inline-block;
+    background: var(--hijau-light); color: var(--hijau);
+    font-size: 12px; font-weight: 600; letter-spacing: .8px;
+    padding: 3px 12px; border-radius: 20px; margin-bottom: 10px;
+  }
+  .section-title h2 { font-size: clamp(20px, 3vw, 28px); }
+  .section-title p { color: var(--teks-redup); margin-top: 8px; max-width: 500px; margin-inline: auto; }
+
+  /* ── Kartu Info ─────────────────────────────────────────── */
+  .card {
+    background: var(--putih); border-radius: var(--radius-lg);
+    border: 1px solid var(--border); padding: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  /* ── INFO LAYANAN ───────────────────────────────────────── */
+  .info-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin: 32px 0;
+  }
+  .info-item {
+    background: var(--putih); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 16px;
+    display: flex; gap: 14px; align-items: flex-start;
+    box-shadow: var(--shadow);
+  }
+  .info-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--hijau-light); color: var(--hijau);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .info-item h4 { font-size: 13px; color: var(--teks-redup); font-weight: 500; margin-bottom: 2px; }
+  .info-item p { font-size: 14px; font-weight: 600; color: var(--teks); }
+
+  /* ── ALUR LAYANAN ───────────────────────────────────────── */
+  .section-alur { background: var(--hijau-pale); padding: 56px 0; }
+  .alur-steps {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0; position: relative;
+  }
+  .alur-step {
+    text-align: center; padding: 20px 12px; position: relative;
+  }
+  .alur-step:not(:last-child)::after {
+    content: '→';
+    position: absolute; right: -8px; top: 30px;
+    font-size: 20px; color: var(--hijau-mid); opacity: .5;
+  }
+  .alur-num {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--hijau); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 16px; margin: 0 auto 12px;
+  }
+  .alur-step h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .alur-step p { font-size: 12px; color: var(--teks-redup); line-height: 1.5; }
+
+  /* ── PERSYARATAN ────────────────────────────────────────── */
+  .syarat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px; margin-top: 24px;
+  }
+  .syarat-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--putih); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px 16px;
+  }
+  .syarat-cek {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--hijau-light); color: var(--hijau);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; flex-shrink: 0; margin-top: 1px;
+  }
+  .syarat-item span { font-size: 14px; line-height: 1.5; }
+
+  /* ── KALKULATOR KIBLAT ──────────────────────────────────── */
+  .section-kalkulator { padding: 56px 0; }
+  .kalkulator-wrap {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; align-items: start;
+  }
+  @media (max-width: 700px) { .kalkulator-wrap { grid-template-columns: 1fr; } }
+
+  .kalk-panel {
+    background: var(--putih); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .kalk-panel h3 { font-size: 16px; margin-bottom: 16px; color: var(--hijau); }
+
+  /* Kompas */
+  .kompas-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  #kompas-svg { width: 220px; height: 220px; }
+  .kompas-result {
+    text-align: center;
+  }
+  .kompas-result .azimuth-angka {
+    font-size: 40px; font-weight: 700; color: var(--hijau);
+    line-height: 1;
+  }
+  .kompas-result .azimuth-label {
+    font-size: 13px; color: var(--teks-redup); margin-top: 4px;
+  }
+  .kompas-result .koordinat-info {
+    font-size: 12px; color: var(--teks-redup);
+    margin-top: 8px; font-family: monospace;
+  }
+
+  /* Form kalkulator */
+  .kalk-form { display: flex; flex-direction: column; gap: 14px; }
+  .kalk-field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--teks-mid); }
+  .kalk-field input {
+    width: 100%; padding: 9px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 14px; color: var(--teks);
+    transition: border-color .15s;
+  }
+  .kalk-field input:focus { outline: none; border-color: var(--hijau-mid); }
+  .kalk-field .hint { font-size: 11px; color: var(--teks-redup); margin-top: 4px; }
+
+  .btn-gps {
+    width: 100%; padding: 10px;
+    background: var(--hijau-light); color: var(--hijau);
+    border: 1px solid var(--hijau-mid); border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background .15s;
+  }
+  .btn-gps:hover { background: #d4ede0; }
+  .btn-gps:disabled { opacity: .5; cursor: not-allowed; }
+
+  .btn-hitung {
+    width: 100%; padding: 11px;
+    background: var(--hijau); color: #fff;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-hitung:hover { background: var(--hijau-mid); }
+
+  .kalk-note {
+    background: var(--emas-light); border: 1px solid #E8C96A;
+    border-radius: 8px; padding: 12px 14px;
+    font-size: 12px; color: #6B4A00; line-height: 1.6;
+    margin-top: 4px;
+  }
+
+  /* ── PETA ───────────────────────────────────────────────── */
+  .section-peta { padding: 0 0 56px; }
+  .peta-wrap {
+    background: var(--putih); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .peta-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .peta-header h3 { font-size: 15px; }
+  .peta-header p { font-size: 12px; color: var(--teks-redup); margin-top: 2px; }
+  #peta-osm { height: 360px; }
+  .peta-placeholder {
+    height: 360px; background: var(--bg-halaman);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; color: var(--teks-redup); font-size: 14px;
+  }
+  .btn-load-peta {
+    padding: 10px 24px; background: var(--hijau); color: #fff;
+    border: none; border-radius: 8px; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background .15s;
+  }
+  .btn-load-peta:hover { background: var(--hijau-mid); }
+
+  /* ── FAQ ────────────────────────────────────────────────── */
+  .section-faq { background: var(--hijau-pale); padding: 56px 0; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; margin-top: 24px; }
+  .faq-item {
+    background: var(--putih); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .faq-q {
+    padding: 14px 18px; font-weight: 600; font-size: 14px;
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    user-select: none; transition: background .15s;
+  }
+  .faq-q:hover { background: var(--hijau-pale); }
+  .faq-q .arr { font-size: 16px; color: var(--hijau); transition: transform .2s; }
+  .faq-q.open .arr { transform: rotate(180deg); }
+  .faq-a {
+    padding: 0 18px; font-size: 14px; line-height: 1.7;
+    color: var(--teks-mid); max-height: 0; overflow: hidden;
+    transition: max-height .3s ease, padding .2s;
+  }
+  .faq-a.open { max-height: 300px; padding: 0 18px 14px; }
+
+  /* ── CTA BANNER ─────────────────────────────────────────── */
+  .section-cta {
+    background: var(--hijau); color: #fff;
+    padding: 48px 20px; text-align: center;
+  }
+  .section-cta h2 { font-size: clamp(20px, 3vw, 28px); margin-bottom: 10px; }
+  .section-cta p { opacity: .85; margin-bottom: 24px; font-size: 15px; }
+  .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn-cta-emas {
+    background: var(--emas); color: #1A0F00;
+    padding: 13px 32px; border-radius: 8px;
+    font-weight: 700; font-size: 15px; text-decoration: none;
+    transition: transform .15s;
+  }
+  .btn-cta-emas:hover { transform: translateY(-2px); text-decoration: none; color: #1A0F00; }
+  .btn-cta-outline {
+    border: 2px solid rgba(255,255,255,0.6); color: #fff;
+    padding: 11px 24px; border-radius: 8px;
+    font-size: 14px; text-decoration: none; transition: background .15s;
+  }
+  .btn-cta-outline:hover { background: rgba(255,255,255,0.12); text-decoration: none; color: #fff; }
+
+  /* ── FOOTER ─────────────────────────────────────────────── */
+  .footer {
+    background: #0F2B1A; color: rgba(255,255,255,0.7);
+    padding: 32px 0 20px;
+  }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto; padding: 0 20px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 640px) { .footer-inner { grid-template-columns: 1fr; gap: 20px; } }
+  .footer h4 { color: #fff; font-size: 14px; margin-bottom: 10px; }
+  .footer p, .footer li { font-size: 13px; line-height: 1.8; }
+  .footer ul { list-style: none; }
+  .footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  .footer a:hover { color: #fff; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 24px; padding-top: 16px; text-align: center;
+    font-size: 12px; color: rgba(255,255,255,0.4);
+    max-width: 1080px; margin-inline: auto; padding-inline: 20px;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 640px) {
+    .alur-step:not(:last-child)::after { display: none; }
+    .alur-steps { grid-template-columns: 1fr 1fr; }
+    .navbar-links { display: none; }
+  }
+
+  /* ── Animasi ────────────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up { animation: fadeUp .5s ease both; }
+  .fade-up-d1 { animation-delay: .1s; }
+  .fade-up-d2 { animation-delay: .2s; }
+  .fade-up-d3 { animation-delay: .3s; }
+
+  /* needle rotate */
+  #needle-group {
+    transform-origin: 110px 110px;
+    transition: transform 1s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* status pesan */
+  .msg { padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-top: 8px; }
+  .msg-ok  { background: var(--hijau-light); color: var(--hijau); }
+  .msg-err { background: #FEE2E2; color: #B91C1C; }
+  .msg-info{ background: var(--emas-light);  color: #854F0B; }
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ──────────────────────────────────────────────── -->
+<div class="topbar">
+  📍 KUA Kecamatan Pilangkenceng — Kabupaten Madiun &nbsp;|&nbsp; Tim Hisab Rukyat siap melayani
+</div>
+
+<!-- ── Navbar ──────────────────────────────────────────────── -->
+<nav class="navbar" role="navigation" aria-label="Navigasi utama">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <div class="lambang" aria-hidden="true">🕌</div>
+      <div>
+        KUA Pilangkenceng
+        <small>Kab. Madiun</small>
+      </div>
+    </a>
+    <div class="navbar-links" role="list">
+      <a href="index.html" role="listitem">Beranda</a>
+      <a href="index.html#layanan" role="listitem">Layanan</a>
+      <a href="layanan-kiblat.html" class="aktif" role="listitem">Kiblat</a>
+      <a href="layanan-wakaf.html" role="listitem">Wakaf</a>
+      <a href="#kontak" role="listitem">Kontak</a>
+      <a href="ptsp/index.html" class="btn-daftar" role="listitem">Daftar Online ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────── -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-inner">
+    <div class="hero-badge" aria-hidden="true">
+      🧭 Layanan Hisab Rukyat
+    </div>
+    <h1 id="hero-heading" class="fade-up">Pengukuran &amp; Sertifikasi<br>Arah Kiblat</h1>
+    <p class="fade-up fade-up-d1">
+      Layanan resmi pengukuran arah kiblat masjid dan musholla oleh
+      Tim Hisab Rukyat KUA Kecamatan Pilangkenceng.
+      Gratis. Terukur. Bersertifikat.
+    </p>
+    <div class="hero-actions fade-up fade-up-d2">
+      <a href="ptsp/index.html?layanan=kiblat_pengukuran" class="btn-hero-utama">
+        🗓️ Ajukan Permohonan
+      </a>
+      <a href="#kalkulator" class="btn-hero-outline">
+        🧮 Cek Kiblat Saya
+      </a>
+    </div>
+    <div class="hero-stats fade-up fade-up-d3" role="list" aria-label="Statistik layanan">
+      <div class="hero-stat" role="listitem">
+        <div class="angka">18</div>
+        <div class="label">Desa dilayani</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="angka">±294.5°</div>
+        <div class="label">Azimuth wilayah</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="angka">Gratis</div>
+        <div class="label">Biaya layanan</div>
+      </div>
+      <div class="hero-stat" role="listitem">
+        <div class="angka">≤7 hari</div>
+        <div class="label">Proses selesai</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Main Content ─────────────────────────────────────────── -->
+<main>
+
+  <!-- Breadcrumb -->
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Beranda</a>
+      <span class="sep" aria-hidden="true">›</span>
+      <a href="index.html#layanan">Layanan</a>
+      <span class="sep" aria-hidden="true">›</span>
+      <span aria-current="page">Pengukuran Arah Kiblat</span>
+    </nav>
+  </div>
+
+  <!-- Info Grid -->
+  <section class="container" aria-label="Informasi singkat layanan">
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-icon" aria-hidden="true">⏱️</div>
+        <div>
+          <h4>Waktu Layanan</h4>
+          <p>5 jam 30 menit</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon" aria-hidden="true">📋</div>
+        <div>
+          <h4>Dasar Hukum</h4>
+          <p>SOP No. 807/Kk.18.7.1/08/2024</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon" aria-hidden="true">🔧</div>
+        <div>
+          <h4>Alat Ukur</h4>
+          <p>Kompas, GPS, Theodolite</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon" aria-hidden="true">📄</div>
+        <div>
+          <h4>Output Dokumen</h4>
+          <p>BA + Sertifikat Kiblat</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon" aria-hidden="true">🏢</div>
+        <div>
+          <h4>Pemohon</h4>
+          <p>Takmir / Pengurus Masjid</p>
+        </div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon" aria-hidden="true">💰</div>
+        <div>
+          <h4>Biaya</h4>
+          <p>Gratis (PNBP Rp 0,-)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Alur Layanan -->
+  <section class="section-alur" aria-labelledby="alur-heading">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">ALUR LAYANAN</span>
+        <h2 id="alur-heading">Bagaimana Prosesnya?</h2>
+        <p>Dari pengajuan hingga sertifikat selesai dalam 7 hari kerja</p>
+      </div>
+      <div class="alur-steps" role="list">
+        <div class="alur-step" role="listitem">
+          <div class="alur-num" aria-hidden="true">1</div>
+          <h4>Ajukan Permohonan</h4>
+          <p>Isi form online atau datang langsung ke PTSP KUA</p>
+        </div>
+        <div class="alur-step" role="listitem">
+          <div class="alur-num" aria-hidden="true">2</div>
+          <h4>Verifikasi Berkas</h4>
+          <p>Petugas memeriksa kelengkapan dokumen persyaratan</p>
+        </div>
+        <div class="alur-step" role="listitem">
+          <div class="alur-num" aria-hidden="true">3</div>
+          <h4>Disposisi Kepala</h4>
+          <p>Kepala KUA memberikan disposisi &amp; jadwal pengukuran</p>
+        </div>
+        <div class="alur-step" role="listitem">
+          <div class="alur-num" aria-hidden="true">4</div>
+          <h4>Pengukuran Lapangan</h4>
+          <p>Tim Hisab Rukyat datang ke lokasi (±2 jam)</p>
+        </div>
+        <div class="alur-step" role="listitem">
+          <div class="alur-num" aria-hidden="true">5</div>
+          <h4>Terima Sertifikat</h4>
+          <p>Berita Acara + Sertifikat diserahkan ke pemohon</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Persyaratan -->
+  <section class="container" style="padding: 56px 20px;" aria-labelledby="syarat-heading">
+    <div class="section-title">
+      <span class="label">PERSYARATAN</span>
+      <h2 id="syarat-heading">Dokumen yang Diperlukan</h2>
+      <p>Siapkan dokumen berikut sebelum mengajukan permohonan</p>
+    </div>
+    <div class="syarat-grid">
+      <div class="syarat-item">
+        <div class="syarat-cek" aria-hidden="true">✓</div>
+        <span>Fotocopy KTP <strong>3 orang pengurus</strong> takmir / masjid</span>
+      </div>
+      <div class="syarat-item">
+        <div class="syarat-cek" aria-hidden="true">✓</div>
+        <span>Materai Rp 10.000 sebanyak <strong>2 lembar</strong></span>
+      </div>
+      <div class="syarat-item">
+        <div class="syarat-cek" aria-hidden="true">✓</div>
+        <span>Surat permohonan bermaterai dari <strong>takmir / pengurus</strong></span>
+      </div>
+      <div class="syarat-item">
+        <div class="syarat-cek" aria-hidden="true">✓</div>
+        <span><strong>Denah / sketsa lokasi</strong> masjid atau musholla</span>
+      </div>
+      <div class="syarat-item">
+        <div class="syarat-cek" aria-hidden="true">✓</div>
+        <span><strong>Alamat lengkap</strong> bangunan (RT/RW, Dusun, Desa)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── KALKULATOR KIBLAT ──────────────────────────────────── -->
+  <section class="section-kalkulator" id="kalkulator" aria-labelledby="kalk-heading">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">KALKULATOR KIBLAT</span>
+        <h2 id="kalk-heading">Cek Arah Kiblat Lokasi Anda</h2>
+        <p>Masukkan koordinat atau gunakan GPS untuk mengetahui azimuth kiblat</p>
+      </div>
+
+      <div class="kalkulator-wrap">
+
+        <!-- Panel Kiri: Kompas -->
+        <div class="kalk-panel">
+          <h3>🧭 Kompas Kiblat</h3>
+          <div class="kompas-wrap">
+
+            <!-- SVG Kompas -->
+            <svg id="kompas-svg" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="kompas-title kompas-desc">
+              <title id="kompas-title">Kompas arah kiblat</title>
+              <desc id="kompas-desc">Visualisasi kompas yang menunjukkan arah kiblat dari lokasi yang dipilih</desc>
+
+              <!-- Lingkaran luar -->
+              <circle cx="110" cy="110" r="105" fill="#F2FAF5" stroke="#1D6A3B" stroke-width="1.5"/>
+              <circle cx="110" cy="110" r="95" fill="none" stroke="#D1D5DB" stroke-width="0.5"/>
+
+              <!-- Derajat tick marks -->
+              <g id="ticks" stroke="#9CA3AF" stroke-width="1">
+                <!-- 72 tick setiap 5 derajat -->
+              </g>
+
+              <!-- Arah Mata Angin -->
+              <text x="110" y="22" text-anchor="middle" font-size="14" font-weight="700" fill="#1D6A3B">U</text>
+              <text x="110" y="207" text-anchor="middle" font-size="14" font-weight="700" fill="#6B7280">S</text>
+              <text x="207" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#6B7280">T</text>
+              <text x="13" y="115" text-anchor="middle" font-size="14" font-weight="700" fill="#6B7280">B</text>
+
+              <!-- Jarum kompas -->
+              <g id="needle-group">
+                <!-- Jarum Utara (merah) -->
+                <polygon points="110,30 104,110 110,104 116,110" fill="#DC2626" opacity="0.9"/>
+                <!-- Jarum Selatan (abu) -->
+                <polygon points="110,190 104,110 110,116 116,110" fill="#9CA3AF" opacity="0.7"/>
+                <!-- Titik tengah -->
+                <circle cx="110" cy="110" r="7" fill="#1D6A3B"/>
+                <circle cx="110" cy="110" r="3" fill="#fff"/>
+              </g>
+
+              <!-- Panah kiblat (hijau, terpisah dari jarum) -->
+              <g id="kiblat-group" style="transform-origin: 110px 110px; transition: transform 1s cubic-bezier(.34,1.56,.64,1);">
+                <line x1="110" y1="110" x2="110" y2="45" stroke="#1D6A3B" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                <polygon points="110,32 104,52 116,52" fill="#1D6A3B" opacity="0.85"/>
+                <!-- Label Ka'bah -->
+                <text x="110" y="28" text-anchor="middle" font-size="9" fill="#1D6A3B" font-weight="700">Ka'bah</text>
+              </g>
+
+              <!-- Skala azimuth -->
+              <text x="110" y="68" text-anchor="middle" font-size="9" fill="#9CA3AF">0°</text>
+              <text x="152" y="115" text-anchor="middle" font-size="9" fill="#9CA3AF">90°</text>
+              <text x="110" y="162" text-anchor="middle" font-size="9" fill="#9CA3AF">180°</text>
+              <text x="68" y="115" text-anchor="middle" font-size="9" fill="#9CA3AF">270°</text>
+            </svg>
+
+            <!-- Hasil -->
+            <div class="kompas-result" id="kompas-result">
+              <div class="azimuth-angka" id="az-angka">294.5°</div>
+              <div class="azimuth-label">Azimuth dari Utara (estimasi wilayah)</div>
+              <div class="koordinat-info" id="az-koordinat">Pusat Kec. Pilangkenceng: -7.5827, 111.6482</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Panel Kanan: Form Input -->
+        <div class="kalk-panel">
+          <h3>📍 Masukkan Koordinat</h3>
+          <div class="kalk-form">
+
+            <!-- GPS Button -->
+            <button class="btn-gps" id="btn-gps" onclick="gunakanGPS()">
+              📡 Gunakan Lokasi Saya (GPS)
+            </button>
+            <div id="gps-msg"></div>
+
+            <div style="display: flex; align-items: center; gap: 10px; color: var(--teks-redup); font-size: 13px;">
+              <div style="flex: 1; height: 1px; background: var(--border);"></div>
+              atau isi manual
+              <div style="flex: 1; height: 1px; background: var(--border);"></div>
+            </div>
+
+            <div class="kalk-field">
+              <label for="inp-lat">Latitude (Lintang)</label>
+              <input type="number" id="inp-lat" step="0.000001"
+                     placeholder="-7.583000" value="-7.5827"
+                     min="-90" max="90" aria-describedby="hint-lat">
+              <div class="hint" id="hint-lat">Contoh untuk Pilangkenceng: -7.5827</div>
+            </div>
+
+            <div class="kalk-field">
+              <label for="inp-lng">Longitude (Bujur)</label>
+              <input type="number" id="inp-lng" step="0.000001"
+                     placeholder="111.648200" value="111.6482"
+                     min="-180" max="180" aria-describedby="hint-lng">
+              <div class="hint" id="hint-lng">Contoh untuk Pilangkenceng: 111.6482</div>
+            </div>
+
+            <button class="btn-hitung" onclick="hitungKiblat()">
+              Hitung Azimuth Kiblat ⟶
+            </button>
+
+            <div class="kalk-note" role="note">
+              <strong>ℹ️ Info:</strong> Azimuth kiblat untuk wilayah Kecamatan Pilangkenceng
+              berkisar <strong>±294.5° dari Utara</strong> (arah barat-laut menuju Makkah).
+              Hasil kalkulator ini bersifat indikatif — untuk keperluan resmi, gunakan
+              layanan pengukuran oleh Tim Hisab Rukyat KUA.
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PETA WILAYAH ──────────────────────────────────────── -->
+  <section class="section-peta" id="peta" aria-labelledby="peta-heading">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">PETA WILAYAH</span>
+        <h2 id="peta-heading">Wilayah Kecamatan Pilangkenceng</h2>
+        <p>18 desa yang dilayani oleh KUA Kecamatan Pilangkenceng</p>
+      </div>
+      <div class="peta-wrap">
+        <div class="peta-header">
+          <div style="font-size: 24px;" aria-hidden="true">🗺️</div>
+          <div>
+            <h3>Peta Interaktif</h3>
+            <p>Klik pada peta untuk mendapatkan koordinat lokasi masjid/musholla Anda</p>
+          </div>
+        </div>
+        <!-- Placeholder dulu, peta dimuat saat klik (lazy load) -->
+        <div id="peta-placeholder" class="peta-placeholder" role="region" aria-label="Area peta">
+          <div style="font-size: 48px;" aria-hidden="true">🗺️</div>
+          <p>Peta belum dimuat untuk menghemat kuota</p>
+          <button class="btn-load-peta" onclick="muatPeta()" aria-label="Muat peta wilayah">
+            Tampilkan Peta
+          </button>
+        </div>
+        <div id="peta-osm" style="display:none; height: 360px;"
+             role="application" aria-label="Peta interaktif wilayah Kecamatan Pilangkenceng"></div>
+        <div style="padding: 10px 16px; font-size: 12px; color: var(--teks-redup); border-top: 1px solid var(--border);">
+          📍 Klik pada peta untuk mengisi koordinat di kalkulator kiblat di atas.
+          Peta: © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ──────────────────────────────────────────────── -->
+  <section class="section-faq" aria-labelledby="faq-heading">
+    <div class="container">
+      <div class="section-title">
+        <span class="label">FAQ</span>
+        <h2 id="faq-heading">Pertanyaan Umum</h2>
+      </div>
+      <div class="faq-list" role="list">
+
+        <div class="faq-item" role="listitem">
+          <div class="faq-q" onclick="toggleFaq(this)" role="button" aria-expanded="false"
+               tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+            Apakah layanan pengukuran kiblat ini berbayar?
+            <span class="arr" aria-hidden="true">▾</span>
+          </div>
+          <div class="faq-a" role="region">
+            Tidak. Layanan pengukuran arah kiblat oleh KUA sepenuhnya <strong>gratis (PNBP Rp 0,-)</strong>.
+            Tidak ada pungutan biaya apapun dalam proses pengukuran hingga penerbitan sertifikat.
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <div class="faq-q" onclick="toggleFaq(this)" role="button" aria-expanded="false"
+               tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+            Berapa lama proses dari pengajuan hingga sertifikat terbit?
+            <span class="arr" aria-hidden="true">▾</span>
+          </div>
+          <div class="faq-a" role="region">
+            Sesuai SOP, total waktu layanan adalah <strong>5 jam 30 menit</strong> terhitung sejak
+            permohonan diterima hingga sertifikat diserahkan. Namun penjadwalan pengukuran lapangan
+            menyesuaikan jadwal Tim Hisab Rukyat, sehingga total proses biasanya <strong>3–7 hari kerja</strong>.
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <div class="faq-q" onclick="toggleFaq(this)" role="button" aria-expanded="false"
+               tabindex="0" onkeydown="if(event.key==='Enter')||event.key===' ')toggleFaq(this)">
+            Apakah musholla kecil / langgar bisa mengajukan pengukuran?
+            <span class="arr" aria-hidden="true">▾</span>
+          </div>
+          <div class="faq-a" role="region">
+            Ya, bisa. Layanan ini terbuka untuk semua jenis tempat ibadah Islam di wilayah
+            Kecamatan Pilangkenceng, baik <strong>masjid, musholla, langgar</strong>, maupun
+            tempat ibadah lainnya, tanpa memandang ukuran bangunan.
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <div class="faq-q" onclick="toggleFaq(this)" role="button" aria-expanded="false"
+               tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+            Kami sudah punya kiblat lama, apakah perlu diukur ulang?
+            <span class="arr" aria-hidden="true">▾</span>
+          </div>
+          <div class="faq-a" role="region">
+            Disarankan untuk melakukan verifikasi/konfirmasi jika masjid/musholla belum pernah
+            diukur secara resmi, atau jika kiblat sudah lama dan belum bersertifikat.
+            Tim Hisab Rukyat akan mengukur ulang dan menerbitkan sertifikat resmi tanpa mengharuskan
+            perubahan fisik jika arah sudah benar.
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <div class="faq-q" onclick="toggleFaq(this)" role="button" aria-expanded="false"
+               tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+            Metode apa yang digunakan untuk pengukuran?
+            <span class="arr" aria-hidden="true">▾</span>
+          </div>
+          <div class="faq-a" role="region">
+            Tim Hisab Rukyat menggunakan berbagai metode ilmiah sesuai ketersediaan alat:
+            <strong>Kompas magnetik, GPS digital, Theodolite</strong>, dan metode Rukyatul Ufuk
+            (menggunakan posisi matahari). Hasil pengukuran dicatat dalam Berita Acara dan
+            ditandatangani oleh tim serta saksi.
+          </div>
+        </div>
+
+        <div class="faq-item" role="listitem">
+          <div class="faq-q" onclick="toggleFaq(this)" role="button" aria-expanded="false"
+               tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleFaq(this)">
+            Siapa yang harus hadir saat pengukuran lapangan?
+            <span class="arr" aria-hidden="true">▾</span>
+          </div>
+          <div class="faq-a" role="region">
+            Saat pengukuran lapangan, setidaknya <strong>2 orang pengurus takmir/masjid</strong>
+            harus hadir sebagai saksi dan menandatangani Berita Acara. Kepala desa atau
+            perangkat desa juga dapat dihadirkan sebagai saksi tambahan.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA Banner ────────────────────────────────────────── -->
+  <section class="section-cta" aria-labelledby="cta-heading">
+    <h2 id="cta-heading">Siap Mengajukan Permohonan?</h2>
+    <p>Isi form online sekarang atau hubungi kami untuk informasi lebih lanjut</p>
+    <div class="cta-btns">
+      <a href="ptsp/index.html?layanan=kiblat_pengukuran" class="btn-cta-emas">
+        📋 Daftar Online Sekarang
+      </a>
+      <a href="https://wa.me/6285XXXXXXXXX?text=Assalamu'alaikum, saya ingin mengajukan permohonan pengukuran arah kiblat."
+         class="btn-cta-outline" target="_blank" rel="noopener" id="link-wa">
+        💬 Tanya via WhatsApp
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ──────────────────────────────────────────────── -->
+<footer class="footer" id="kontak" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <h4>KUA Kecamatan Pilangkenceng</h4>
+      <p>Kantor Urusan Agama Kecamatan Pilangkenceng<br>
+         Kabupaten Madiun, Jawa Timur<br>
+         Kementerian Agama RI</p>
+      <p style="margin-top: 10px;">
+        📞 [Nomor Telepon KUA]<br>
+        📱 <a href="https://wa.me/6285XXXXXXXXX" id="footer-wa">WhatsApp: 085X-XXXX-XXXX</a><br>
+        ✉️ [Email KUA]
+      </p>
+    </div>
+    <div>
+      <h4>Layanan Kami</h4>
+      <ul>
+        <li><a href="layanan-nikah.html">Layanan Nikah</a></li>
+        <li><a href="layanan-wakaf.html">Layanan Wakaf</a></li>
+        <li><a href="layanan-kiblat.html">Pengukuran Kiblat</a></li>
+        <li><a href="layanan-halal.html">Sertifikasi Halal</a></li>
+        <li><a href="ptsp/index.html">PTSP Digital</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Tautan</h4>
+      <ul>
+        <li><a href="index.html">Beranda</a></li>
+        <li><a href="artikel.html">Artikel</a></li>
+        <li><a href="https://kemenag.go.id" target="_blank" rel="noopener">Kemenag RI</a></li>
+        <li><a href="https://jatim.kemenag.go.id" target="_blank" rel="noopener">Kemenag Jatim</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 KUA Kecamatan Pilangkenceng, Kabupaten Madiun. Dibuat dengan ❤️ untuk pelayanan umat.</p>
+  </div>
+</footer>
+
+<!-- Leaflet JS (lazy, dimuat saat btn klik) -->
+<script>
+// ── KALKULATOR AZIMUTH KIBLAT ──────────────────────────────
+// Ka'bah: 21.4225° N, 39.8262° E
+const KABAH_LAT = 21.4225;
+const KABAH_LNG = 39.8262;
+
+function toRad(d) { return d * Math.PI / 180; }
+function toDeg(r) { return r * 180 / Math.PI; }
+
+function hitungAzimuthJS(lat, lng) {
+  const lat1 = toRad(lat);
+  const lat2 = toRad(KABAH_LAT);
+  const dLng = toRad(KABAH_LNG - lng);
+  const x = Math.sin(dLng) * Math.cos(lat2);
+  const y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+  return ((toDeg(Math.atan2(x, y)) + 360) % 360);
+}
+
+function hitungKiblat() {
+  const lat = parseFloat(document.getElementById('inp-lat').value);
+  const lng = parseFloat(document.getElementById('inp-lng').value);
+
+  if (isNaN(lat) || isNaN(lng)) {
+    tampilMsg('gps-msg', 'Masukkan koordinat yang valid.', 'err');
+    return;
+  }
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    tampilMsg('gps-msg', 'Koordinat di luar batas valid.', 'err');
+    return;
+  }
+
+  const az = hitungAzimuthJS(lat, lng);
+  updateKompas(az, lat, lng);
+  document.getElementById('gps-msg').innerHTML = '';
+}
+
+function updateKompas(az, lat, lng) {
+  const azBulat = Math.round(az * 100) / 100;
+
+  // Putar panah kiblat (panah menunjuk ke Ka'bah)
+  const kiblatGroup = document.getElementById('kiblat-group');
+  kiblatGroup.style.transform = `rotate(${azBulat}deg)`;
+
+  // Update teks
+  document.getElementById('az-angka').textContent = azBulat.toFixed(1) + '°';
+  document.getElementById('az-koordinat').textContent =
+    `Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+  document.querySelector('#kompas-result .azimuth-label').textContent =
+    'Azimuth dari Utara ke Ka\'bah (° searah jarum jam)';
+}
+
+// ── GPS BROWSER ────────────────────────────────────────────
+function gunakanGPS() {
+  if (!navigator.geolocation) {
+    tampilMsg('gps-msg', 'Browser Anda tidak mendukung GPS.', 'err');
+    return;
+  }
+  const btn = document.getElementById('btn-gps');
+  btn.disabled = true;
+  btn.textContent = '📡 Mendapatkan lokasi...';
+  tampilMsg('gps-msg', 'Meminta izin GPS...', 'info');
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      document.getElementById('inp-lat').value = lat.toFixed(6);
+      document.getElementById('inp-lng').value = lng.toFixed(6);
+      const az = hitungAzimuthJS(lat, lng);
+      updateKompas(az, lat, lng);
+      tampilMsg('gps-msg', `✅ Lokasi didapat! Akurasi ±${Math.round(pos.coords.accuracy)} meter.`, 'ok');
+
+      // Sync ke peta jika sudah dimuat
+      if (window._peta) {
+        window._peta.setView([lat, lng], 16);
+        if (window._marker) {
+          window._marker.setLatLng([lat, lng]);
+          window._marker.setPopupContent(`📍 Lokasi GPS Anda<br>Azimuth: ${az.toFixed(1)}°`).openPopup();
+        }
+      }
+
+      btn.disabled = false;
+      btn.textContent = '📡 Gunakan Lokasi Saya (GPS)';
+    },
+    function(err) {
+      const pesan = {
+        1: 'Izin lokasi ditolak. Aktifkan izin lokasi di browser.',
+        2: 'Lokasi tidak dapat ditentukan.',
+        3: 'Waktu habis. Coba lagi.'
+      };
+      tampilMsg('gps-msg', '❌ ' + (pesan[err.code] || 'Gagal mendapatkan lokasi.'), 'err');
+      btn.disabled = false;
+      btn.textContent = '📡 Gunakan Lokasi Saya (GPS)';
+    },
+    { timeout: 12000, enableHighAccuracy: true }
+  );
+}
+
+// ── TAMPIL PESAN ───────────────────────────────────────────
+function tampilMsg(idEl, teks, tipe) {
+  const el = document.getElementById(idEl);
+  if (!el) return;
+  el.innerHTML = `<div class="msg msg-${tipe}" role="alert">${teks}</div>`;
+}
+
+// ── FAQ TOGGLE ─────────────────────────────────────────────
+function toggleFaq(el) {
+  const jawaban = el.nextElementSibling;
+  const isOpen  = jawaban.classList.contains('open');
+  // Tutup semua
+  document.querySelectorAll('.faq-a.open').forEach(a => a.classList.remove('open'));
+  document.querySelectorAll('.faq-q.open').forEach(q => {
+    q.classList.remove('open');
+    q.setAttribute('aria-expanded', 'false');
+  });
+  // Buka yang diklik (jika belum buka)
+  if (!isOpen) {
+    jawaban.classList.add('open');
+    el.classList.add('open');
+    el.setAttribute('aria-expanded', 'true');
+  }
+}
+
+// ── TICK MARKS KOMPAS ──────────────────────────────────────
+(function buatTicks() {
+  const g = document.getElementById('ticks');
+  if (!g) return;
+  for (let i = 0; i < 72; i++) {
+    const angle = i * 5;
+    const rad   = (angle - 90) * Math.PI / 180;
+    const r1    = i % 9 === 0 ? 85 : (i % 3 === 0 ? 88 : 91);
+    const r2    = 95;
+    const x1    = 110 + r1 * Math.cos(rad);
+    const y1    = 110 + r1 * Math.sin(rad);
+    const x2    = 110 + r2 * Math.cos(rad);
+    const y2    = 110 + r2 * Math.sin(rad);
+    const line  = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1.toFixed(1));
+    line.setAttribute('y1', y1.toFixed(1));
+    line.setAttribute('x2', x2.toFixed(1));
+    line.setAttribute('y2', y2.toFixed(1));
+    line.setAttribute('stroke-width', i % 9 === 0 ? '2' : '1');
+    g.appendChild(line);
+  }
+})();
+
+// Inisialisasi kompas dengan nilai default
+updateKompas(294.5, -7.5827, 111.6482);
+
+// ── PETA OPENSTREETMAP (LAZY LOAD) ─────────────────────────
+function muatPeta() {
+  const placeholder = document.getElementById('peta-placeholder');
+  const petaDiv     = document.getElementById('peta-osm');
+
+  // Tampilkan loading
+  placeholder.innerHTML = '<p style="color:var(--teks-redup)">⏳ Memuat peta...</p>';
+
+  // Load Leaflet JS
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+  script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLuQ=';
+  script.crossOrigin = '';
+  script.onload = function() {
+    placeholder.style.display = 'none';
+    petaDiv.style.display = 'block';
+
+    const peta = L.map('peta-osm').setView([-7.5827, 111.6482], 12);
+    window._peta = peta;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(peta);
+
+    // Marker default (pusat kecamatan)
+    const iconKiblat = L.divIcon({
+      html: '<div style="background:#1D6A3B;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)">🕌</div>',
+      iconSize: [32, 32], iconAnchor: [16, 16]
+    });
+    const marker = L.marker([-7.5827, 111.6482], { icon: iconKiblat, draggable: true })
+      .addTo(peta)
+      .bindPopup('📍 Seret marker ke lokasi masjid/musholla Anda');
+    window._marker = marker;
+
+    // Klik peta → isi koordinat & hitung kiblat
+    function prosesKoordinat(lat, lng) {
+      document.getElementById('inp-lat').value = lat.toFixed(6);
+      document.getElementById('inp-lng').value = lng.toFixed(6);
+      const az = hitungAzimuthJS(lat, lng);
+      updateKompas(az, lat, lng);
+      marker.setLatLng([lat, lng]);
+      marker.setPopupContent(
+        `🕌 Lokasi dipilih<br>Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}<br>` +
+        `<strong>Azimuth kiblat: ${az.toFixed(1)}°</strong>`
+      ).openPopup();
+      // Scroll ke kalkulator
+      document.getElementById('kalkulator').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    peta.on('click', function(e) { prosesKoordinat(e.latlng.lat, e.latlng.lng); });
+    marker.on('dragend', function() {
+      const pos = marker.getLatLng();
+      prosesKoordinat(pos.lat, pos.lng);
+    });
+  };
+  script.onerror = function() {
+    placeholder.innerHTML = '<p style="color:#B91C1C">❌ Gagal memuat peta. Periksa koneksi internet.</p>';
+  };
+  document.head.appendChild(script);
+}
+</script>
+
+</body>
+</html>
