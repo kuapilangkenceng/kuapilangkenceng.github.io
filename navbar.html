@@ -1,0 +1,235 @@
+<!--
+  navbar.html — Navigasi Shared KUA Pilangkenceng
+  ================================================
+  CARA PAKAI di website publik (kuapilangkenceng.github.io):
+    <script src="https://kuapilangkenceng.github.io/config.js"></script>
+    <script>
+      fetch('https://kuapilangkenceng.github.io/navbar.html')
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('navbar-container').innerHTML = html;
+          initNavbar();
+        });
+    </script>
+    <div id="navbar-container"></div>
+
+  CARA PAKAI di PTSP (kuapilangkenceng.github.io/ptsp):
+    Sama, tapi tambahkan atribut data-mode="ptsp" pada container:
+    <div id="navbar-container" data-mode="ptsp"></div>
+
+  ATAU — cara lebih simpel: salin <nav> di bawah ini langsung ke setiap halaman.
+-->
+
+<style>
+  :root {
+    --kua-green   : #0F6E56;
+    --kua-green-lt: #E1F5EE;
+    --kua-amber   : #BA7517;
+    --nav-h       : 56px;
+  }
+
+  .kua-nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    height: var(--nav-h);
+    background: var(--kua-green);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+
+  .kua-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+
+  .kua-nav__logo {
+    width: 32px;
+    height: 32px;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .kua-nav__title {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .kua-nav__subtitle {
+    color: rgba(255,255,255,.7);
+    font-size: 10px;
+    font-weight: 400;
+  }
+
+  .kua-nav__links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+    list-style: none;
+    padding: 0;
+    margin-right: 0;
+  }
+
+  .kua-nav__links a {
+    color: rgba(255,255,255,.85);
+    text-decoration: none;
+    font-size: 13px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+
+  .kua-nav__links a:hover,
+  .kua-nav__links a.aktif {
+    background: rgba(255,255,255,.15);
+    color: white;
+  }
+
+  /* Tombol PTSP — highlight khusus */
+  .kua-nav__ptsp-btn {
+    background: var(--kua-amber) !important;
+    color: white !important;
+    font-weight: 500;
+    padding: 6px 14px !important;
+    margin-left: 8px;
+    transition: opacity .15s !important;
+  }
+  .kua-nav__ptsp-btn:hover {
+    opacity: .88;
+    background: var(--kua-amber) !important;
+  }
+
+  /* Tombol HOME — untuk halaman PTSP */
+  .kua-nav__home-btn {
+    background: rgba(255,255,255,.2) !important;
+    color: white !important;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+
+  /* Badge mode PTSP */
+  .kua-nav__badge {
+    background: var(--kua-amber);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 8px;
+    letter-spacing: .3px;
+  }
+
+  /* Mobile */
+  .kua-nav__toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .kua-nav__toggle { display: block; }
+    .kua-nav__links  {
+      display: none;
+      position: absolute;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: var(--kua-green);
+      flex-direction: column;
+      align-items: stretch;
+      padding: 8px 16px 16px;
+      gap: 4px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+    .kua-nav__links.open { display: flex; }
+    .kua-nav__links a    { padding: 10px 12px; }
+    .kua-nav__ptsp-btn   { margin-left: 0; text-align: center; }
+  }
+</style>
+
+<!-- ===== NAVBAR PUBLIK (default) ===== -->
+<nav class="kua-nav" id="kua-navbar">
+  <a class="kua-nav__brand" href="https://kuapilangkenceng.github.io">
+    <div class="kua-nav__logo">🕌</div>
+    <div>
+      <div class="kua-nav__title">KUA Pilangkenceng</div>
+      <div class="kua-nav__subtitle">Kab. Madiun · Jawa Timur</div>
+    </div>
+  </a>
+
+  <button class="kua-nav__toggle" onclick="toggleNav()" aria-label="Buka menu">☰</button>
+
+  <ul class="kua-nav__links" id="kua-nav-links">
+    <li><a href="https://kuapilangkenceng.github.io" id="nav-beranda">Beranda</a></li>
+    <li><a href="https://kuapilangkenceng.github.io/profil.html">Profil</a></li>
+    <li><a href="https://kuapilangkenceng.github.io/layanan.html">Layanan</a></li>
+    <li><a href="https://kuapilangkenceng.github.io/artikel.html">Artikel</a></li>
+    <li>
+      <a href="https://kuapilangkenceng.github.io/ptsp"
+         class="kua-nav__ptsp-btn"
+         title="Buka Pelayanan Terpadu Satu Pintu">
+        📋 Daftar Layanan
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  /* ── Auto-highlight link aktif ── */
+  (function() {
+    const path = window.location.pathname;
+    document.querySelectorAll('.kua-nav__links a').forEach(a => {
+      try {
+        const linkPath = new URL(a.href).pathname;
+        if (linkPath === path || (path === "/" && linkPath === "/")) {
+          a.classList.add('aktif');
+        }
+      } catch(_) {}
+    });
+  })();
+
+  /* ── Deteksi mode PTSP — tambahkan badge jika di /ptsp ── */
+  (function() {
+    if (window.location.pathname.startsWith('/ptsp')) {
+      const brand = document.querySelector('.kua-nav__brand');
+      if (brand) {
+        const badge = document.createElement('span');
+        badge.className = 'kua-nav__badge';
+        badge.textContent = 'PTSP';
+        brand.appendChild(badge);
+      }
+
+      // Ubah tombol PTSP jadi tombol kembali ke HOME
+      const ptspBtn = document.querySelector('.kua-nav__ptsp-btn');
+      if (ptspBtn) {
+        ptspBtn.href      = 'https://kuapilangkenceng.github.io';
+        ptspBtn.textContent = '🏠 Website KUA';
+        ptspBtn.classList.remove('kua-nav__ptsp-btn');
+        ptspBtn.classList.add('kua-nav__home-btn');
+      }
+    }
+  })();
+
+  /* ── Toggle mobile menu ── */
+  function toggleNav() {
+    document.getElementById('kua-nav-links').classList.toggle('open');
+  }
+</script>
