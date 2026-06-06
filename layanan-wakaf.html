@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layanan Wakaf — KUA Kecamatan Pilangkenceng</title>
+  <meta name="description" content="Layanan Wakaf KUA Pilangkenceng: Ikrar Wakaf (e-AIW) dan Penggantian Nadzir untuk pengelolaan aset wakaf di Kecamatan Pilangkenceng, Kabupaten Madiun.">
+  <meta name="keywords" content="Wakaf, Ikrar Wakaf, e-AIW, Nadzir, KUA Pilangkenceng, Madiun, AIW, Tanah Wakaf">
+  <meta property="og:title" content="Layanan Wakaf — KUA Kecamatan Pilangkenceng">
+  <meta property="og:description" content="Daftarkan Ikrar Wakaf (e-AIW) dan Penggantian Nadzir secara digital melalui PTSP KUA Pilangkenceng.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kuapilangkenceng.github.io/layanan-wakaf.html">
+  <link rel="canonical" href="https://kuapilangkenceng.github.io/layanan-wakaf.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hijau-tua: #1b5e35;
+      --hijau: #237a3e;
+      --hijau-muda: #2ea04f;
+      --hijau-terang: #eaf5ee;
+      --hijau-border: #c3dfc9;
+      --emas: #c9a030;
+      --emas-muda: #fdf3dc;
+      --putih: #ffffff;
+      --abu: #f4f6f4;
+      --teks: #1a2b1e;
+      --teks-abu: #536356;
+      --teks-ringan: #8fa392;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --font-display: 'Playfair Display', serif;
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--teks); background: var(--putih); font-size: 14px; line-height: 1.65; }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: var(--hijau-tua);
+      position: sticky; top: 0; z-index: 1000;
+      border-bottom: 2px solid rgba(201,160,48,0.4);
+    }
+    .navbar-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 64px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; }
+    .nav-logo {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--emas); display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .nav-brand-text strong { display: block; font-size: 13px; font-weight: 700; color: #fff; line-height: 1.25; }
+    .nav-brand-text span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+    .nav-links a {
+      color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 500;
+      padding: 4px 0; border-bottom: 2px solid transparent; transition: all .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--emas); border-bottom-color: var(--emas); }
+    .btn-ptsp {
+      background: var(--emas); color: var(--hijau-tua);
+      padding: 8px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+      display: flex; align-items: center; gap: 6px; border: none; cursor: pointer;
+      transition: opacity .2s; white-space: nowrap;
+    }
+    .btn-ptsp:hover { opacity: .88; }
+
+    /* ── HERO WAKAF ── */
+    .hero {
+      background: var(--hijau-tua);
+      min-height: 360px; display: flex; align-items: center;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--hijau-tua) 0%, #1f6b38 45%, rgba(35,122,62,0.85) 100%);
+    }
+    .hero-pattern {
+      position: absolute; inset: 0; opacity: 0.06;
+      background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%);
+      background-size: 20px 20px;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;
+      position: relative; z-index: 1; width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(201,160,48,0.2); border: 1px solid rgba(201,160,48,0.45);
+      color: var(--emas); padding: 4px 14px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: .5px; margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display); color: #fff;
+      font-size: 2.4rem; line-height: 1.2; margin-bottom: .75rem;
+    }
+    .hero-tagline {
+      color: var(--emas); font-style: italic; font-size: 1rem;
+      font-weight: 500; margin-bottom: 1rem;
+    }
+    .hero p { color: rgba(255,255,255,0.75); font-size: 13.5px; margin-bottom: 1.75rem; max-width: 440px; }
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-hero-primary {
+      background: var(--emas); color: var(--hijau-tua);
+      padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 13px;
+      display: inline-flex; align-items: center; gap: 7px; transition: opacity .2s;
+    }
+    .btn-hero-primary:hover { opacity: .88; }
+    .btn-hero-outline {
+      background: transparent; color: #fff;
+      padding: 11px 22px; border-radius: 8px; font-weight: 600; font-size: 13px;
+      border: 1.5px solid rgba(255,255,255,0.45); transition: border-color .2s;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-hero-outline:hover { border-color: rgba(255,255,255,0.8); }
+    .hero-stats { display: flex; gap: 2rem; margin-top: 2rem; }
+    .hero-stat strong { display: block; font-size: 1.6rem; font-weight: 700; color: var(--emas); }
+    .hero-stat span { font-size: 11px; color: rgba(255,255,255,0.6); }
+
+    /* Hero right card */
+    .hero-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg); padding: 1.5rem; backdrop-filter: blur(4px);
+    }
+    .hero-card h3 { color: var(--emas); font-size: 13px; font-weight: 700; letter-spacing: .3px; margin-bottom: 1rem; }
+    .surat-list { list-style: none; }
+    .surat-list li {
+      display: flex; align-items: flex-start; gap: 8px;
+      color: rgba(255,255,255,0.8); font-size: 12px; padding: 5px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .surat-list li:last-child { border-bottom: none; }
+    .surat-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(201,160,48,0.25); border: 1px solid rgba(201,160,48,0.4);
+      color: var(--emas); display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      background: var(--abu); border-bottom: 1px solid var(--hijau-border);
+      padding: .625rem 1.5rem;
+    }
+    .breadcrumb-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--teks-abu);
+    }
+    .breadcrumb-inner a { color: var(--hijau); font-weight: 500; }
+    .breadcrumb-inner a:hover { text-decoration: underline; }
+    .breadcrumb-sep { opacity: .4; }
+
+    /* ── SECTION BASE ── */
+    section { padding: 3rem 1.5rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-hd { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
+    .section-title {
+      font-size: 1.25rem; font-weight: 700; color: var(--teks);
+      padding-bottom: .4rem; position: relative;
+    }
+    .section-title::after {
+      content: ''; position: absolute; left: 0; bottom: 0;
+      width: 36px; height: 3px; background: var(--hijau); border-radius: 2px;
+    }
+
+    /* ── LAYANAN CARDS (2 sub-layanan utama) ── */
+    .layanan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .lcard {
+      border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+      overflow: hidden; background: var(--putih);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .lcard:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(27,94,53,.1); }
+    .lcard-thumb {
+      height: 140px; background: var(--hijau-terang);
+      display: flex; align-items: center; justify-content: center; font-size: 54px;
+      position: relative;
+    }
+    .lcard-phase {
+      position: absolute; top: 10px; right: 10px;
+      background: var(--hijau); color: #fff; font-size: 10px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px; letter-spacing: .3px;
+    }
+    .lcard-body { padding: 1.125rem 1.25rem 1.25rem; }
+    .lbadge {
+      display: inline-block; background: var(--hijau-terang); color: var(--hijau);
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      letter-spacing: .3px; margin-bottom: .5rem;
+    }
+    .lbadge-emas {
+      display: inline-block; background: var(--emas-muda); color: #a07820;
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      letter-spacing: .3px; margin-bottom: .5rem;
+    }
+    .lcard-body h3 { font-size: 15px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .35rem; }
+    .lcard-body > p { font-size: 12.5px; color: var(--teks-abu); margin-bottom: 1rem; line-height: 1.6; }
+    .cklist { list-style: none; margin-bottom: 1rem; }
+    .cklist li { font-size: 12px; color: var(--teks-abu); display: flex; align-items: baseline; gap: 6px; padding: 3px 0; }
+    .cklist li::before { content: '✓'; color: var(--hijau-muda); font-weight: 700; font-size: 11px; flex-shrink: 0; }
+    .btn-lcard {
+      background: var(--hijau); color: #fff; border: none;
+      padding: 10px 16px; border-radius: 7px; font-size: 12.5px; font-weight: 600;
+      cursor: pointer; width: 100%; transition: background .2s; display: block; text-align: center;
+    }
+    .btn-lcard:hover { background: var(--hijau-tua); }
+
+    /* Dokumen accordion */
+    .dok-section { margin-top: 1rem; border-top: 1px solid var(--hijau-border); padding-top: .875rem; }
+    .dok-title { font-size: 11.5px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .5rem; }
+    .dok-grid { display: flex; flex-wrap: wrap; gap: 5px; }
+    .dok-chip {
+      display: flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 500;
+      color: var(--teks-abu); background: var(--abu); border: 1px solid var(--hijau-border);
+      padding: 3px 9px; border-radius: 20px;
+    }
+    .dok-chip .dok-ic { color: var(--hijau); font-size: 11px; }
+
+    /* ── PERSYARATAN DOKUMEN (accordion) ── */
+    .syarat-section { background: var(--abu); }
+    .syarat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .syarat-card {
+      background: var(--putih); border: 1px solid var(--hijau-border);
+      border-radius: var(--radius-lg); overflow: hidden;
+    }
+    .syarat-head {
+      background: var(--hijau-terang); border-bottom: 1px solid var(--hijau-border);
+      padding: .875rem 1.125rem; display: flex; align-items: center; gap: 10px;
+      cursor: pointer; user-select: none;
+    }
+    .syarat-head-icon { font-size: 24px; flex-shrink: 0; }
+    .syarat-head-text h4 { font-size: 13px; font-weight: 700; color: var(--hijau-tua); }
+    .syarat-head-text span { font-size: 11px; color: var(--teks-abu); }
+    .syarat-toggle {
+      margin-left: auto; font-size: 14px; color: var(--hijau);
+      transition: transform .25s; font-weight: 700;
+    }
+    .syarat-head.open .syarat-toggle { transform: rotate(180deg); }
+    .syarat-body { padding: .875rem 1.125rem; display: none; }
+    .syarat-body.open { display: block; }
+    .syarat-body ol { padding-left: 1.2rem; }
+    .syarat-body li { font-size: 12px; color: var(--teks-abu); padding: 3px 0; line-height: 1.55; }
+    .syarat-body li strong { color: var(--teks); }
+    .syarat-note {
+      margin-top: .75rem; background: var(--emas-muda); border: 1px solid rgba(201,160,48,0.3);
+      border-radius: 8px; padding: 8px 12px; font-size: 11px; color: #7a5a10;
+    }
+
+    /* ── 7 SURAT PENDUKUNG ── */
+    .surat-section { }
+    .surat-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .875rem; }
+    .surat-card {
+      background: var(--putih); border: 1px solid var(--hijau-border);
+      border-radius: var(--radius-lg); padding: 1rem 1.125rem;
+      transition: transform .2s, box-shadow .2s; display: flex; align-items: flex-start; gap: 10px;
+    }
+    .surat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(27,94,53,.08); }
+    .surat-card-num {
+      width: 34px; height: 34px; border-radius: 8px; flex-shrink: 0;
+      background: var(--hijau-terang); border: 1.5px solid var(--hijau-border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--hijau-tua);
+    }
+    .surat-card h4 { font-size: 12.5px; font-weight: 700; color: var(--hijau-tua); margin-bottom: 3px; line-height: 1.35; }
+    .surat-card p { font-size: 11px; color: var(--teks-abu); line-height: 1.5; }
+    .surat-tag {
+      display: inline-block; font-size: 9.5px; font-weight: 700;
+      padding: 2px 7px; border-radius: 10px; margin-top: 5px; letter-spacing: .2px;
+    }
+    .tag-per { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .tag-org { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+    .tag-both { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+    .tag-bnp { background: var(--emas-muda); color: #7a5a10; border: 1px solid rgba(201,160,48,0.4); }
+
+    /* ── ALUR ── */
+    .alur-section { background: var(--abu); }
+    .alur-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .875rem; }
+    .alur-card {
+      background: var(--hijau-terang); border: 1px solid var(--hijau-border);
+      border-radius: var(--radius-lg); padding: 1.125rem; text-align: center;
+    }
+    .alur-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--hijau); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; margin: 0 auto .625rem;
+    }
+    .alur-icon { font-size: 26px; margin-bottom: .5rem; }
+    .alur-card h4 { font-size: 12px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .25rem; }
+    .alur-card p { font-size: 11px; color: var(--teks-abu); line-height: 1.5; }
+
+    /* ── INFO PENTING ── */
+    .info-section { }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .info-box {
+      border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+      padding: 1.25rem; background: var(--putih);
+    }
+    .info-box h4 { font-size: 13px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .75rem; display: flex; align-items: center; gap: 7px; }
+    .info-box ul { list-style: none; }
+    .info-box li {
+      font-size: 12px; color: var(--teks-abu); padding: 4px 0;
+      border-bottom: 1px solid var(--hijau-border); display: flex; align-items: flex-start; gap: 6px;
+    }
+    .info-box li:last-child { border-bottom: none; }
+    .info-box li::before { content: '→'; color: var(--hijau); font-weight: 700; flex-shrink: 0; }
+    .info-emas {
+      background: var(--emas-muda); border: 1px solid rgba(201,160,48,0.35);
+      border-radius: var(--radius-lg); padding: 1.25rem;
+    }
+    .info-emas h4 { color: #7a5a10; }
+    .info-emas li { border-bottom-color: rgba(201,160,48,0.2); color: #6a4a08; }
+    .info-emas li::before { color: #b0861a; }
+
+    /* ── WA CENTER ── */
+    .wa-section { background: var(--hijau-terang); border-top: 1px solid var(--hijau-border); }
+    .wa-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .wa-text h3 { font-size: 1.1rem; font-weight: 700; color: var(--hijau-tua); margin-bottom: .25rem; }
+    .wa-text p { font-size: 13px; color: var(--teks-abu); }
+    .wa-btn {
+      background: #25D366; color: #fff; padding: 12px 24px;
+      border-radius: 8px; font-weight: 700; font-size: 14px;
+      display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+      transition: opacity .2s;
+    }
+    .wa-btn:hover { opacity: .88; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--hijau-tua); color: #fff; padding: 2.5rem 1.5rem 1.5rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2rem; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: .875rem; }
+    .footer-logo {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--emas); display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .footer-brand-name { font-size: 13px; font-weight: 700; }
+    .footer-brand-sub { font-size: 10px; opacity: .6; }
+    footer p { font-size: 12px; opacity: .7; line-height: 1.65; margin-bottom: .35rem; }
+    footer h4 { font-size: 11.5px; font-weight: 700; color: var(--emas); margin-bottom: .75rem; letter-spacing: .4px; }
+    footer ul { list-style: none; }
+    footer ul li { font-size: 12px; opacity: .72; padding: 3px 0; cursor: pointer; transition: opacity .2s; }
+    footer ul li:hover { opacity: 1; color: var(--emas); }
+    .fjam-row { display: flex; justify-content: space-between; font-size: 11.5px; opacity: .72; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .fjam-row:last-child { border-bottom: none; }
+    .sosmed { display: flex; gap: 8px; margin-top: .875rem; }
+    .smd-btn {
+      width: 32px; height: 32px; border-radius: 7px;
+      background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center;
+      font-size: 14px; cursor: pointer; transition: background .2s; font-weight: 700;
+    }
+    .smd-btn:hover { background: var(--emas); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1); padding-top: 1.25rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .footer-bottom p { font-size: 11px; opacity: .45; margin: 0; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🕌</div>
+      <div class="nav-brand-text">
+        <strong>KUA PILANGKENCENG</strong>
+        <span>Kantor Urusan Agama — Kab. Madiun</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="index.html#profil">Profil</a>
+      <a href="index.html#layanan">Layanan</a>
+      <a href="layanan-nikah.html">Nikah</a>
+      <a href="layanan-wakaf.html" class="active">Wakaf</a>
+      <a href="index.html#kontak">Kontak</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" class="btn-ptsp" target="_blank">
+        🔒 Login Petugas
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ BREADCRUMB ═══ -->
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">🏠 Beranda</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>Layanan Wakaf</span>
+  </div>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">🕌 Layanan Wakaf Digital — KUA Pilangkenceng</div>
+      <h1>Ikrar Wakaf<br>Lebih Mudah &<br>Terdigitalisasi</h1>
+      <p class="hero-tagline">"Wakaf Anda, Manfaat Abadi untuk Umat"</p>
+      <p>Urus permohonan Ikrar Wakaf (e-AIW) dan Penggantian Nadzir secara digital melalui sistem PTSP KUA Pilangkenceng. Proses lebih cepat, dokumen lebih teratur.</p>
+      <div class="hero-btns">
+        <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-hero-primary">
+          📋 Daftar Wakaf Online →
+        </a>
+        <a href="#layanan-wakaf" class="btn-hero-outline">Lihat Layanan</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>2</strong><span>Sub-Layanan</span></div>
+        <div class="hero-stat"><strong>11</strong><span>Template Dokumen</span></div>
+        <div class="hero-stat"><strong>e-AIW</strong><span>Sistem Digital</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="hero-card">
+        <h3>📄 SURAT PENDUKUNG WAKAF</h3>
+        <ul class="surat-list">
+          <li><div class="surat-num">1</div><span>Pernyataan Bersedia Diaudit</span></li>
+          <li><div class="surat-num">2</div><span>Kesediaan Nadzir Perorangan</span></li>
+          <li><div class="surat-num">3</div><span>Pernyataan Tanah Tidak Sengketa</span></li>
+          <li><div class="surat-num">4</div><span>Daftar Harta Kekayaan Nadzir</span></li>
+          <li><div class="surat-num">5</div><span>Perwakilan Nadzir Organisasi</span></li>
+          <li><div class="surat-num">6</div><span>Pengantar ke BPN</span></li>
+          <li><div class="surat-num">7</div><span>Pengesahan Nadzir oleh KUA</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2 SUB LAYANAN UTAMA ═══ -->
+<section id="layanan-wakaf">
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">Sub-Layanan Wakaf</p>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" style="font-size:12px;color:var(--hijau);font-weight:600">Daftar via PTSP →</a>
+    </div>
+    <div class="layanan-grid reveal">
+
+      <!-- IKRAR WAKAF -->
+      <div class="lcard">
+        <div class="lcard-thumb" style="background: linear-gradient(135deg, #eaf5ee 0%, #d4eddb 100%);">
+          🕌
+          <span class="lcard-phase">FASE 7 — AKTIF</span>
+        </div>
+        <div class="lcard-body">
+          <span class="lbadge">LAYANAN WAKAF</span>
+          <h3>Permohonan Ikrar Wakaf (e-AIW)</h3>
+          <p>Layanan digital untuk proses Ikrar Wakaf secara resmi melalui KUA Pilangkenceng. Sistem e-AIW memudahkan pencatatan akta ikrar wakaf dengan 7 surat pendukung yang digenerate otomatis.</p>
+          <ul class="cklist">
+            <li>Formulir lengkap data wakif & tanah wakaf</li>
+            <li>Data nadzir: perseorangan, organisasi, atau badan hukum</li>
+            <li>Input data saksi 1 & 2 secara digital</li>
+            <li>7 surat pendukung tergenerate otomatis</li>
+            <li>Pilihan: nadzir perorangan atau organisasi</li>
+            <li>Sistem deteksi otomatis jenis template</li>
+          </ul>
+          <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-lcard">Daftar Ikrar Wakaf →</a>
+          <div class="dok-section">
+            <p class="dok-title">📄 Dokumen yang Digenerate:</p>
+            <div class="dok-grid">
+              <span class="dok-chip"><span class="dok-ic">✓</span> Pernyataan Diaudit</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Kesediaan Nadzir</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Tanah Tidak Sengketa</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Harta Kekayaan</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Pengantar BPN</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Pengesahan Nadzir</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PENGGANTIAN NADZIR -->
+      <div class="lcard">
+        <div class="lcard-thumb" style="background: linear-gradient(135deg, #fdf3dc 0%, #f5e4b8 100%);">
+          🔄
+          <span class="lcard-phase" style="background:var(--emas);color:var(--hijau-tua)">FASE 7 — AKTIF</span>
+        </div>
+        <div class="lcard-body">
+          <span class="lbadge-emas">PERUBAHAN NADZIR</span>
+          <h3>Penggantian Nadzir Wakaf</h3>
+          <p>Layanan penggantian pengurus nadzir wakaf apabila terjadi pergantian karena meninggal, tidak aktif, atau mengundurkan diri sesuai ketentuan perwakafan yang berlaku.</p>
+          <ul class="cklist">
+            <li>Referensi nomor AIW lama yang tercatat</li>
+            <li>Alasan penggantian nadzir yang jelas</li>
+            <li>Data nadzir baru lengkap dengan identitas</li>
+            <li>Data saksi untuk pengesahan penggantian</li>
+            <li>Generate SK Penggantian Nadzir otomatis</li>
+            <li>Tercatat resmi di sistem KUA Pilangkenceng</li>
+          </ul>
+          <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-lcard">Daftar Penggantian Nadzir →</a>
+          <div class="dok-section">
+            <p class="dok-title">📄 Dokumen yang Digenerate:</p>
+            <div class="dok-grid">
+              <span class="dok-chip"><span class="dok-ic">✓</span> SK Penggantian Nadzir</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Berita Acara</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7 SURAT PENDUKUNG ═══ -->
+<section class="surat-section" style="background:var(--abu);">
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">7 Surat Pendukung Wakaf</p>
+      <span style="font-size:12px;color:var(--teks-abu)">Generate otomatis oleh sistem PTSP</span>
+    </div>
+    <div class="surat-cards reveal">
+      <div class="surat-card">
+        <div class="surat-card-num">1</div>
+        <div>
+          <h4>Pernyataan Bersedia Diaudit</h4>
+          <p>Surat pernyataan wakif/nadzir bersedia diaudit oleh pejabat berwenang atas pengelolaan aset wakaf.</p>
+          <span class="surat-tag tag-both">Perorangan & Organisasi</span>
+        </div>
+      </div>
+      <div class="surat-card">
+        <div class="surat-card-num">2</div>
+        <div>
+          <h4>Kesediaan Nadzir Perorangan</h4>
+          <p>Pernyataan resmi kesediaan nadzir perorangan untuk mengelola aset wakaf sesuai peruntukan.</p>
+          <span class="surat-tag tag-per">Perorangan</span>
+        </div>
+      </div>
+      <div class="surat-card">
+        <div class="surat-card-num">3</div>
+        <div>
+          <h4>Tanah Tidak dalam Sengketa</h4>
+          <p>Pernyataan bahwa tanah yang diwakafkan bebas dari sengketa dan tidak dalam jaminan pihak lain.</p>
+          <span class="surat-tag tag-both">Perorangan & Organisasi</span>
+        </div>
+      </div>
+      <div class="surat-card">
+        <div class="surat-card-num">4</div>
+        <div>
+          <h4>Daftar Harta Kekayaan Nadzir</h4>
+          <p>Daftar lengkap harta kekayaan nadzir sebagai salah satu syarat administratif pengesahan nadzir.</p>
+          <span class="surat-tag tag-org">Organisasi</span>
+        </div>
+      </div>
+      <div class="surat-card">
+        <div class="surat-card-num">5</div>
+        <div>
+          <h4>Perwakilan Nadzir Organisasi</h4>
+          <p>Surat kuasa atau perwakilan dari pengurus organisasi/badan hukum yang bertindak sebagai nadzir.</p>
+          <span class="surat-tag tag-org">Organisasi</span>
+        </div>
+      </div>
+      <div class="surat-card">
+        <div class="surat-card-num">6</div>
+        <div>
+          <h4>Pengantar ke BPN</h4>
+          <p>Surat pengantar dari KUA kepada Badan Pertanahan Nasional untuk proses sertifikasi tanah wakaf.</p>
+          <span class="surat-tag tag-bnp">Ke BPN</span>
+        </div>
+      </div>
+      <div class="surat-card">
+        <div class="surat-card-num">7</div>
+        <div>
+          <h4>Pengesahan Nadzir oleh KUA</h4>
+          <p>Surat pengesahan resmi dari Kepala KUA Pilangkenceng yang melegitimasi nadzir wakaf yang ditunjuk.</p>
+          <span class="surat-tag tag-both">Perorangan & Organisasi</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PERSYARATAN DOKUMEN ═══ -->
+<section class="syarat-section">
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">Persyaratan Dokumen</p>
+    </div>
+    <div class="syarat-grid reveal">
+      <!-- Ikrar Wakaf -->
+      <div class="syarat-card">
+        <div class="syarat-head open" onclick="toggleSyarat(this)">
+          <span class="syarat-head-icon">🕌</span>
+          <div class="syarat-head-text">
+            <h4>Ikrar Wakaf (e-AIW)</h4>
+            <span>Persyaratan untuk Wakif & Nadzir</span>
+          </div>
+          <span class="syarat-toggle">▼</span>
+        </div>
+        <div class="syarat-body open">
+          <ol>
+            <li><strong>Fotokopi KTP Wakif</strong> yang masih berlaku</li>
+            <li><strong>Fotokopi Kartu Keluarga</strong> Wakif</li>
+            <li><strong>Sertifikat Tanah / Letter C</strong> atau bukti kepemilikan tanah</li>
+            <li><strong>Nomor Induk Bidang (NIB)</strong> dari BPN jika tersedia</li>
+            <li><strong>Foto tanah</strong> yang akan diwakafkan</li>
+            <li><strong>KTP Nadzir</strong> (minimal 3 orang untuk nadzir perorangan)</li>
+            <li><strong>Akta organisasi/badan hukum</strong> (untuk nadzir organisasi)</li>
+            <li><strong>KTP Saksi 1 & 2</strong> yang hadir saat ikrar</li>
+          </ol>
+          <div class="syarat-note">
+            💡 Sistem otomatis menentukan template dokumen berdasarkan jenis nadzir (perorangan atau organisasi).
+          </div>
+        </div>
+      </div>
+
+      <!-- Penggantian Nadzir -->
+      <div class="syarat-card">
+        <div class="syarat-head" onclick="toggleSyarat(this)">
+          <span class="syarat-head-icon">🔄</span>
+          <div class="syarat-head-text">
+            <h4>Penggantian Nadzir</h4>
+            <span>Persyaratan perubahan pengurus nadzir</span>
+          </div>
+          <span class="syarat-toggle">▼</span>
+        </div>
+        <div class="syarat-body">
+          <ol>
+            <li><strong>Nomor AIW lama</strong> yang tercatat di KUA</li>
+            <li><strong>Alasan penggantian</strong> nadzir (meninggal/tidak aktif/mengundurkan diri)</li>
+            <li><strong>Surat keterangan</strong> pendukung alasan penggantian</li>
+            <li><strong>KTP Nadzir Baru</strong> beserta data lengkap</li>
+            <li><strong>KTP Saksi</strong> yang hadir dalam proses penggantian</li>
+            <li><strong>Berita acara</strong> musyawarah penggantian (jika ada)</li>
+          </ol>
+          <div class="syarat-note">
+            💡 Penggantian nadzir harus merujuk pada nomor AIW lama agar tercatat dalam satu berkas wakaf yang sama.
+          </div>
+        </div>
+      </div>
+
+      <!-- Wakaf Tanah Perorangan -->
+      <div class="syarat-card">
+        <div class="syarat-head" onclick="toggleSyarat(this)">
+          <span class="syarat-head-icon">👤</span>
+          <div class="syarat-head-text">
+            <h4>Nadzir Perorangan</h4>
+            <span>Syarat khusus nadzir perseorangan</span>
+          </div>
+          <span class="syarat-toggle">▼</span>
+        </div>
+        <div class="syarat-body">
+          <ol>
+            <li><strong>Warga Negara Indonesia</strong> yang beragama Islam</li>
+            <li><strong>Dewasa dan cakap hukum</strong> (minimal 21 tahun)</li>
+            <li><strong>Tidak di bawah perwalian</strong> pengampuan</li>
+            <li><strong>Bertempat tinggal</strong> di kecamatan tempat wakaf berada</li>
+            <li><strong>Minimal 3 orang</strong> sebagai nadzir perorangan</li>
+            <li><strong>Salah satu menjadi Ketua</strong> nadzir yang bertanggung jawab</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Wakaf Tanah Organisasi -->
+      <div class="syarat-card">
+        <div class="syarat-head" onclick="toggleSyarat(this)">
+          <span class="syarat-head-icon">🏛️</span>
+          <div class="syarat-head-text">
+            <h4>Nadzir Organisasi</h4>
+            <span>Syarat khusus nadzir berbentuk organisasi</span>
+          </div>
+          <span class="syarat-toggle">▼</span>
+        </div>
+        <div class="syarat-body">
+          <ol>
+            <li><strong>Berbadan hukum</strong> sesuai peraturan perundangan</li>
+            <li><strong>Bergerak di bidang</strong> sosial, pendidikan, kemasyarakatan, atau keagamaan Islam</li>
+            <li><strong>Akta pendirian organisasi</strong> yang masih berlaku</li>
+            <li><strong>Surat keputusan</strong> pengurus yang berwenang</li>
+            <li><strong>NPWP organisasi</strong> (jika ada)</li>
+            <li><strong>SK Perwakilan</strong> siapa yang mewakili organisasi dalam ikrar</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ALUR PENDAFTARAN ═══ -->
+<section class="alur-section">
+  <div class="container">
+    <div class="section-hd"><p class="section-title">Alur Pendaftaran Layanan Wakaf</p></div>
+    <div class="alur-grid reveal">
+      <div class="alur-card">
+        <div class="alur-num">1</div>
+        <div class="alur-icon">📝</div>
+        <h4>Isi Form Online</h4>
+        <p>Lengkapi data wakif, tanah, nadzir, dan saksi melalui form PTSP digital</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">2</div>
+        <div class="alur-icon">📂</div>
+        <h4>Upload Berkas</h4>
+        <p>Upload foto/scan KTP, sertifikat tanah, dan dokumen pendukung lainnya</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">3</div>
+        <div class="alur-icon">✅</div>
+        <h4>Verifikasi Petugas</h4>
+        <p>Petugas KUA memverifikasi data dan kelengkapan berkas yang diajukan</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">4</div>
+        <div class="alur-icon">📄</div>
+        <h4>Jadwal Ikrar</h4>
+        <p>KUA menentukan jadwal pelaksanaan ikrar wakaf di hadapan PPAIW</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">5</div>
+        <div class="alur-icon">🎉</div>
+        <h4>AIW Terbit</h4>
+        <p>Akta Ikrar Wakaf (AIW) diterbitkan, surat pendukung dapat diunduh</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1.25rem">
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-lcard" style="display:inline-block;width:auto;padding:10px 28px">
+        Mulai Pendaftaran Wakaf →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ INFO PENTING ═══ -->
+<section class="info-section">
+  <div class="container">
+    <div class="section-hd"><p class="section-title">Informasi Penting Wakaf</p></div>
+    <div class="info-grid reveal">
+      <div class="info-box">
+        <h4>📋 Jenis Wakaf yang Dilayani</h4>
+        <ul>
+          <li>Wakaf tanah hak milik perorangan</li>
+          <li>Wakaf tanah Letter C / girik</li>
+          <li>Wakaf dengan nadzir perorangan (min. 3 orang)</li>
+          <li>Wakaf dengan nadzir organisasi/badan hukum</li>
+          <li>Penggantian nadzir wakaf yang sudah terdaftar</li>
+          <li>Konsultasi pra-wakaf secara langsung di KUA</li>
+        </ul>
+      </div>
+      <div class="info-emas">
+        <h4>⚠️ Perlu Diperhatikan</h4>
+        <ul>
+          <li>Tanah yang diwakafkan harus bebas dari sengketa dan jaminan hutang</li>
+          <li>Wakif harus hadir langsung saat ikrar wakaf di hadapan PPAIW KUA</li>
+          <li>Nama Kepala Desa pada dokumen diisi manual setelah dokumen diterima</li>
+          <li>Proses sertifikasi tanah wakaf ke BPN dilakukan setelah AIW terbit</li>
+          <li>Untuk nadzir organisasi, pastikan bawa SK pengurus yang berlaku</li>
+        </ul>
+      </div>
+      <div class="info-box">
+        <h4>⏰ Estimasi Waktu Proses</h4>
+        <ul>
+          <li>Verifikasi berkas online: 1–2 hari kerja</li>
+          <li>Penjadwalan ikrar wakaf: 3–5 hari kerja</li>
+          <li>Penerbitan AIW setelah ikrar: 1 hari kerja</li>
+          <li>Proses ke BPN (sertifikasi): menyesuaikan BPN</li>
+          <li>Konsultasi langsung: sesuai jam pelayanan KUA</li>
+        </ul>
+      </div>
+      <div class="info-box" style="background:var(--hijau-terang);border-color:var(--hijau-border)">
+        <h4>📞 Hubungi Kami</h4>
+        <ul>
+          <li>WA Center KUA: 085119505451</li>
+          <li>Email: kuapilangkenceng@gmail.com</li>
+          <li>Jam pelayanan: Senin–Kamis 08.00–16.00</li>
+          <li>Jumat: 08.00–16.30 (istirahat 12.00–13.00)</li>
+          <li>Alamat: Jl. Tirtotejo, Ds. Kenongorejo, Pilangkenceng</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WA CENTER ═══ -->
+<section class="wa-section" id="kontak">
+  <div class="container">
+    <div class="wa-inner">
+      <div class="wa-text">
+        <h3>💬 Konsultasi Wakaf via WhatsApp</h3>
+        <p>Punya pertanyaan seputar wakaf? Hubungi petugas KUA Pilangkenceng langsung via WhatsApp untuk konsultasi cepat.</p>
+        <p style="margin-top:4px;font-size:12px;color:var(--hijau-tua);font-weight:600">📱 085119505451</p>
+      </div>
+      <a href="https://wa.me/6285119505451?text=Assalamu'alaikum%2C%20saya%20ingin%20konsultasi%20mengenai%20layanan%20wakaf%20di%20KUA%20Pilangkenceng." target="_blank" class="wa-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat via WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo">🕌</div>
+          <div>
+            <div class="footer-brand-name">KUA Kecamatan Pilangkenceng</div>
+            <div class="footer-brand-sub">Kantor Urusan Agama — Kemenag Kab. Madiun</div>
+          </div>
+        </div>
+        <p>Jl. Tirtotejo, Ds. Kenongorejo<br>Kec. Pilangkenceng, Kab. Madiun<br>Jawa Timur 63154</p>
+        <p style="margin-top:.5rem">📱 085119505451<br>✉️ kuapilangkenceng@gmail.com</p>
+        <div class="sosmed">
+          <div class="smd-btn">f</div>
+          <div class="smd-btn">ig</div>
+          <div class="smd-btn">yt</div>
+        </div>
+      </div>
+      <div>
+        <h4>TAUTAN CEPAT</h4>
+        <ul>
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="index.html#profil">Profil KUA</a></li>
+          <li><a href="layanan-nikah.html">Layanan Nikah</a></li>
+          <li><a href="layanan-wakaf.html">Layanan Wakaf</a></li>
+          <li><a href="index.html#informasi">Informasi</a></li>
+          <li><a href="index.html#kontak">Kontak</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>JAM PELAYANAN</h4>
+        <div class="fjam-row"><span>Senin – Kamis</span><span>08.00–16.00</span></div>
+        <div class="fjam-row"><span>Jumat</span><span>08.00–16.30</span></div>
+        <div class="fjam-row"><span>Istirahat</span><span>12.00–13.00</span></div>
+        <div class="fjam-row"><span>Sabtu–Minggu</span><span>Tutup</span></div>
+        <div style="margin-top:.875rem;background:rgba(201,160,48,0.12);border:1px solid rgba(201,160,48,0.3);border-radius:8px;padding:10px">
+          <p style="color:var(--emas);font-size:11px;font-weight:600;opacity:1;margin:0 0 3px">💬 WA Center KUA</p>
+          <p style="font-size:13px;font-weight:700;color:#fff;opacity:1;margin:0">085119505451</p>
+        </div>
+      </div>
+      <div>
+        <h4>PTSP DIGITAL</h4>
+        <ul>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Ikrar Wakaf Online</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Penggantian Nadzir</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Daftar Nikah Online</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Cek Status Berkas</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank">Ecotheology</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp/admin.html" target="_blank">Login Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun. All rights reserved.</p>
+      <p>v1.0 — Fase 7 PTSP Digital</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── ACCORDION SYARAT ── */
+  function toggleSyarat(head) {
+    const body = head.nextElementSibling;
+    const isOpen = head.classList.contains('open');
+    head.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── ACTIVE NAV ON SCROLL ── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) cur = s.id; });
+    navLinks.forEach(a => {
+      const href = a.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        a.classList.toggle('active', href === '#' + cur);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
