@@ -20,8 +20,8 @@ const KUA = {
     ptsp   : "https://kuapilangkenceng.github.io/ptsp",
 
     // Ganti dengan URL deploy Apps Script Anda
-    // Format: https://script.google.com/macros/s/XXXX/exec
-    api    : "https://script.google.com/macros/s/AKfycbwKEc2eRIAlvHywdGjC6RxSbjHQgIAZ5ATRvopLZuvqghy1AqXsRRkvO5SoisXTu7qR/exec",  // [WAJIB DIISI]
+    // Format: https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec
+    api    : "https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec",  // [WAJIB DIISI]
 
     // ID Google Sheets utama (ada di URL spreadsheet)
     sheetsId: "17TPFJ32oaWfqe4zW9uY8bPG1vfs56vOxr9g4DDJV_aY",            // [WAJIB DIISI]
