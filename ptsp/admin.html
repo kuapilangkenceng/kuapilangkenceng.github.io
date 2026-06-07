@@ -1764,8 +1764,10 @@ async function doPublish(id) {
     </div>
     <div class="modal-gen-foot">
       <button class="btn-gcancel" onclick="tutupModalGenerate()">Batal</button>
+      <button class="btn-ggo" id="btn-gselesai" style="display:none;background:linear-gradient(135deg,#1a6b45,#2d8c5e)"
+        onclick="doSelesaikanLayanan()">&#10003; Tandai Selesai</button>
       <button class="btn-ggo" id="btn-ggo" onclick="doGenerateDokumen()">
-        <span id="gen-btn-txt">📄 Generate</span>
+        <span id="gen-btn-txt">&#128196; Generate</span>
         <div class="sp-xs" id="gen-spin"></div>
       </button>
     </div>
@@ -1844,6 +1846,7 @@ function bukaModalGenerate(id, jenis, nama, label, existingUrl) {
   document.getElementById('inp-no-surat').classList.remove('invalid');
   document.getElementById('preview-no-surat').textContent = '—';
   document.getElementById('gen-result').style.display   = 'none';
+  document.getElementById('btn-gselesai').style.display  = 'none';
   document.getElementById('gen-link-extra').innerHTML    = '';
   if (existingUrl) {
     document.getElementById('gen-result').style.display = 'block';
@@ -1855,6 +1858,35 @@ function bukaModalGenerate(id, jenis, nama, label, existingUrl) {
 
 function tutupModalGenerate() {
   document.getElementById('modal-generate').classList.remove('show');
+  document.getElementById('btn-gselesai').style.display = 'none';
+}
+
+async function doSelesaikanLayanan() {
+  if (!_gId) return;
+  const btn = document.getElementById('btn-gselesai');
+  btn.disabled = true; btn.textContent = 'Menyimpan...';
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'updateStatus', id: _gId, status: 'Selesai', catatan_admin: 'Dokumen telah digenerate.' })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      // Update lokal
+      var rec = allData.find(function(r) { return r.id === _gId; });
+      if (rec) rec.status_layanan = 'Selesai';
+      filtered = filtered.map(function(r) { return r.id === _gId ? Object.assign({}, r, { status_layanan: 'Selesai' }) : r; });
+      renderTable(); renderRecent();
+      // Update badge
+      var baru = allData.filter(function(r) { return r.status_layanan === 'Baru'; }).length;
+      var badgeEl = document.getElementById('badge-baru');
+      badgeEl.textContent = baru; badgeEl.style.display = baru > 0 ? 'inline-flex' : 'none';
+      showToast('✅ Status "' + _gId + '" → Selesai');
+      tutupModalGenerate();
+    } else { showToast(data.error || 'Gagal update status.', true); }
+  } catch { showToast('❌ Tidak dapat terhubung ke server.', true); }
+  btn.disabled = false; btn.textContent = '&#10003; Tandai Selesai';
 }
 
 document.getElementById('modal-generate').addEventListener('click', function(e) {
@@ -1895,6 +1927,7 @@ async function doGenerateDokumen() {
       var rec = allData.find(function(r) { return r.id === _gId; });
       if (rec) rec.dok_url = data.url;
       showToast('✅ Dokumen berhasil digenerate!');
+      document.getElementById('btn-gselesai').style.display = 'flex';
     } else {
       showToast('❌ ' + (data.error || 'Gagal generate'), true);
     }
