@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Config global KUA -->
+  <script src="https://kuapilangkenceng.github.io/config.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PTSP Digital — KUA Kecamatan Pilangkenceng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── CSS Variables ── */
+:root {
+  --green:       #1a6b45;
+  --green-mid:   #2d8c5e;
+  --green-light: #e8f5ee;
+  --gold:        #c49a28;
+  --gold-light:  #fdf6e0;
+  --cream:       #fafaf7;
+  --ink:         #1a1a1a;
+  --ink-soft:    #4a4a4a;
+  --ink-muted:   #888;
+  --border:      #d8e5dc;
+  --border-mid:  #b8d4c2;
+  --red:         #c0392b;
+  --red-light:   #fdecea;
+  --white:       #ffffff;
+  --radius:      12px;
+  --radius-sm:   8px;
+  --shadow:      0 2px 16px rgba(26,107,69,.10);
+  --shadow-lg:   0 8px 40px rgba(26,107,69,.15);
+  --font-main:   'Plus Jakarta Sans', sans-serif;
+  --font-arabic: 'Amiri', serif;
+  --transition:  all .22s ease;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-main);
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── Header ── */
+header {
+  background: linear-gradient(135deg, var(--green) 0%, #14533a 100%);
+  color: var(--white);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,.25);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.header-logo {
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,.3);
+}
+.header-text { flex: 1; }
+.header-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  line-height: 1.2;
+}
+.header-sub {
+  font-size: 11.5px;
+  opacity: .78;
+  font-weight: 400;
+  margin-top: 1px;
+}
+.header-badge {
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+#btn-login-header {
+  background: rgba(255,255,255,.15);
+  color: var(--white);
+  border: 1.5px solid rgba(255,255,255,.35);
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  font-family: var(--font-main);
+}
+#btn-login-header:hover { background: rgba(255,255,255,.25); }
+#btn-login-header.active { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* ── Marquee ── */
+.marquee-bar {
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 0;
+  overflow: hidden;
+}
+.marquee-inner {
+  display: inline-flex;
+  animation: marquee 28s linear infinite;
+  white-space: nowrap;
+  gap: 60px;
+}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ── Main wrapper ── */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* ── Section Heading ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.section-desc {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin-bottom: 18px;
+}
+
+/* ── Role Tabs ── */
+.role-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.role-tab {
+  flex: 1;
+  padding: 14px 10px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  cursor: pointer;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.role-tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+  opacity: 0;
+  transition: var(--transition);
+}
+.role-tab.active { border-color: var(--green); box-shadow: 0 0 0 3px rgba(26,107,69,.12); }
+.role-tab.active::before { opacity: 1; }
+.role-tab-icon {
+  font-size: 26px;
+  display: block;
+  margin-bottom: 5px;
+  position: relative; z-index: 1;
+}
+.role-tab-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  position: relative; z-index: 1;
+  transition: var(--transition);
+}
+.role-tab-sub {
+  font-size: 11px;
+  color: var(--ink-muted);
+  position: relative; z-index: 1;
+  transition: var(--transition);
+}
+.role-tab.active .role-tab-label,
+.role-tab.active .role-tab-sub { color: var(--white); }
+
+/* ── Login box ── */
+#login-box {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  max-width: 400px;
+  margin: 0 auto 24px;
+  display: none;
+}
+#login-box h3 {
+  font-size: 16px; font-weight: 800;
+  color: var(--green); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.login-error {
+  background: var(--red-light);
+  color: var(--red);
+  padding: 9px 13px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  margin-bottom: 14px;
+  display: none;
+}
+
+/* ── Kategori Grid ── */
+.kategori-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.kategori-card {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+.kategori-card:hover {
+  border-color: var(--green-mid);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+.kategori-card.active {
+  border-color: var(--green);
+  background: var(--green-light);
+  box-shadow: 0 0 0 3px rgba(26,107,69,.1);
+}
+.kat-icon { font-size: 28px; display: block; margin-bottom: 6px; }
+.kat-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.kat-count {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 20px;
+}
+
+/* ── Layanan List ── */
+.layanan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.layanan-item {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.layanan-item:hover {
+  border-color: var(--green-mid);
+  background: var(--green-light);
+  transform: translateX(3px);
+}
+.layanan-item.active { border-color: var(--green); background: var(--green-light); }
+.layanan-num {
+  width: 28px; height: 28px;
+  background: var(--green-light);
+  color: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+  flex-shrink: 0;
+}
+.layanan-item.active .layanan-num { background: var(--green); color: var(--white); }
+.layanan-info { flex: 1; }
+.layanan-name { font-size: 13.5px; font-weight: 700; }
+.layanan-desc { font-size: 11.5px; color: var(--ink-muted); margin-top: 1px; }
+.layanan-arrow { color: var(--ink-muted); font-size: 16px; }
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.breadcrumb span { cursor: pointer; }
+.breadcrumb span:hover { color: var(--green); }
+.breadcrumb .sep { color: var(--border-mid); }
+.breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+/* ── Form Card ── */
+.form-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.form-card-header {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+  color: var(--white);
+  padding: 18px 22px;
+}
+.form-card-header h2 { font-size: 17px; font-weight: 800; }
+.form-card-header p { font-size: 12.5px; opacity: .85; margin-top: 3px; }
+.form-card-body { padding: 22px; }
+
+/* ── Form Groups ── */
+.form-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--green);
+  padding: 10px 0 8px;
+  border-bottom: 1.5px solid var(--green-light);
+  margin-bottom: 14px;
+  margin-top: 6px;
+}
+.form-group { margin-bottom: 16px; }
+.form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.form-label .req { color: var(--red); margin-left: 2px; }
+.form-help {
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  margin-top: 4px;
+  display: block;
+}
+.form-control {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font-main);
+  color: var(--ink);
+  background: var(--white);
+  transition: var(--transition);
+  outline: none;
+}
+.form-control:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(26,107,69,.1);
+}
+.form-control::placeholder { color: #bbb; }
+textarea.form-control { resize: vertical; min-height: 80px; }
+select.form-control { cursor: pointer; }
+
+/* Radio / Checkbox groups */
+.radio-group, .check-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radio-opt, .check-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 13.5px;
+}
+.radio-opt:hover, .check-opt:hover { border-color: var(--green-mid); background: var(--green-light); }
+.radio-opt input, .check-opt input { accent-color: var(--green); width: 16px; height: 16px; cursor: pointer; }
+.radio-opt.selected, .check-opt.selected { border-color: var(--green); background: var(--green-light); font-weight: 600; }
+
+/* Autocomplete */
+.autocomplete-wrap { position: relative; }
+.autocomplete-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  background: var(--white);
+  border: 1.5px solid var(--green);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  z-index: 50;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  display: none;
+}
+.autocomplete-item {
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.autocomplete-item:hover { background: var(--green-light); }
+.autocomplete-item:last-child { border-bottom: none; }
+
+/* Photo upload */
+.photo-upload-area {
+  border: 2px dashed var(--border-mid);
+  border-radius: var(--radius);
+  padding: 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+.photo-upload-area:hover { border-color: var(--green); background: var(--green-light); }
+.photo-upload-area.dragover { border-color: var(--green); background: var(--green-light); }
+.photo-upload-icon { font-size: 32px; margin-bottom: 8px; display: block; }
+.photo-upload-label { font-size: 13px; font-weight: 600; color: var(--green); }
+.photo-upload-sub { font-size: 11.5px; color: var(--ink-muted); margin-top: 3px; }
+.photo-input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.photo-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.photo-thumb {
+  width: 72px; height: 72px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 2px solid var(--border);
+  position: relative;
+  cursor: pointer;
+}
+.photo-thumb-wrap { position: relative; display: inline-block; }
+.photo-thumb-del {
+  position: absolute; top: -6px; right: -6px;
+  width: 18px; height: 18px;
+  background: var(--red);
+  color: white;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* ── Consent field ── */
+.consent-box {
+  background: var(--gold-light);
+  border: 1.5px solid #e5c84a;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+}
+
+/* ── Autofill banner ── */
+.autofill-banner {
+  background: var(--green-light);
+  border: 1.5px solid var(--green-mid);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12.5px;
+  color: var(--green);
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: none;
+}
+
+/* ── Submit button ── */
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--font-main);
+  cursor: pointer;
+  transition: var(--transition);
+  letter-spacing: .3px;
+  box-shadow: 0 4px 18px rgba(26,107,69,.3);
+}
+.btn-submit:hover:not(:disabled) { opacity: .9; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(26,107,69,.38); }
+.btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.btn-submit.loading::after {
+  content: '';
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--ink-soft);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: var(--transition);
+  font-family: var(--font-main);
+  margin-bottom: 14px;
+}
+.btn-back:hover { border-color: var(--green); color: var(--green); }
+
+/* ── Toast / Alert ── */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--green);
+  color: var(--white);
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  font-size: 14px; font-weight: 700;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: transform .3s ease;
+  max-width: 90vw;
+  text-align: center;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { background: var(--red); }
+
+/* ── Success screen ── */
+.success-screen {
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-icon { font-size: 64px; margin-bottom: 12px; animation: pop .4s ease; }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.success-id {
+  display: inline-block;
+  background: var(--green-light);
+  color: var(--green);
+  font-size: 22px; font-weight: 800;
+  padding: 12px 28px;
+  border-radius: var(--radius);
+  border: 2px solid var(--green-mid);
+  margin: 12px 0 8px;
+  letter-spacing: 1px;
+}
+.success-screen p { color: var(--ink-soft); font-size: 14px; margin-bottom: 20px; }
+.btn-ulang {
+  background: var(--green);
+  color: white;
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: var(--font-main);
+  transition: var(--transition);
+}
+.btn-ulang:hover { opacity: .9; }
+
+/* ── Info card ── */
+.info-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.info-card-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+.info-card-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.info-card-body p { font-size: 12.5px; color: var(--ink-soft); }
+
+/* ── Petugas session bar ── */
+.session-bar {
+  background: linear-gradient(90deg, #0d4d2e 0%, var(--green) 100%);
+  color: rgba(255,255,255,.9);
+  padding: 9px 24px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+}
+.session-bar.show { display: flex; }
+.session-dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; flex-shrink: 0; }
+.session-bar span { flex: 1; }
+.session-bar button {
+  background: rgba(255,255,255,.15);
+  color: white; border: none;
+  padding: 4px 12px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: var(--font-main);
+}
+
+/* ── Field error ── */
+.field-error {
+  font-size: 11.5px;
+  color: var(--red);
+  margin-top: 4px;
+  display: none;
+}
+.form-control.invalid { border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,.1); }
+
+/* ── Loading skeleton ── */
+.skeleton {
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: var(--radius-sm);
+  height: 42px;
+  margin-bottom: 12px;
+}
+@keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  main { padding: 16px 12px 60px; }
+  .header-inner { padding: 10px 14px; }
+  .header-badge { display: none; }
+  .kategori-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-card-body { padding: 16px 14px; }
+  .role-tabs { flex-direction: column; }
+  .role-tab { display: flex; align-items: center; gap: 12px; padding: 12px 16px; text-align: left; }
+  .role-tab-icon { font-size: 22px; margin: 0; }
+}
+
+/* ── Fade-in ── */
+.fade-in { animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Page sections ── */
+.page { display: none; }
+.page.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Session bar for logged-in petugas -->
+<div class="session-bar" id="session-bar">
+  <span class="session-dot"></span>
+  <span id="session-info">Petugas: —</span>
+  <button onclick="logout()">Keluar</button>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-inner">
+    <a href="https://kuapilangkenceng.github.io" style="color:rgba(255,255,255,0.75);font-size:12px;text-decoration:none;margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:6px" title="Website KUA Pilangkenceng">🏠 Website KUA</a>
+    <div class="header-logo">🕌</div>
+    <div class="header-text">
+      <div class="header-title">PTSP Digital KUA Pilangkenceng</div>
+      <div class="header-sub">Kementerian Agama · Kab. Madiun</div>
+    </div>
+    <div class="header-badge">● ONLINE</div>
+    <button id="btn-login-header" onclick="toggleLoginPanel()">🔐 Petugas</button>
+  </div>
+</header>
+
+<!-- Marquee -->
+<div class="marquee-bar">
+  <div class="marquee-inner">
+    <span>📋 Layanan tersedia: Pendaftaran Nikah · Pelaksanaan Nikah · Bimwin · Ecotheology · Duplikat Buku Nikah · SK Belum Menikah · SK Pernah Menikah · Itsbat Nikah · Rekomendasi Nikah · Taukil Wali · Saksi Ahli · Konsultasi Wali · Pengumuman Kehendak Nikah · Permohonan Legalisir &nbsp;&nbsp;&nbsp;</span>
+    <span>📋 Layanan tersedia: Pendaftaran Nikah · Pelaksanaan Nikah · Bimwin · Ecotheology · Duplikat Buku Nikah · SK Belum Menikah · SK Pernah Menikah · Itsbat Nikah · Rekomendasi Nikah · Taukil Wali · Saksi Ahli · Konsultasi Wali · Pengumuman Kehendak Nikah · Permohonan Legalisir &nbsp;&nbsp;&nbsp;</span>
+  </div>
+</div>
+
+<!-- Main -->
+<main>
+
+  <!-- Login box (collapsible) -->
+  <div id="login-box">
+    <h3>🔐 Login Petugas</h3>
+    <div class="login-error" id="login-error">Username atau password salah.</div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-control" id="inp-username" type="text" placeholder="Username petugas" autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-control" id="inp-password" type="password" placeholder="Password" autocomplete="current-password"/>
+    </div>
+    <button class="btn-submit" onclick="doLogin()" id="btn-do-login">Masuk</button>
+  </div>
+
+  <!-- ╔═ PAGE: HOME ═╗ -->
+  <div class="page active fade-in" id="page-home">
+
+    <!-- Role selector -->
+    <div class="section-label">Selamat Datang</div>
+    <div class="section-title">Pilih Jenis Pengguna</div>
+    <div class="section-desc">Pilih sesuai peran Anda untuk mendapatkan layanan yang tepat.</div>
+
+    <div class="role-tabs">
+      <div class="role-tab active" id="tab-tamu" onclick="selectRole('tamu')">
+        <span class="role-tab-icon">👤</span>
+        <div class="role-tab-label">Tamu / Masyarakat</div>
+        <div class="role-tab-sub">Pengajuan layanan umum</div>
+      </div>
+      <div class="role-tab" id="tab-petugas" onclick="selectRole('petugas')">
+        <span class="role-tab-icon">🏛️</span>
+        <div class="role-tab-label">Petugas PTSP</div>
+        <div class="role-tab-sub">Input & administrasi internal</div>
+      </div>
+    </div>
+
+    <!-- Info cards -->
+    <div id="info-tamu">
+      <div class="info-card">
+        <div class="info-card-icon">ℹ️</div>
+        <div class="info-card-body">
+          <h4>Cara Penggunaan (Tamu)</h4>
+          <p>Pilih kategori layanan, lalu pilih jenis layanan yang dibutuhkan. Isi form dan kirim. Nomor layanan akan muncul sebagai bukti pengajuan.</p>
+        </div>
+      </div>
+    </div>
+    <div id="info-petugas" style="display:none">
+      <div class="info-card">
+        <div class="info-card-icon">🔐</div>
+        <div class="info-card-body">
+          <h4>Mode Petugas</h4>
+          <p>Gunakan tombol <strong>🔐 Petugas</strong> di atas untuk login terlebih dahulu. Setelah login, form internal dan fitur autofill tersedia.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kategori -->
+    <div class="section-label" style="margin-top:20px">Kategori Layanan</div>
+    <div class="section-title">Pilih Kategori</div>
+    <div class="kategori-grid" id="kategori-grid">
+      <div class="skeleton" style="height:100px;"></div>
+      <div class="skeleton" style="height:100px;"></div>
+      <div class="skeleton" style="height:100px;"></div>
+    </div>
+  </div>
+
+  <!-- ╔═ PAGE: LAYANAN LIST ═╗ -->
+  <div class="page fade-in" id="page-layanan">
+    <button class="btn-back" onclick="goBack('page-home')">← Kembali</button>
+    <div class="breadcrumb">
+      <span onclick="goBack('page-home')">Beranda</span>
+      <span class="sep">›</span>
+      <span class="current" id="bc-kategori">—</span>
+    </div>
+    <div class="section-label" id="layanan-label">Layanan</div>
+    <div class="section-title" id="layanan-title">Pilih Jenis Layanan</div>
+    <div class="layanan-list" id="layanan-list"></div>
+  </div>
+
+  <!-- ╔═ PAGE: FORM ═╗ -->
+  <div class="page fade-in" id="page-form">
+    <button class="btn-back" onclick="goBack('page-layanan')">← Kembali</button>
+    <div class="breadcrumb" id="form-breadcrumb"></div>
+    <div id="autofill-banner" class="autofill-banner">✅ Data berhasil diisi otomatis dari data Pendaftaran.</div>
+    <div class="form-card" id="form-card">
+      <div class="form-card-header">
+        <h2 id="form-title">—</h2>
+        <p id="form-desc">—</p>
+      </div>
+      <div class="form-card-body" id="form-body"></div>
+    </div>
+  </div>
+
+  <!-- ╔═ PAGE: SUCCESS ═╗ -->
+  <div class="page fade-in" id="page-success">
+    <div class="form-card">
+      <div class="form-card-body">
+        <div class="success-screen">
+          <div class="success-icon">✅</div>
+          <h2 style="font-size:20px;font-weight:800;margin-bottom:6px;">Layanan Berhasil Dikirim!</h2>
+          <div class="success-id" id="success-id">LYN-...</div>
+          <p>Nomor di atas adalah bukti pengajuan Anda.<br/>Simpan nomor ini untuk keperluan tindak lanjut.</p>
+          <button class="btn-ulang" onclick="resetAll()">+ Ajukan Layanan Lain</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   CONFIG — Ganti dengan URL Web App Anda
+   ══════════════════════════════════════════════════════ */
+const API_URL = 'https://script.google.com/macros/s/AKfycbwb2xPsR9RsAsNsG2YfKCEaGmOorcjgUYE09ddJkB7s6cyczkvX0ETmdtaDEsOh1Xty/exec'; 
+/* ══════════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════════ */
+let CONFIG       = null;
+let currentRole  = 'tamu';
+let currentKat   = null;
+let currentJenis = null;
+let session      = null;   // { username, nama, role }
+let photoFiles   = [];     // [{file, base64, mimeType}]
+let autocompleteTimers = {};
+
+/* ══════════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════════ */
+async function init() {
+  await loadConfig();
+  renderKategori();
+}
+
+async function loadConfig() {
+  try {
+    const url = `${API_URL}?action=getConfig&_=${Date.now()}`;
+    const res = await fetch(url);
+    CONFIG = await res.json();
+  } catch (e) {
+    // Fallback: embed config directly if API unreachable during dev
+    CONFIG = window.FALLBACK_CONFIG || { forms: {}, kategori: {}, universal: [], consentField: null, publishMode: {} };
+    showToast('⚠️ Gagal memuat config dari server. Mode offline.', true);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   KATEGORI
+   ══════════════════════════════════════════════════════ */
+const KAT_META = {
+  'Nikah':                    { icon: '💍', color: '#1a6b45' },
+  'Wakaf':                    { icon: '🏠', color: '#7c3aed' },
+  'SKT Masjid/Musholla':      { icon: '🕌', color: '#b45309' },
+  'Sertifikasi Produk Halal': { icon: '🍃', color: '#065f46' },
+  'Pengukuran Arah Kiblat':   { icon: '🧭', color: '#1d4ed8' },
+  'Survey Lapangan':          { icon: '📋', color: '#be185d' },
+  'Konseling':                { icon: '💬', color: '#0f766e' },
+  'Surat Rekomendasi KUA':    { icon: '📜', color: '#92400e' }
+};
+
+function renderKategori() {
+  const grid = document.getElementById('kategori-grid');
+  grid.innerHTML = '';
+  const forms = CONFIG.forms || {};
+
+  // Hitung jumlah form per kategori
+  const katCount = {};
+  Object.values(forms).forEach(f => {
+    katCount[f.kategori] = (katCount[f.kategori] || 0) + 1;
+  });
+
+  Object.entries(CONFIG.kategori || {}).forEach(([key, label]) => {
+    const meta = KAT_META[label] || { icon: '📂', color: '#6b7280' };
+    const count = katCount[label] || 0;
+    if (count === 0) return; // sembunyikan kategori kosong
+
+    const card = document.createElement('div');
+    card.className = 'kategori-card';
+    card.innerHTML = `
+      <span class="kat-icon">${meta.icon}</span>
+      <div class="kat-label">${label}</div>
+      <div class="kat-count">${count}</div>
+    `;
+    card.onclick = () => showLayanan(label);
+    grid.appendChild(card);
+  });
+
+  if (grid.children.length === 0) {
+    grid.innerHTML = '<p style="color:#888;font-size:13px;grid-column:1/-1">Belum ada layanan tersedia.</p>';
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   ROLE SELECTOR
+   ══════════════════════════════════════════════════════ */
+function selectRole(role) {
+  currentRole = role;
+  document.getElementById('tab-tamu').classList.toggle('active', role === 'tamu');
+  document.getElementById('tab-petugas').classList.toggle('active', role === 'petugas');
+  document.getElementById('info-tamu').style.display = role === 'tamu' ? '' : 'none';
+  document.getElementById('info-petugas').style.display = role === 'petugas' ? '' : 'none';
+  if (role === 'petugas' && !session) toggleLoginPanel();
+}
+
+/* ══════════════════════════════════════════════════════
+   LOGIN
+   ══════════════════════════════════════════════════════ */
+function toggleLoginPanel() {
+  const box = document.getElementById('login-box');
+  const isOpen = box.style.display === 'block';
+  box.style.display = isOpen ? 'none' : 'block';
+  document.getElementById('btn-login-header').classList.toggle('active', !isOpen);
+  if (!isOpen) document.getElementById('inp-username').focus();
+}
+
+async function doLogin() {
+  const username = document.getElementById('inp-username').value.trim();
+  const password = document.getElementById('inp-password').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('btn-do-login');
+  if (!username || !password) { errEl.style.display = 'block'; errEl.textContent = 'Isi username dan password.'; return; }
+
+  btn.disabled = true; btn.textContent = 'Memverifikasi...';
+
+  try {
+    const payload = { action: 'login', username, password };
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.ok) {
+      session = data.user;
+      errEl.style.display = 'none';
+      document.getElementById('login-box').style.display = 'none';
+      document.getElementById('btn-login-header').classList.add('active');
+      document.getElementById('btn-login-header').textContent = '✅ ' + session.nama;
+      const bar = document.getElementById('session-bar');
+      bar.classList.add('show');
+      document.getElementById('session-info').textContent = `Petugas: ${session.nama} (${session.role})`;
+      currentRole = 'petugas';
+      selectRole('petugas');
+      showToast('✅ Login berhasil. Selamat datang, ' + session.nama + '!');
+    } else {
+      errEl.style.display = 'block';
+      errEl.textContent = data.error || 'Login gagal.';
+    }
+  } catch {
+    // Demo mode: simulasi login lokal jika API belum deploy
+    if (username === 'demo' && password === 'demo123') {
+      session = { username: 'demo', nama: 'Petugas Demo', role: 'petugas' };
+      errEl.style.display = 'none';
+      document.getElementById('login-box').style.display = 'none';
+      document.getElementById('btn-login-header').textContent = '✅ Petugas Demo';
+      document.getElementById('btn-login-header').classList.add('active');
+      document.getElementById('session-bar').classList.add('show');
+      document.getElementById('session-info').textContent = 'Petugas: Demo (petugas)';
+      currentRole = 'petugas';
+      selectRole('petugas');
+      showToast('✅ Login demo berhasil!');
+    } else {
+      errEl.style.display = 'block'; errEl.textContent = 'Tidak dapat terhubung ke server.';
+    }
+  }
+  btn.disabled = false; btn.textContent = 'Masuk';
+}
+
+function logout() {
+  session = null;
+  currentRole = 'tamu';
+  document.getElementById('session-bar').classList.remove('show');
+  document.getElementById('btn-login-header').textContent = '🔐 Petugas';
+  document.getElementById('btn-login-header').classList.remove('active');
+  selectRole('tamu');
+  goPage('page-home');
+  showToast('Anda telah keluar.');
+}
+
+/* ══════════════════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════════════════ */
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.classList.remove('fade-in');
+  void el.offsetWidth;
+  el.classList.add('fade-in');
+  window.scrollTo(0, 0);
+}
+
+function goBack(target) {
+  goPage(target);
+}
+
+/* ══════════════════════════════════════════════════════
+   LAYANAN LIST
+   ══════════════════════════════════════════════════════ */
+function showLayanan(kategori) {
+  currentKat = kategori;
+  document.getElementById('bc-kategori').textContent = kategori;
+  document.getElementById('layanan-label').textContent = kategori;
+  document.getElementById('layanan-title').textContent = 'Pilih Jenis Layanan';
+
+  const list = document.getElementById('layanan-list');
+  list.innerHTML = '';
+  const forms = CONFIG.forms || {};
+  const items = Object.entries(forms).filter(([, f]) => f.kategori === kategori);
+
+  // Filter: tamu tidak lihat form internal (yg punya autofill + universalOverrides hidden semua)
+  // PATCH A: tambah filter berdasarkan field "role" di config form
+  const filtered = items.filter(([key, f]) => {
+    if (currentRole === 'petugas') return true;
+    // Jika form punya properti role dan tidak include 'tamu' → sembunyikan dari tamu
+    if (f.role && Array.isArray(f.role) && !f.role.includes('tamu')) return false;
+    // sembunyikan form yg semua universal di-hidden (form petugas lama)
+    const ov = f.universalOverrides || {};
+    const allHidden = ['nama_pemohon','kontak'].every(k => ov[k] && ov[k].hidden);
+    return !allHidden;
+  });
+
+  filtered.forEach(([key, f], i) => {
+    const item = document.createElement('div');
+    item.className = 'layanan-item';
+    item.innerHTML = `
+      <div class="layanan-num">${i + 1}</div>
+      <div class="layanan-info">
+        <div class="layanan-name">${f.label}</div>
+        <div class="layanan-desc">${f.deskripsi || ''}</div>
+      </div>
+      <div class="layanan-arrow">›</div>
+    `;
+    item.onclick = () => showForm(key);
+    list.appendChild(item);
+  });
+
+  // PATCH B: Tambah banner Ecotheology Luar jika kategori Nikah
+  if (kategori === 'Nikah') {
+    renderBannerEcoteologyLuar(list);
+  }
+
+  goPage('page-layanan');
+}
+
+/* ══════════════════════════════════════════════════════
+   FORM ENGINE
+   ══════════════════════════════════════════════════════ */
+function showForm(jenis) {
+  currentJenis = jenis;
+  photoFiles = [];
+  const f = CONFIG.forms[jenis];
+  if (!f) return;
+
+  document.getElementById('form-title').textContent = f.label;
+  document.getElementById('form-desc').textContent = f.deskripsi || f.kategori;
+  document.getElementById('autofill-banner').style.display = 'none';
+
+  // Breadcrumb
+  document.getElementById('form-breadcrumb').innerHTML = `
+    <span onclick="goPage('page-home')">Beranda</span>
+    <span class="sep">›</span>
+    <span onclick="showLayanan('${currentKat}')">${currentKat}</span>
+    <span class="sep">›</span>
+    <span class="current">${f.label}</span>
+  `;
+
+  // Build fields
+  const body = document.getElementById('form-body');
+  body.innerHTML = '';
+
+  const publishMode = (CONFIG.publishMode || {})[jenis];
+  const needConsent = (publishMode === 'kegiatan') && currentRole === 'petugas';
+  const ov = f.universalOverrides || {};
+  const uFields = CONFIG.universal || [];
+
+  // ── Universal fields ──
+  const universalVisible = uFields.filter(u => !(ov[u.name] && ov[u.name].hidden));
+  if (universalVisible.length > 0) {
+    addSectionTitle(body, '📋 Data Umum');
+    universalVisible.forEach(u => {
+      const req = (ov[u.name] && ov[u.name].required === false) ? false : u.required;
+      renderField(body, { ...u, required: req });
+    });
+  }
+
+  // ── Specific fields ──
+  if (f.fields && f.fields.length > 0) {
+    addSectionTitle(body, '📝 Data Layanan');
+    f.fields.forEach(field => renderField(body, field, f));
+  }
+
+  // ── Autofill setup ──
+  if (f.autofill && currentRole === 'petugas') {
+    setupAutofill(f.autofill);
+  }
+
+  // PATCH C: Autofill khusus Bimwin
+  if (jenis === 'nikah_bimwin' && currentRole === 'petugas') {
+    setTimeout(triggerAutofillBimwin, 100);
+  }
+
+  // ── Consent ──
+  if (needConsent && CONFIG.consentField) {
+    addSectionTitle(body, '📢 Izin Publikasi');
+    const div = document.createElement('div');
+    div.className = 'consent-box';
+    renderField(div, CONFIG.consentField);
+    body.appendChild(div);
+  }
+
+  // ── Petugas field ──
+  const petugasField = document.createElement('div');
+  petugasField.className = 'form-group';
+  petugasField.innerHTML = `
+    <label class="form-label">Petugas PTSP</label>
+    <input class="form-control" id="field_petugas_ptsp" value="${session ? session.nama : ''}"
+           type="text" placeholder="Nama petugas (isi jika tidak login)" ${session ? 'readonly' : ''}/>
+  `;
+  body.appendChild(petugasField);
+
+  // ── Submit ──
+  const submitWrap = document.createElement('div');
+  submitWrap.style.marginTop = '20px';
+  submitWrap.innerHTML = `<button class="btn-submit" id="btn-submit" onclick="submitForm()">📤 Kirim Layanan</button>`;
+  body.appendChild(submitWrap);
+
+  goPage('page-form');
+
+  // Init conditional fields
+  setTimeout(() => evalAllConditions(f), 50);
+}
+
+function addSectionTitle(parent, text) {
+  const el = document.createElement('div');
+  el.className = 'form-section-title';
+  el.textContent = text;
+  parent.appendChild(el);
+}
+
+function renderField(parent, field, formDef) {
+  const f = field;
+  const group = document.createElement('div');
+  group.className = 'form-group';
+  group.id = `group_${f.name}`;
+  if (f.showIf) group.dataset.showIf = JSON.stringify(f.showIf);
+
+  const labelHtml = `<label class="form-label" for="field_${f.name}">${f.label}${f.required ? '<span class="req">*</span>' : ' <span style="color:#aaa;font-size:11px">(opsional)</span>'}</label>`;
+
+  let inputHtml = '';
+
+  if (f.type === 'text' || f.type === 'tel' || f.type === 'email' || f.type === 'number' || f.type === 'date' || f.type === 'time') {
+    inputHtml = `<input class="form-control" id="field_${f.name}" name="${f.name}" type="${f.type}"
+      placeholder="${f.placeholder || ''}" ${f.required ? 'required' : ''}
+      oninput="evalAllConditions()" />`;
+  } else if (f.type === 'textarea') {
+    inputHtml = `<textarea class="form-control" id="field_${f.name}" name="${f.name}"
+      placeholder="${f.placeholder || ''}" ${f.required ? 'required' : ''}
+      oninput="evalAllConditions()"></textarea>`;
+  } else if (f.type === 'select') {
+    const opts = (f.options || []).map(o => `<option value="${o}">${o}</option>`).join('');
+    inputHtml = `<select class="form-control" id="field_${f.name}" name="${f.name}" ${f.required ? 'required' : ''}
+      onchange="evalAllConditions()"><option value="">— Pilih —</option>${opts}</select>`;
+  } else if (f.type === 'radio') {
+    const opts = (f.options || []).map(o => `
+      <label class="radio-opt" onclick="selectRadio('${f.name}','${o}', this)">
+        <input type="radio" name="${f.name}" value="${o}" id="field_${f.name}_${btoa(o).slice(0,6)}" onchange="evalAllConditions()"/> ${o}
+      </label>`).join('');
+    inputHtml = `<div class="radio-group" id="field_${f.name}">${opts}</div>`;
+  } else if (f.type === 'checkbox') {
+    const opts = (f.options || []).map(o => `
+      <label class="check-opt" onclick="toggleCheck(this)">
+        <input type="checkbox" name="${f.name}" value="${o}"/> ${o}
+      </label>`).join('');
+    inputHtml = `<div class="check-group" id="field_${f.name}">${opts}</div>`;
+  } else if (f.type === 'photo') {
+    inputHtml = `
+      <div class="photo-upload-area" id="photo_area_${f.name}"
+           ondragover="e=>{e.preventDefault();this.classList.add('dragover')}"
+           ondragleave="this.classList.remove('dragover')"
+           ondrop="handleDrop(event,'${f.name}')">
+        <input type="file" class="photo-input" id="field_${f.name}" accept="image/*"
+               ${f.multiple ? 'multiple' : ''} onchange="handlePhotoInput(event,'${f.name}')"/>
+        <span class="photo-upload-icon">📷</span>
+        <div class="photo-upload-label">Klik atau seret foto ke sini</div>
+        <div class="photo-upload-sub">JPG, PNG · Maks 5MB per foto</div>
+      </div>
+      <div class="photo-previews" id="previews_${f.name}"></div>`;
+  } else if (f.type === 'autocomplete') {
+    inputHtml = `
+      <div class="autocomplete-wrap">
+        <input class="form-control" id="field_${f.name}" name="${f.name}" type="text"
+          placeholder="${f.placeholder || 'Ketik untuk mencari...'}" ${f.required ? 'required' : ''}
+          oninput="handleAutocomplete(event,'${f.name}', '${currentJenis}')"/>
+        <div class="autocomplete-dropdown" id="ac_${f.name}"></div>
+      </div>`;
+  }
+
+  const helpHtml = f.help ? `<span class="form-help">ℹ️ ${f.help}</span>` : '';
+  const errHtml = `<div class="field-error" id="err_${f.name}">Field ini wajib diisi.</div>`;
+
+  group.innerHTML = labelHtml + inputHtml + helpHtml + errHtml;
+  parent.appendChild(group);
+}
+
+/* ── Radio / Checkbox helpers ── */
+function selectRadio(name, value, el) {
+  document.querySelectorAll(`[name="${name}"]`).forEach(inp => {
+    inp.closest('.radio-opt').classList.remove('selected');
+  });
+  el.classList.add('selected');
+  const inp = el.querySelector('input');
+  if (inp) inp.checked = true;
+  evalAllConditions();
+}
+
+function toggleCheck(el) {
+  el.classList.toggle('selected');
+}
+
+/* ── Photo upload ── */
+function handlePhotoInput(e, name) {
+  Array.from(e.target.files).forEach(file => addPhoto(file, name));
+}
+
+function handleDrop(e, name) {
+  e.preventDefault();
+  document.getElementById(`photo_area_${name}`).classList.remove('dragover');
+  Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')).forEach(file => addPhoto(file, name));
+}
+
+function addPhoto(file, name) {
+  if (file.size > 5 * 1024 * 1024) { showToast('⚠️ File terlalu besar (maks 5MB): ' + file.name, true); return; }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const base64Full = ev.target.result;
+    const base64 = base64Full.split(',')[1];
+    const obj = { file, base64, mimeType: file.type, name };
+    photoFiles.push(obj);
+    renderPhotoPreview(obj, name);
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderPhotoPreview(obj, name) {
+  const wrap = document.createElement('div');
+  wrap.className = 'photo-thumb-wrap';
+  wrap.id = 'pw_' + photoFiles.indexOf(obj);
+  wrap.innerHTML = `
+    <img class="photo-thumb" src="data:${obj.mimeType};base64,${obj.base64}" title="${obj.file.name}"/>
+    <div class="photo-thumb-del" onclick="removePhoto(${photoFiles.indexOf(obj)})">×</div>`;
+  document.getElementById(`previews_${name}`).appendChild(wrap);
+}
+
+function removePhoto(idx) {
+  photoFiles.splice(idx, 1);
+  document.getElementById('pw_' + idx)?.remove();
+}
+
+/* ── Conditional fields ── */
+function evalAllConditions(formDef) {
+  document.querySelectorAll('[data-show-if]').forEach(group => {
+    try {
+      const cond = JSON.parse(group.dataset.showIf);
+      const triggerEl = document.querySelector(`[name="${cond.field}"]`) ||
+                        document.getElementById(`field_${cond.field}`);
+      let val = '';
+      if (triggerEl) {
+        if (triggerEl.type === 'radio') {
+          const checked = document.querySelector(`[name="${cond.field}"]:checked`);
+          val = checked ? checked.value : '';
+        } else { val = triggerEl.value; }
+      }
+      // PATCH E: support valueIn (array) selain value tunggal
+      let tampil = false;
+      if (cond.valueIn && Array.isArray(cond.valueIn)) {
+        tampil = cond.valueIn.includes(val);
+      } else {
+        tampil = (val === cond.value);
+      }
+      group.style.display = tampil ? '' : 'none';
+      // Reset nilai jika disembunyikan agar tidak ikut tersubmit
+      if (!tampil) {
+        const inp = group.querySelector('input, select, textarea');
+        if (inp && inp.type !== 'radio' && inp.type !== 'checkbox') inp.value = '';
+      }
+    } catch {}
+  });
+}
+
+/* ── Autocomplete ── */
+async function handleAutocomplete(e, fieldName, currentJenis) {
+  const q = e.target.value.trim();
+  const dd = document.getElementById(`ac_${fieldName}`);
+  if (q.length < 2) { dd.style.display = 'none'; return; }
+
+  clearTimeout(autocompleteTimers[fieldName]);
+  autocompleteTimers[fieldName] = setTimeout(async () => {
+    const formDef = CONFIG.forms[currentJenis];
+    if (!formDef || !formDef.autofill) return;
+    const { sourceJenis, lookupField } = formDef.autofill;
+    try {
+      const res = await fetch(`${API_URL}?action=lookup&jenis=${sourceJenis}&field=${lookupField}&q=${encodeURIComponent(q)}`);
+      const data = await res.json();
+      renderACDropdown(dd, data.results || [], formDef.autofill, fieldName);
+    } catch { dd.style.display = 'none'; }
+  }, 380);
+}
+
+function renderACDropdown(dd, results, autofill, triggerField) {
+  dd.innerHTML = '';
+  if (!results.length) { dd.style.display = 'none'; return; }
+  results.forEach(r => {
+    const item = document.createElement('div');
+    item.className = 'autocomplete-item';
+    item.textContent = r.label;
+    item.onclick = () => {
+      applyAutofill(r.data, autofill.map, triggerField);
+      dd.style.display = 'none';
+    };
+    dd.appendChild(item);
+  });
+  dd.style.display = 'block';
+}
+
+function applyAutofill(srcData, map, triggerField) {
+  let filled = 0;
+  Object.entries(map).forEach(([srcKey, destKey]) => {
+    const el = document.getElementById(`field_${destKey}`);
+    if (el && srcData[srcKey] !== undefined) {
+      el.value = srcData[srcKey];
+      filled++;
+    }
+  });
+  if (filled > 0) {
+    document.getElementById('autofill-banner').style.display = 'block';
+    evalAllConditions();
+  }
+}
+
+function setupAutofill(autofillConfig) {
+  // Listener untuk menutup dropdown saat klik di luar
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.autocomplete-wrap')) {
+      document.querySelectorAll('.autocomplete-dropdown').forEach(d => d.style.display = 'none');
+    }
+  }, { once: false });
+}
+
+/* ══════════════════════════════════════════════════════
+   SUBMIT
+   ══════════════════════════════════════════════════════ */
+async function submitForm() {
+  const f = CONFIG.forms[currentJenis];
+  if (!f) return;
+
+  // Validate
+  let valid = true;
+  const allFields = [...(CONFIG.universal || []), ...(f.fields || [])];
+  const ov = f.universalOverrides || {};
+
+  allFields.forEach(field => {
+    const skip = (ov[field.name] && ov[field.name].hidden);
+    const groupEl = document.getElementById(`group_${field.name}`);
+    // skip jika kondisi tidak terpenuhi (field tersembunyi)
+    if (groupEl && groupEl.style.display === 'none') return;
+    if (skip) return;
+    if (!field.required) return;
+
+    const el = document.getElementById(`field_${field.name}`);
+    const errEl = document.getElementById(`err_${field.name}`);
+    if (!el) return;
+
+    let val = '';
+    if (field.type === 'radio') {
+      const checked = document.querySelector(`[name="${field.name}"]:checked`);
+      val = checked ? checked.value : '';
+    } else if (field.type === 'photo') {
+      val = photoFiles.filter(p => p.name === field.name).length > 0 ? 'ok' : '';
+    } else { val = el.value.trim(); }
+
+    if (!val) {
+      valid = false;
+      el.classList.add('invalid');
+      if (errEl) errEl.style.display = 'block';
+    } else {
+      el.classList.remove('invalid');
+      if (errEl) errEl.style.display = 'none';
+    }
+  });
+
+  if (!valid) { showToast('⚠️ Lengkapi field yang wajib diisi.', true); return; }
+
+  // Collect data
+  const data = {};
+  const allFieldsDef = [...(CONFIG.universal || []), ...(f.fields || [])];
+  allFieldsDef.forEach(field => {
+    if (ov[field.name] && ov[field.name].hidden) return;
+    const el = document.getElementById(`field_${field.name}`);
+    if (!el) return;
+    if (field.type === 'radio') {
+      const checked = document.querySelector(`[name="${field.name}"]:checked`);
+      data[field.name] = checked ? checked.value : '';
+    } else if (field.type === 'checkbox') {
+      const checked = document.querySelectorAll(`[name="${field.name}"]:checked`);
+      data[field.name] = Array.from(checked).map(c => c.value);
+    } else if (field.type === 'photo') {
+      // Handled separately
+    } else {
+      data[field.name] = el.value.trim();
+    }
+  });
+
+  const petugasEl = document.getElementById('field_petugas_ptsp');
+  const petugas = petugasEl ? petugasEl.value.trim() : (session ? session.nama : '');
+
+  const payload = {
+    action:        'submit',
+    jenis_layanan: currentJenis,
+    jenis_label:   f.label,
+    kategori:      f.kategori,
+    nama_pemohon:  data.nama_pemohon || '',
+    kontak:        data.kontak || '',
+    petugas_ptsp:  petugas,
+    data,
+    foto:          photoFiles.map(p => ({ mimeType: p.mimeType, base64: p.base64 }))
+  };
+
+  // Submit
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.classList.add('loading');
+  btn.textContent = 'Mengirim...';
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    if (result.ok) {
+      document.getElementById('success-id').textContent = result.id;
+      goPage('page-success');
+    } else {
+      showToast('❌ Gagal: ' + (result.error || 'Unknown error'), true);
+    }
+  } catch (e) {
+    showToast('❌ Tidak dapat terhubung ke server.', true);
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+  btn.textContent = '📤 Kirim Layanan';
+}
+
+/* ══════════════════════════════════════════════════════
+   UTILITIES
+   ══════════════════════════════════════════════════════ */
+function resetAll() {
+  currentKat = null; currentJenis = null; photoFiles = [];
+  goPage('page-home');
+}
+
+let toastTimer;
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+/* ── Start ── */
+// PATCH B: Banner Ecotheology Luar Kantor
+function renderBannerEcoteologyLuar(containerEl) {
+  const lama = document.getElementById('banner-eco-luar');
+  if (lama) lama.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'banner-eco-luar';
+  banner.style.cssText = `
+    background: linear-gradient(135deg, #1a6b45 0%, #2d8c5e 55%, #c49a28 100%);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 18px rgba(26,107,69,.25);
+  `;
+  banner.onmouseenter = () => {
+    banner.style.transform = 'translateY(-2px)';
+    banner.style.boxShadow = '0 8px 28px rgba(26,107,69,.38)';
+  };
+  banner.onmouseleave = () => {
+    banner.style.transform = '';
+    banner.style.boxShadow = '0 4px 18px rgba(26,107,69,.25)';
+  };
+  banner.innerHTML = `
+    <div style="font-size:36px;flex-shrink:0">🌳</div>
+    <div style="flex:1">
+      <div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:3px">
+        Ecotheology Nikah — Di Luar Kantor
+      </div>
+      <div style="color:rgba(255,255,255,.82);font-size:12px;line-height:1.5">
+        Khusus calon pengantin yang menikah <strong style="color:#fde68a">di luar KUA</strong>.
+        Isi form penanaman pohon di halaman terpisah.
+      </div>
+    </div>
+    <div style="color:#fde68a;font-size:22px;flex-shrink:0">→</div>
+  `;
+  banner.addEventListener('click', () => window.open('ecoteology.html', '_blank'));
+  containerEl.appendChild(banner);
+}
+
+// PATCH C: Autofill Bimwin — dipanggil dari showForm
+function triggerAutofillBimwin() {
+  const namaField = document.getElementById('field_nama_pa');
+  if (!namaField) return;
+  namaField.setAttribute('placeholder', 'Ketik nama catin pria untuk autofill...');
+  namaField.addEventListener('input', function() {
+    clearTimeout(this._afTimer);
+    this._afTimer = setTimeout(async () => {
+      const q = this.value.trim();
+      if (q.length < 3) return;
+      try {
+        const url = `${API_URL}?action=lookup&jenis=nikah_pendaftaran&field=nama_pa&q=${encodeURIComponent(q)}`;
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.results && json.results.length > 0) {
+          showAutofillBimwinDropdown(json.results, namaField);
+        }
+      } catch {}
+    }, 500);
+  });
+}
+
+function showAutofillBimwinDropdown(results, anchor) {
+  let dd = document.getElementById('bimwin-af-dd');
+  if (!dd) {
+    dd = document.createElement('div');
+    dd.id = 'bimwin-af-dd';
+    dd.style.cssText = `position:absolute;top:100%;left:0;right:0;background:#fff;
+      border:1.5px solid var(--green);border-top:none;border-radius:0 0 8px 8px;
+      z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12)`;
+    anchor.parentElement.style.position = 'relative';
+    anchor.parentElement.appendChild(dd);
+  }
+  dd.innerHTML = '';
+  results.forEach(r => {
+    const item = document.createElement('div');
+    item.style.cssText = 'padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #eee';
+    item.textContent = r.label;
+    item.onmouseenter = () => item.style.background = 'var(--green-light)';
+    item.onmouseleave = () => item.style.background = '';
+    item.onclick = () => {
+      applyAutofill(r.data, {
+        nama_pa:'nama_pa', nama_pi:'nama_pi',
+        ttl_pa:'ttl_pa', ttl_pi:'ttl_pi',
+        desa_pa:'desa_pa', desa_pi:'desa_pi',
+        kontak:'kontak', nama_pemohon:'nama_pemohon'
+      }, 'nama_pa');
+      dd.remove();
+      showToast('✅ Data catin terisi otomatis dari pendaftaran');
+    };
+    dd.appendChild(item);
+  });
+  dd.style.display = results.length ? 'block' : 'none';
+}
+
+init();
+</script>
+</body>
+</html>
