@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <!-- Config global KUA -->
@@ -873,7 +873,7 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 /* ══════════════════════════════════════════════
    CONFIG
 ══════════════════════════════════════════════ */
-const API_URL = 'https://script.google.com/macros/s/AKfycbzgAcc0OXUOVSjqK2FvNwpNYnvfDf4AiskC3OWADpp21uJs-Fn_DAcAPp_QU-1Rg-yW/exec';
+const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.apiUrl) ? KUA_CONFIG.apiUrl : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
 
 /* ══════════════════════════════════════════════
    STATE
