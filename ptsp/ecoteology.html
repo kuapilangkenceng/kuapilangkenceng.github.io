@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- Config global KUA -->
+  <script src="https://kuapilangkenceng.github.io/config.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecotheology Nikah — KUA Pilangkenceng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── CSS Variables ──────────────────────────────────── */
+:root {
+  --hijau: #1a6b45;
+  --hijau-muda: #2d8a5e;
+  --hijau-terang: #e8f5ef;
+  --gold: #c49a28;
+  --gold-muda: #f9f0d8;
+  --putih: #ffffff;
+  --abu: #f4f6f5;
+  --teks: #1c2b24;
+  --teks-muted: #6b7c74;
+  --border: #d0ddd7;
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(26,107,69,.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--abu);
+  color: var(--teks);
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.header {
+  background: linear-gradient(135deg, var(--hijau) 0%, #0f4a2f 100%);
+  color: var(--putih);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+.header-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.header-logo {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.header-text h1 {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.header-text p {
+  font-size: 11px;
+  opacity: .75;
+  margin-top: 2px;
+}
+.header-back {
+  margin-left: auto;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  color: var(--putih);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background .2s;
+}
+.header-back:hover { background: rgba(255,255,255,.25); }
+
+/* ── Hero Banner ────────────────────────────────────── */
+.hero {
+  background: linear-gradient(135deg, #1a6b45 0%, #2d8a5e 50%, #c49a28 100%);
+  padding: 32px 20px 28px;
+  text-align: center;
+  color: var(--putih);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '🌿';
+  position: absolute;
+  font-size: 120px;
+  opacity: .08;
+  top: -20px;
+  right: -20px;
+  transform: rotate(15deg);
+}
+.hero-icon { font-size: 48px; margin-bottom: 10px; }
+.hero h2 {
+  font-family: 'Amiri', serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.hero p {
+  font-size: 13px;
+  opacity: .85;
+  max-width: 460px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+  letter-spacing: .5px;
+}
+
+/* ── Info Box ───────────────────────────────────────── */
+.info-box {
+  background: var(--gold-muda);
+  border: 1px solid #e8d08a;
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 20px auto;
+  max-width: 640px;
+  font-size: 13px;
+  color: #7a5c0a;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.info-box .icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Card Form ──────────────────────────────────────── */
+.card {
+  background: var(--putih);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  margin: 0 auto 20px;
+  max-width: 640px;
+}
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--hijau);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--hijau-terang);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── Form Fields ────────────────────────────────────── */
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teks);
+  margin-bottom: 6px;
+}
+.form-group label .req {
+  color: #e53935;
+  margin-left: 2px;
+}
+.form-control {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--teks);
+  background: var(--putih);
+  transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--hijau);
+  box-shadow: 0 0 0 3px rgba(26,107,69,.12);
+}
+.form-control::placeholder { color: #b0bbb5; }
+
+select.form-control {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a6b45' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 38px;
+  cursor: pointer;
+}
+
+textarea.form-control {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+
+/* ── Upload Foto ────────────────────────────────────── */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .2s;
+  background: var(--abu);
+  position: relative;
+}
+.upload-area:hover, .upload-area.drag-over {
+  border-color: var(--hijau);
+  background: var(--hijau-terang);
+}
+.upload-area input[type="file"] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.upload-icon { font-size: 32px; margin-bottom: 8px; }
+.upload-label { font-size: 13px; color: var(--teks-muted); }
+.upload-label strong { color: var(--hijau); }
+.upload-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.preview-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: #e0e0e0;
+}
+.preview-item img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.preview-item .remove {
+  position: absolute;
+  top: 4px; right: 4px;
+  background: rgba(0,0,0,.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px; height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Tombol Submit ──────────────────────────────────── */
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--hijau), var(--hijau-muda));
+  color: var(--putih);
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,107,69,.35); }
+.btn-submit:active { transform: none; }
+.btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+/* ── Error ──────────────────────────────────────────── */
+.field-error {
+  font-size: 12px;
+  color: #e53935;
+  margin-top: 4px;
+  display: none;
+}
+.form-control.error { border-color: #e53935; }
+
+/* ── Screen Sukses ──────────────────────────────────── */
+.screen-sukses {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.sukses-icon { font-size: 72px; margin-bottom: 16px; }
+.sukses-card {
+  background: var(--putih);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px 24px;
+}
+.sukses-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--hijau);
+  margin-bottom: 8px;
+}
+.sukses-card p { font-size: 14px; color: var(--teks-muted); margin-bottom: 20px; }
+.no-layanan {
+  background: var(--hijau-terang);
+  border: 1.5px solid var(--hijau);
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--hijau);
+  display: inline-block;
+  margin-bottom: 24px;
+}
+.btn-kembali {
+  background: var(--hijau);
+  color: var(--putih);
+  border: none;
+  padding: 13px 28px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* ── Loading ────────────────────────────────────────── */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2.5px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Toast ──────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 9999;
+  transition: transform .3s ease;
+  white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.sukses { background: var(--hijau); }
+.toast.gagal { background: #e53935; }
+
+/* ── Wrapper ────────────────────────────────────────── */
+.wrapper { padding: 20px 16px 40px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="https://kuapilangkenceng.github.io" style="color:rgba(255,255,255,0.75);font-size:12px;text-decoration:none;margin-left:auto;display:flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:6px" title="Website KUA Pilangkenceng">🏠 Website KUA</a>
+    <div class="header-logo">🌿</div>
+    <div class="header-text">
+      <h1>Ecotheology Nikah</h1>
+      <p>KUA Kecamatan Pilangkenceng</p>
+    </div>
+    <a href="index.html" class="header-back">← Beranda</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">Program Penghijauan</div>
+  <div class="hero-icon">🌳</div>
+  <h2>Ecotheology Pernikahan</h2>
+  <p>Program penanaman pohon bagi pasangan yang melaksanakan ijab kabul <strong>di luar Kantor KUA</strong> sebagai wujud kepedulian terhadap lingkungan.</p>
+</div>
+
+<div class="wrapper">
+
+  <!-- Info Box -->
+  <div class="info-box">
+    <span class="icon">ℹ️</span>
+    <div>
+      <strong>Form ini khusus untuk calon pengantin yang menikah di luar kantor.</strong><br>
+      Isi data sesuai pelaksanaan ijab kabul Anda. Foto kegiatan penanaman pohon sangat dianjurkan.
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form id="formEco" novalidate>
+
+    <!-- Data Pengantin -->
+    <div class="card">
+      <div class="card-title">💍 Data Pengantin</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nama Pengantin Pria <span class="req">*</span></label>
+          <input type="text" id="nama_pa" class="form-control" placeholder="Nama lengkap pengantin pria" required>
+          <div class="field-error" id="err_nama_pa">Nama pengantin pria wajib diisi</div>
+        </div>
+        <div class="form-group">
+          <label>Nama Pengantin Wanita <span class="req">*</span></label>
+          <input type="text" id="nama_pi" class="form-control" placeholder="Nama lengkap pengantin wanita" required>
+          <div class="field-error" id="err_nama_pi">Nama pengantin wanita wajib diisi</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nama Pemohon / Penanggung Jawab <span class="req">*</span></label>
+          <input type="text" id="nama_pemohon" class="form-control" placeholder="Nama yang melaporkan" required>
+          <div class="field-error" id="err_nama_pemohon">Nama pemohon wajib diisi</div>
+        </div>
+        <div class="form-group">
+          <label>No. HP / WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="kontak" class="form-control" placeholder="08xxxxxxxxxx" required>
+          <div class="field-error" id="err_kontak">Nomor HP wajib diisi</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Pelaksanaan -->
+    <div class="card">
+      <div class="card-title">📅 Data Pelaksanaan Ijab</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tanggal Ijab Kabul <span class="req">*</span></label>
+          <input type="date" id="tgl_ijab" class="form-control" required>
+          <div class="field-error" id="err_tgl_ijab">Tanggal ijab wajib diisi</div>
+        </div>
+        <div class="form-group">
+          <label>Desa Tempat Ijab <span class="req">*</span></label>
+          <select id="desa_ijab" class="form-control" required>
+            <option value="">— Pilih Desa —</option>
+            <option>BULU</option>
+            <option>DAWUHAN</option>
+            <option>DUREN</option>
+            <option>GANDUL</option>
+            <option>KEDUNGBANTENG</option>
+            <option>KEDUNGMARON</option>
+            <option>KEDUNGREJO</option>
+            <option>KENONGOREJO</option>
+            <option>KREBET</option>
+            <option>LUWORO</option>
+            <option>MUNENG</option>
+            <option>NGALE</option>
+            <option>NGENGOR</option>
+            <option>PILANGKENCENG</option>
+            <option>PULEREJO</option>
+            <option>PURWOREJO</option>
+            <option>SUMBERGANDU</option>
+            <option>WONOAYU</option>
+          </select>
+          <div class="field-error" id="err_desa_ijab">Desa tempat ijab wajib dipilih</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Pohon -->
+    <div class="card">
+      <div class="card-title">🌱 Data Penanaman Pohon</div>
+
+      <div class="form-group">
+        <label>Nama Pohon yang Ditanam <span class="req">*</span></label>
+        <input type="text" id="nama_pohon" class="form-control"
+          placeholder="Contoh: Mangga, Jambu Air, Kelengkeng, Alpukat…" required>
+        <div class="field-error" id="err_nama_pohon">Nama pohon wajib diisi</div>
+      </div>
+
+      <div class="form-group">
+        <label>Keterangan Tambahan <span style="color:var(--teks-muted);font-weight:400">(opsional)</span></label>
+        <textarea id="keterangan_pohon" class="form-control"
+          placeholder="Contoh: ditanam di halaman rumah, dirawat bersama keluarga…"></textarea>
+      </div>
+
+      <!-- Upload Foto -->
+      <div class="form-group">
+        <label>Foto Kegiatan Penanaman Pohon <span style="color:var(--teks-muted);font-weight:400">(dianjurkan)</span></label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="fotoInput" accept="image/*" multiple>
+          <div class="upload-icon">📷</div>
+          <div class="upload-label">
+            <strong>Klik atau seret foto ke sini</strong><br>
+            JPG, PNG — maks. 5MB per foto
+          </div>
+          <div class="upload-preview" id="uploadPreview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="card">
+      <button type="submit" class="btn-submit" id="btnSubmit">
+        <span id="btnText">🌿 Kirim Laporan Ecotheology</span>
+        <div class="spinner" id="spinner" style="display:none"></div>
+      </button>
+    </div>
+
+  </form><!-- /form -->
+
+  <!-- Sukses Screen -->
+  <div class="screen-sukses" id="screenSukses">
+    <div class="sukses-icon">🌳</div>
+    <div class="sukses-card">
+      <h2>Terima Kasih!</h2>
+      <p>Laporan ecotheology Anda berhasil terkirim. Semoga pohon yang ditanam menjadi berkah.</p>
+      <div class="no-layanan" id="noLayanan">—</div>
+      <br>
+      <a href="index.html" class="btn-kembali">← Kembali ke Beranda</a>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Konfigurasi ──────────────────────────────────────────────
+const API_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'; // ← ganti dengan URL Apps Script
+
+// ── Upload Foto ──────────────────────────────────────────────
+let fotosBase64 = [];
+
+const uploadArea  = document.getElementById('uploadArea');
+const fotoInput   = document.getElementById('fotoInput');
+const preview     = document.getElementById('uploadPreview');
+
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+uploadArea.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadArea.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+fotoInput.addEventListener('change', e => handleFiles(e.target.files));
+
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    if (!file.type.startsWith('image/')) return;
+    if (file.size > 5 * 1024 * 1024) { showToast('Ukuran foto maks. 5MB', 'gagal'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      fotosBase64.push({ name: file.name, data: e.target.result.split(',')[1], type: file.type });
+      renderPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function renderPreview() {
+  preview.innerHTML = '';
+  fotosBase64.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'preview-item';
+    div.innerHTML = `<img src="data:${f.type};base64,${f.data}">
+      <button class="remove" onclick="removePhoto(${i})">✕</button>`;
+    preview.appendChild(div);
+  });
+}
+
+function removePhoto(i) { fotosBase64.splice(i, 1); renderPreview(); }
+
+// ── Validasi ─────────────────────────────────────────────────
+const WAJIB = ['nama_pa','nama_pi','nama_pemohon','kontak','tgl_ijab','desa_ijab','nama_pohon'];
+
+function validasi() {
+  let ok = true;
+  WAJIB.forEach(id => {
+    const el  = document.getElementById(id);
+    const err = document.getElementById('err_' + id);
+    const kosong = !el || !el.value.trim();
+    if (err) err.style.display = kosong ? 'block' : 'none';
+    if (el)  el.classList.toggle('error', kosong);
+    if (kosong) ok = false;
+  });
+  return ok;
+}
+
+// ── Submit ───────────────────────────────────────────────────
+document.getElementById('formEco').addEventListener('submit', async e => {
+  e.preventDefault();
+  if (!validasi()) { showToast('Lengkapi field yang wajib diisi', 'gagal'); return; }
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  document.getElementById('btnText').style.display = 'none';
+  document.getElementById('spinner').style.display = 'block';
+
+  const payload = {
+    action: 'submit',
+    kategori: 'nikah',
+    jenis: 'nikah_ecoteology_luar',
+    nama_pemohon: g('nama_pemohon'),
+    kontak: g('kontak'),
+    nama_pa: g('nama_pa'),
+    nama_pi: g('nama_pi'),
+    tgl_ijab: g('tgl_ijab'),
+    desa_ijab: g('desa_ijab'),
+    nama_pohon: g('nama_pohon'),
+    keterangan_pohon: g('keterangan_pohon'),
+    fotos: fotosBase64
+  };
+
+  try {
+    const res  = await fetch(API_URL, { method:'POST', body: JSON.stringify(payload) });
+    const json = await res.json();
+
+    if (json.success) {
+      document.getElementById('noLayanan').textContent = json.id || 'Terkirim';
+      document.getElementById('formEco').style.display = 'none';
+      document.querySelector('.info-box').style.display = 'none';
+      document.getElementById('screenSukses').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      throw new Error(json.message || 'Gagal mengirim data');
+    }
+  } catch(err) {
+    showToast('Gagal: ' + err.message, 'gagal');
+    btn.disabled = false;
+    document.getElementById('btnText').style.display = 'inline';
+    document.getElementById('spinner').style.display = 'none';
+  }
+});
+
+function g(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// ── Set tanggal max = hari ini ────────────────────────────────
+document.getElementById('tgl_ijab').max = new Date().toISOString().split('T')[0];
+</script>
+</body>
+</html>
