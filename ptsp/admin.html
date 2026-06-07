@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
   <!-- Config global KUA -->
@@ -989,11 +989,11 @@ async function loadData() {
   } catch {
     // Demo data
     allData = [
-      { id:'LYN-20260605-001', timestamp:'2026-06-05 08:30:00', kategori:'Nikah', jenis_label:'Pendaftaran Pernikahan', nama_pemohon:'Ahmad Fauzi', kontak:'081234567890', petugas_ptsp:'Kang Rozif', status_layanan:'Baru', foto:[], data:{ nama_calon_suami:'Ahmad Fauzi', nama_calon_istri:'Siti Rahayu', desa_kelurahan:'PILANGKENCENG', tanggal_akad:'2026-07-10' } },
-      { id:'LYN-20260605-002', timestamp:'2026-06-05 09:15:00', kategori:'Nikah', jenis_label:'Pelaksanaan Pernikahan', nama_pemohon:'Budi Santoso', kontak:'089876543210', petugas_ptsp:'Kang Rozif', status_layanan:'Proses', foto:[], data:{ nama_suami:'Budi Santoso', nama_istri:'Dewi Lestari' } },
-      { id:'LYN-20260604-003', timestamp:'2026-06-04 10:00:00', kategori:'Nikah', jenis_label:'Bimbingan Calon Pengantin', nama_pemohon:'Hasan Basri', kontak:'087654321098', petugas_ptsp:'Kang Rozif', status_layanan:'Selesai', foto:[], data:{ nama_calon_suami:'Hasan Basri', nama_calon_istri:'Fatimah' } },
-      { id:'LYN-20260604-004', timestamp:'2026-06-04 11:30:00', kategori:'Konseling', jenis_label:'Konsultasi Wali Nikah', nama_pemohon:'Pak Umar', kontak:'082233445566', petugas_ptsp:'Kang Rozif', status_layanan:'Baru', foto:[], data:{ topik_konsultasi:'Wali adhal' } },
-      { id:'LYN-20260603-005', timestamp:'2026-06-03 09:00:00', kategori:'Nikah', jenis_label:'SK Belum Pernah Menikah', nama_pemohon:'Rina Kartika', kontak:'081122334455', petugas_ptsp:'Kang Rozif', status_layanan:'Selesai', foto:[], data:{} }
+      { id:'LYN-20260605-001', timestamp:'2026-06-05 08:30:00', kategori:'Nikah', jenis_layanan:'nikah_pendaftaran', jenis_label:'Pendaftaran Pernikahan', nama_pemohon:'Ahmad Fauzi', kontak:'081234567890', petugas_ptsp:'Kang Rozif', status_layanan:'Baru', foto:[], dok_url:'', data:{ nama_calon_suami:'Ahmad Fauzi', nama_calon_istri:'Siti Rahayu', desa_kelurahan:'PILANGKENCENG', tanggal_akad:'2026-07-10' } },
+      { id:'LYN-20260605-002', timestamp:'2026-06-05 09:15:00', kategori:'Nikah', jenis_layanan:'nikah_pelaksanaan', jenis_label:'Pelaksanaan Pernikahan', nama_pemohon:'Budi Santoso', kontak:'089876543210', petugas_ptsp:'Kang Rozif', status_layanan:'Proses', foto:[], dok_url:'', data:{ nama_suami:'Budi Santoso', nama_istri:'Dewi Lestari' } },
+      { id:'LYN-20260604-003', timestamp:'2026-06-04 10:00:00', kategori:'Nikah', jenis_layanan:'nikah_sk_belum', jenis_label:'SK Belum Pernah Menikah', nama_pemohon:'Hasan Basri', kontak:'087654321098', petugas_ptsp:'Kang Rozif', status_layanan:'Selesai', foto:[], dok_url:'', data:{ nama_calon_suami:'Hasan Basri', nama_calon_istri:'Fatimah' } },
+      { id:'LYN-20260604-004', timestamp:'2026-06-04 11:30:00', kategori:'Konseling', jenis_layanan:'konseling_wali', jenis_label:'Konsultasi Wali Nikah', nama_pemohon:'Pak Umar', kontak:'082233445566', petugas_ptsp:'Kang Rozif', status_layanan:'Baru', foto:[], dok_url:'', data:{ topik_konsultasi:'Wali adhal' } },
+      { id:'LYN-20260603-005', timestamp:'2026-06-03 09:00:00', kategori:'Nikah', jenis_layanan:'nikah_sk_belum', jenis_label:'SK Belum Pernah Menikah', nama_pemohon:'Rina Kartika', kontak:'081122334455', petugas_ptsp:'Kang Rozif', status_layanan:'Selesai', foto:[], dok_url:'', data:{} }
     ];
   }
   filtered = [...allData];
