@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artikel & Informasi — KUA Kecamatan Pilangkenceng</title>
+  <meta name="description" content="Kumpulan artikel, informasi, dan pengumuman resmi dari KUA Kecamatan Pilangkenceng, Kabupaten Madiun.">
+  <meta name="keywords" content="artikel KUA Pilangkenceng, informasi pernikahan, wakaf, keagamaan, Madiun">
+  <meta property="og:title" content="Artikel & Informasi — KUA Pilangkenceng">
+  <meta property="og:description" content="Artikel, informasi, dan pengumuman resmi KUA Kecamatan Pilangkenceng.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kuapilangkenceng.github.io/artikel.html">
+  <link rel="canonical" href="https://kuapilangkenceng.github.io/artikel.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Config global KUA -->
+  <script src="https://kuapilangkenceng.github.io/config.js"></script>
+
+  <style>
+    :root {
+      --hijau-tua:#1b5e35; --hijau:#237a3e; --hijau-muda:#2ea04f;
+      --hijau-terang:#eaf5ee; --hijau-border:#c3dfc9;
+      --emas:#c9a030; --emas-muda:#fdf3dc;
+      --putih:#ffffff; --abu:#f4f6f4; --teks:#1a2b1e;
+      --teks-abu:#536356; --teks-ringan:#8fa392;
+      --font:'Plus Jakarta Sans',sans-serif;
+      --font-display:'Playfair Display',serif;
+      --radius:10px; --radius-lg:14px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);color:var(--teks);background:var(--putih);font-size:14px;line-height:1.65}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+
+    /* ── NAVBAR ── */
+    .navbar{background:var(--hijau-tua);position:sticky;top:0;z-index:1000;border-bottom:2px solid rgba(201,160,48,.4)}
+    .navbar-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:64px}
+    .nav-brand{display:flex;align-items:center;gap:10px}
+    .nav-logo{width:42px;height:42px;border-radius:50%;background:var(--emas);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+    .nav-brand-text strong{display:block;font-size:13px;font-weight:700;color:#fff;line-height:1.25}
+    .nav-brand-text span{font-size:10px;color:rgba(255,255,255,.6)}
+    .nav-links{display:flex;align-items:center;gap:1.25rem}
+    .nav-links a{color:rgba(255,255,255,.8);font-size:13px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--emas);border-bottom-color:var(--emas)}
+    .nav-dropdown{position:relative}
+    .nav-dropdown-toggle{color:rgba(255,255,255,.8);font-size:13px;font-weight:500;padding:4px 0;border-bottom:2px solid transparent;transition:all .2s;background:none;border-top:none;border-left:none;border-right:none;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:var(--font)}
+    .nav-dropdown-toggle:hover,.nav-dropdown.open .nav-dropdown-toggle{color:var(--emas);border-bottom-color:var(--emas)}
+    .dd-arrow{font-size:9px;transition:transform .2s;display:inline-block}
+    .nav-dropdown.open .dd-arrow{transform:rotate(180deg)}
+    .nav-dropdown-menu{position:absolute;top:calc(100% + 14px);left:50%;transform:translateX(-50%);background:var(--putih);border-radius:var(--radius-lg);box-shadow:0 8px 32px rgba(0,0,0,.18);min-width:220px;border:1px solid var(--hijau-border);overflow:hidden;opacity:0;pointer-events:none;transform:translateX(-50%) translateY(-6px);transition:opacity .2s,transform .2s}
+    .nav-dropdown.open .nav-dropdown-menu{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+    .dd-section-label{font-size:9.5px;font-weight:700;color:var(--teks-ringan);letter-spacing:.6px;padding:8px 14px 4px;text-transform:uppercase}
+    .dd-item{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:12.5px;font-weight:500;color:var(--teks);transition:background .15s;text-decoration:none;border-bottom:none}
+    .dd-item:hover{background:var(--hijau-terang);color:var(--hijau-tua)}
+    .dd-item-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0}
+    .dd-item-text strong{display:block;font-size:12px;font-weight:600;color:inherit;line-height:1.2}
+    .dd-item-text span{font-size:10.5px;color:var(--teks-abu)}
+    .dd-badge-soon{margin-left:auto;font-size:9px;font-weight:700;background:#fff3e0;color:#b45309;border:1px solid #fbbf24;padding:1px 6px;border-radius:10px;white-space:nowrap;flex-shrink:0}
+    .dd-divider{height:1px;background:var(--hijau-border);margin:4px 0}
+    .btn-ptsp{background:var(--emas);color:var(--hijau-tua);padding:8px 16px;border-radius:8px;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;border:none;cursor:pointer;transition:opacity .2s;white-space:nowrap}
+    .btn-ptsp:hover{opacity:.88}
+
+    /* ── HERO MINI ── */
+    .hero-mini{background:var(--hijau-tua);padding:2.5rem 1.5rem;position:relative;overflow:hidden}
+    .hero-mini::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--hijau-tua) 0%,#1f6b38 60%,rgba(35,122,62,.9) 100%)}
+    .hero-mini::after{content:'';position:absolute;inset:0;opacity:.05;background-image:repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%);background-size:20px 20px}
+    .hero-mini-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+    .hero-breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.6);margin-bottom:.75rem}
+    .hero-breadcrumb a{color:rgba(255,255,255,.6);transition:color .2s}
+    .hero-breadcrumb a:hover{color:var(--emas)}
+    .hero-breadcrumb span{color:rgba(255,255,255,.35)}
+    .hero-mini h1{font-family:var(--font-display);color:#fff;font-size:2rem;line-height:1.25;margin-bottom:.5rem}
+    .hero-mini p{color:rgba(255,255,255,.72);font-size:13.5px;max-width:560px}
+
+    /* ── LAYOUT UTAMA ── */
+    .main-wrap{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;display:grid;grid-template-columns:1fr 280px;gap:2rem;align-items:start}
+
+    /* ── FILTER KATEGORI ── */
+    .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem}
+    .filter-btn{padding:6px 16px;border-radius:20px;border:1.5px solid var(--hijau-border);background:var(--putih);color:var(--teks-abu);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--font)}
+    .filter-btn:hover{border-color:var(--hijau);color:var(--hijau)}
+    .filter-btn.aktif{background:var(--hijau);color:#fff;border-color:var(--hijau)}
+
+    /* ── SEARCH ── */
+    .search-wrap{position:relative;margin-bottom:1.5rem}
+    .search-input{width:100%;border:1.5px solid var(--hijau-border);border-radius:var(--radius);padding:10px 16px 10px 40px;font-size:13px;font-family:var(--font);color:var(--teks);background:var(--abu);outline:none;transition:border-color .2s}
+    .search-input:focus{border-color:var(--hijau);background:var(--putih)}
+    .search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--teks-ringan);font-size:15px;pointer-events:none}
+
+    /* ── GRID ARTIKEL ── */
+    .artikel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+    .acard{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);overflow:hidden;background:var(--putih);transition:transform .2s,box-shadow .2s;cursor:pointer}
+    .acard:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(27,94,53,.1)}
+    .acard-thumb{height:140px;background:var(--hijau-terang);display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;overflow:hidden}
+    .acard-thumb img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+    .acard-body{padding:1rem 1.125rem 1.125rem}
+    .acard-meta-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+    .acard-cat{display:inline-block;background:var(--hijau-terang);color:var(--hijau);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
+    .acard-date{font-size:11px;color:var(--teks-ringan)}
+    .acard-body h3{font-size:13.5px;font-weight:700;color:var(--teks);line-height:1.4;margin-bottom:.4rem}
+    .acard-body p{font-size:12px;color:var(--teks-abu);line-height:1.55;margin-bottom:.75rem}
+    .acard-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--hijau-border);padding-top:.625rem}
+    .acard-author{font-size:11px;color:var(--teks-ringan)}
+    .acard-read{font-size:12px;color:var(--hijau);font-weight:600}
+
+    /* ── FEATURED ARTIKEL (baris pertama) ── */
+    .acard.featured{grid-column:1/-1;display:grid;grid-template-columns:280px 1fr}
+    .acard.featured .acard-thumb{height:100%;min-height:160px}
+    .acard.featured .acard-body h3{font-size:15px}
+
+    /* ── SKELETON LOADING ── */
+    .skeleton{background:linear-gradient(90deg,var(--abu) 25%,#e8ede9 50%,var(--abu) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    .skel-card{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);overflow:hidden}
+    .skel-thumb{height:140px;background:var(--abu)}
+    .skel-body{padding:1rem}
+    .skel-line{height:12px;border-radius:4px;margin-bottom:8px}
+    .skel-line.w80{width:80%}
+    .skel-line.w60{width:60%}
+    .skel-line.w40{width:40%}
+
+    /* ── EMPTY STATE ── */
+    .empty-state{text-align:center;padding:3rem 1.5rem;color:var(--teks-abu);grid-column:1/-1}
+    .empty-state .empty-icon{font-size:48px;margin-bottom:1rem;opacity:.5}
+    .empty-state h3{font-size:15px;font-weight:700;color:var(--teks);margin-bottom:.4rem}
+    .empty-state p{font-size:13px}
+
+    /* ── PAGINATION ── */
+    .pagination{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:1.75rem}
+    .page-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--hijau-border);background:var(--putih);color:var(--teks-abu);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:var(--font)}
+    .page-btn:hover{border-color:var(--hijau);color:var(--hijau)}
+    .page-btn.aktif{background:var(--hijau);color:#fff;border-color:var(--hijau)}
+    .page-btn:disabled{opacity:.4;cursor:not-allowed}
+
+    /* ── SIDEBAR ── */
+    .sidebar{display:flex;flex-direction:column;gap:1.25rem}
+    .sbox{border:1px solid var(--hijau-border);border-radius:var(--radius-lg);padding:1.125rem;background:var(--putih)}
+    .sbox-title{font-size:13px;font-weight:700;color:var(--hijau-tua);padding-bottom:.5rem;margin-bottom:.75rem;border-bottom:2px solid var(--hijau-terang);display:flex;align-items:center;gap:6px}
+    /* Kategori sidebar */
+    .kat-list{list-style:none}
+    .kat-item{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--hijau-border);cursor:pointer;transition:color .15s}
+    .kat-item:last-child{border-bottom:none}
+    .kat-item:hover .kat-name{color:var(--hijau)}
+    .kat-name{font-size:12.5px;color:var(--teks);display:flex;align-items:center;gap:6px}
+    .kat-count{font-size:11px;font-weight:700;background:var(--hijau-terang);color:var(--hijau);padding:2px 8px;border-radius:20px}
+    /* Artikel terpopuler */
+    .pop-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--hijau-border);cursor:pointer}
+    .pop-item:last-child{border-bottom:none}
+    .pop-thumb{width:52px;height:44px;border-radius:6px;background:var(--hijau-terang);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+    .pop-thumb img{width:100%;height:100%;object-fit:cover}
+    .pop-title{font-size:12px;font-weight:600;color:var(--teks);line-height:1.35;margin-bottom:3px}
+    .pop-date{font-size:10.5px;color:var(--teks-ringan)}
+    /* Tag cloud */
+    .tag-cloud{display:flex;flex-wrap:wrap;gap:6px}
+    .tag{padding:4px 12px;border-radius:20px;border:1px solid var(--hijau-border);font-size:11.5px;color:var(--teks-abu);cursor:pointer;transition:all .2s}
+    .tag:hover{background:var(--hijau-terang);color:var(--hijau);border-color:var(--hijau)}
+    /* CTA PTSP sidebar */
+    .sbox-ptsp{background:var(--hijau-tua);border-color:var(--hijau-tua);text-align:center}
+    .sbox-ptsp .sbox-title{color:#fff;border-bottom-color:rgba(255,255,255,.15)}
+    .sbox-ptsp p{font-size:12px;color:rgba(255,255,255,.72);line-height:1.6;margin-bottom:.875rem}
+    .btn-ptsp-sidebar{display:block;background:var(--emas);color:var(--hijau-tua);text-align:center;padding:9px 16px;border-radius:8px;font-size:13px;font-weight:700;transition:opacity .2s}
+    .btn-ptsp-sidebar:hover{opacity:.88}
+
+    /* ── MODAL ARTIKEL ── */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity .25s}
+    .modal-overlay.open{opacity:1;pointer-events:auto}
+    .modal-box{background:var(--putih);border-radius:var(--radius-lg);max-width:720px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);transform:translateY(12px);transition:transform .25s}
+    .modal-overlay.open .modal-box{transform:none}
+    .modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--hijau-border);display:flex;align-items:flex-start;gap:12px;position:sticky;top:0;background:var(--putih);z-index:1}
+    .modal-header-info{flex:1}
+    .modal-cat{display:inline-block;background:var(--hijau-terang);color:var(--hijau);font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;margin-bottom:.4rem}
+    .modal-title{font-size:16px;font-weight:700;color:var(--teks);line-height:1.35}
+    .modal-meta{font-size:11.5px;color:var(--teks-ringan);margin-top:.3rem}
+    .modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--hijau-border);background:var(--abu);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:background .15s}
+    .modal-close:hover{background:var(--hijau-terang)}
+    .modal-thumb{width:100%;height:220px;background:var(--hijau-terang);display:flex;align-items:center;justify-content:center;font-size:60px;overflow:hidden}
+    .modal-thumb img{width:100%;height:100%;object-fit:cover}
+    .modal-content{padding:1.5rem}
+    .modal-content p{font-size:13.5px;line-height:1.8;color:var(--teks);margin-bottom:1rem}
+    .modal-content p:last-child{margin-bottom:0}
+    .modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--hijau-border);display:flex;gap:10px;align-items:center;justify-content:space-between}
+    .modal-share{font-size:12px;color:var(--teks-abu)}
+    .btn-wa-share{background:#25D366;color:#fff;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s}
+    .btn-wa-share:hover{opacity:.88}
+
+    /* ── FOOTER ── */
+    footer{background:var(--hijau-tua);color:#fff;padding:2rem 1.5rem 1.25rem;margin-top:3rem}
+    .footer-bottom{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1);padding-top:1rem}
+    .footer-bottom p{font-size:11px;opacity:.5;margin:0}
+    .footer-links{display:flex;gap:16px}
+    .footer-links a{font-size:12px;color:rgba(255,255,255,.6);transition:color .2s}
+    .footer-links a:hover{color:var(--emas)}
+
+    /* ── REVEAL ── */
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+    .reveal.visible{opacity:1;transform:none}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      .main-wrap{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .artikel-grid{grid-template-columns:1fr}
+      .acard.featured{grid-template-columns:1fr}
+      .acard.featured .acard-thumb{height:160px}
+    }
+    @media(max-width:480px){
+      .nav-links{display:none}
+      .hero-mini h1{font-size:1.5rem}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🕌</div>
+      <div class="nav-brand-text">
+        <strong>KUA PILANGKENCENG</strong>
+        <span>Kantor Urusan Agama — Kab. Madiun</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <div class="nav-dropdown" id="navDropdown">
+        <button class="nav-dropdown-toggle" onclick="toggleDropdown()">
+          Layanan <span class="dd-arrow">▼</span>
+        </button>
+        <div class="nav-dropdown-menu">
+          <div class="dd-section-label">Layanan Aktif</div>
+          <a href="layanan-nikah.html" class="dd-item">
+            <span class="dd-item-icon">💒</span>
+            <div class="dd-item-text"><strong>Layanan Nikah</strong><span>12 sub-layanan pernikahan</span></div>
+          </a>
+          <a href="layanan-wakaf.html" class="dd-item">
+            <span class="dd-item-icon">🕌</span>
+            <div class="dd-item-text"><strong>Layanan Wakaf</strong><span>Ikrar Wakaf (e-AIW) &amp; Nadzir</span></div>
+          </a>
+          <a href="layanan-kiblat.html" class="dd-item">
+            <span class="dd-item-icon">🌙</span>
+            <div class="dd-item-text"><strong>Pengukuran Kiblat</strong><span>BA &amp; Sertifikat Arah Kiblat</span></div>
+          </a>
+          <a href="layanan-konseling.html" class="dd-item">
+            <span class="dd-item-icon">🤝</span>
+            <div class="dd-item-text"><strong>Konseling &amp; Rekomendasi</strong><span>9 sub-layanan bimbingan &amp; surat</span></div>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-section-label">Segera Hadir</div>
+          <div class="dd-item" style="opacity:.65;cursor:default">
+            <span class="dd-item-icon">🥩</span>
+            <div class="dd-item-text"><strong>Sertifikasi Halal</strong><span>Pendampingan produk halal</span></div>
+            <span class="dd-badge-soon">Segera</span>
+          </div>
+        </div>
+      </div>
+      <a href="artikel.html" class="active">Artikel</a>
+      <a href="index.html#kontak">Kontak</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp">🔒 Login Petugas</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO MINI -->
+<div class="hero-mini">
+  <div class="hero-mini-inner">
+    <div class="hero-breadcrumb">
+      <a href="index.html">Beranda</a>
+      <span>›</span>
+      <span style="color:rgba(255,255,255,.85)">Artikel &amp; Informasi</span>
+    </div>
+    <h1>Artikel &amp; Informasi</h1>
+    <p>Kumpulan artikel, pengumuman, dan informasi resmi seputar layanan dan kegiatan KUA Kecamatan Pilangkenceng.</p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- KONTEN ARTIKEL -->
+  <div>
+    <!-- Search -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Cari artikel, topik, atau kata kunci..." oninput="handleSearch(this.value)">
+    </div>
+
+    <!-- Filter Kategori -->
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-btn aktif" onclick="filterKategori('semua',this)">Semua</button>
+      <button class="filter-btn" onclick="filterKategori('Pernikahan',this)">💒 Pernikahan</button>
+      <button class="filter-btn" onclick="filterKategori('Wakaf',this)">🕌 Wakaf</button>
+      <button class="filter-btn" onclick="filterKategori('Keluarga',this)">👨‍👩‍👧 Keluarga</button>
+      <button class="filter-btn" onclick="filterKategori('Ecotheology',this)">🌿 Ecotheology</button>
+      <button class="filter-btn" onclick="filterKategori('Penyuluhan',this)">🎤 Penyuluhan</button>
+      <button class="filter-btn" onclick="filterKategori('Pengumuman',this)">📢 Pengumuman</button>
+    </div>
+
+    <!-- Grid Artikel -->
+    <div class="artikel-grid reveal" id="artikelGrid">
+      <!-- Skeleton loading -->
+      <div class="skel-card">
+        <div class="skel-thumb skeleton"></div>
+        <div class="skel-body">
+          <div class="skel-line skeleton w40"></div>
+          <div class="skel-line skeleton w80" style="height:16px;margin:10px 0 6px"></div>
+          <div class="skel-line skeleton w60"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-thumb skeleton"></div>
+        <div class="skel-body">
+          <div class="skel-line skeleton w40"></div>
+          <div class="skel-line skeleton w80" style="height:16px;margin:10px 0 6px"></div>
+          <div class="skel-line skeleton w60"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-thumb skeleton"></div>
+        <div class="skel-body">
+          <div class="skel-line skeleton w40"></div>
+          <div class="skel-line skeleton w80" style="height:16px;margin:10px 0 6px"></div>
+          <div class="skel-line skeleton w60"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-thumb skeleton"></div>
+        <div class="skel-body">
+          <div class="skel-line skeleton w40"></div>
+          <div class="skel-line skeleton w80" style="height:16px;margin:10px 0 6px"></div>
+          <div class="skel-line skeleton w60"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Kategori -->
+    <div class="sbox">
+      <div class="sbox-title">📂 Kategori</div>
+      <ul class="kat-list" id="katList">
+        <li class="kat-item" onclick="filterKategori('Pernikahan')">
+          <span class="kat-name">💒 Pernikahan</span>
+          <span class="kat-count" id="kc-pernikahan">–</span>
+        </li>
+        <li class="kat-item" onclick="filterKategori('Wakaf')">
+          <span class="kat-name">🕌 Wakaf</span>
+          <span class="kat-count" id="kc-wakaf">–</span>
+        </li>
+        <li class="kat-item" onclick="filterKategori('Keluarga')">
+          <span class="kat-name">👨‍👩‍👧 Keluarga</span>
+          <span class="kat-count" id="kc-keluarga">–</span>
+        </li>
+        <li class="kat-item" onclick="filterKategori('Ecotheology')">
+          <span class="kat-name">🌿 Ecotheology</span>
+          <span class="kat-count" id="kc-ecotheology">–</span>
+        </li>
+        <li class="kat-item" onclick="filterKategori('Penyuluhan')">
+          <span class="kat-name">🎤 Penyuluhan</span>
+          <span class="kat-count" id="kc-penyuluhan">–</span>
+        </li>
+        <li class="kat-item" onclick="filterKategori('Pengumuman')">
+          <span class="kat-name">📢 Pengumuman</span>
+          <span class="kat-count" id="kc-pengumuman">–</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Artikel Terbaru -->
+    <div class="sbox">
+      <div class="sbox-title">🕐 Artikel Terbaru</div>
+      <div id="artikelTerbaru">
+        <p style="font-size:12px;color:var(--teks-ringan)">Memuat...</p>
+      </div>
+    </div>
+
+    <!-- Tag Cloud -->
+    <div class="sbox">
+      <div class="sbox-title">🏷️ Topik Populer</div>
+      <div class="tag-cloud">
+        <span class="tag" onclick="handleSearch('nikah')">Nikah</span>
+        <span class="tag" onclick="handleSearch('keluarga')">Keluarga Sakinah</span>
+        <span class="tag" onclick="handleSearch('wakaf')">Wakaf</span>
+        <span class="tag" onclick="handleSearch('kiblat')">Kiblat</span>
+        <span class="tag" onclick="handleSearch('halal')">Halal</span>
+        <span class="tag" onclick="handleSearch('ecotheology')">Ecotheology</span>
+        <span class="tag" onclick="handleSearch('bimwin')">Bimwin</span>
+        <span class="tag" onclick="handleSearch('itsbat')">Itsbat Nikah</span>
+        <span class="tag" onclick="handleSearch('masjid')">Masjid</span>
+        <span class="tag" onclick="handleSearch('taklim')">Majelis Taklim</span>
+      </div>
+    </div>
+
+    <!-- CTA PTSP -->
+    <div class="sbox sbox-ptsp">
+      <div class="sbox-title">📋 Daftar Layanan Online</div>
+      <p>Ajukan layanan KUA secara digital — pendaftaran nikah, wakaf, konseling, dan lainnya.</p>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp-sidebar">Buka PTSP Digital →</a>
+    </div>
+  </aside>
+</div>
+
+<!-- MODAL DETAIL ARTIKEL -->
+<div class="modal-overlay" id="modalOverlay" onclick="tutupModal(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <div class="modal-header-info">
+        <div class="modal-cat" id="modalKat">Kategori</div>
+        <div class="modal-title" id="modalJudul">Judul Artikel</div>
+        <div class="modal-meta" id="modalMeta">Tanggal · KUA Pilangkenceng</div>
+      </div>
+      <button class="modal-close" onclick="tutupModal()">✕</button>
+    </div>
+    <div class="modal-thumb" id="modalThumb">📋</div>
+    <div class="modal-content" id="modalIsi"></div>
+    <div class="modal-footer">
+      <span class="modal-share">Bagikan artikel ini:</span>
+      <a id="btnWaShare" href="#" target="_blank" class="btn-wa-share">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Bagikan via WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-bottom">
+    <p>© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun</p>
+    <div class="footer-links">
+      <a href="index.html">Beranda</a>
+      <a href="profil.html">Profil</a>
+      <a href="layanan-nikah.html">Layanan Nikah</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">PTSP Digital</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const API_URL = window.KUA ? KUA.URL.api : 'https://script.google.com/macros/s/AKfycbzV1e8HR4L_tBRjnhkebipR7rTuapGH6xaQxP_SNmEyYatLxl1aoRarzkPMKu02FhtC/exec';
+
+  /* ── STATE ── */
+  let semuaArtikel = [];
+  let artikelTampil = [];
+  let halamanAktif  = 1;
+  const PER_HALAMAN = 6;
+  let kategoriAktif = 'semua';
+  let querySearch   = '';
+
+  /* ── EMOJI KATEGORI ── */
+  function getEmoji(kat) {
+    const map = {
+      Pernikahan:'💒', Nikah:'💒', Wakaf:'🕌', Keluarga:'👨‍👩‍👧',
+      Ecotheology:'🌿', Penyuluhan:'🎤', Kiblat:'🌙', Halal:'🥩',
+      Konseling:'🤝', Rekomendasi:'📜', Pengumuman:'📢', Informasi:'📋'
+    };
+    return map[kat] || '📋';
+  }
+
+  /* ── FORMAT TANGGAL ── */
+  function formatTgl(str) {
+    if (!str) return '';
+    const d = new Date(str);
+    if (isNaN(d)) return str;
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+  }
+
+  /* ── LOAD ARTIKEL DARI API ── */
+  async function loadArtikel() {
+    try {
+      const res  = await fetch(API_URL + '?action=getartikel&status=Publikasi&limit=100&t=' + Date.now());
+      const data = await res.json();
+
+      if ((data.ok || data.status === 'ok') && (data.results || data.data || data.artikel)) {
+        semuaArtikel = data.results || data.data || data.artikel || [];
+      } else {
+        semuaArtikel = [];
+      }
+    } catch(e) {
+      semuaArtikel = [];
+    }
+
+    // Jika kosong, tampilkan artikel default/contoh
+    if (semuaArtikel.length === 0) {
+      semuaArtikel = getArtikelDefault();
+    }
+
+    artikelTampil = [...semuaArtikel];
+    render();
+    renderSidebar();
+  }
+
+  /* ── ARTIKEL DEFAULT (sebelum ada data di Sheets) ── */
+  function getArtikelDefault() {
+    return [
+      { id:'D1', judul:'Syarat & Prosedur Pendaftaran Nikah 2025', kategori:'Pernikahan', tanggal:'2025-06-01', ringkasan:'Panduan lengkap dokumen yang perlu disiapkan untuk mendaftar nikah di KUA Pilangkenceng, termasuk persyaratan terbaru tahun 2025.', isi:'Untuk mendaftar nikah di KUA Pilangkenceng, calon pengantin perlu menyiapkan dokumen berikut:\n\n1. Fotokopi KTP kedua calon pengantin\n2. Fotokopi Kartu Keluarga\n3. Akta Kelahiran kedua calon pengantin\n4. Surat keterangan belum menikah dari kelurahan/desa\n5. Pas foto 2x3 dan 4x6 masing-masing 4 lembar\n6. Surat izin orang tua (bagi yang belum berusia 21 tahun)\n\nPendaftaran dapat dilakukan secara online melalui sistem PTSP Digital KUA Pilangkenceng.' },
+      { id:'D2', judul:'Ecotheology: Merawat Lingkungan sebagai Wujud Ibadah', kategori:'Ecotheology', tanggal:'2025-05-20', ringkasan:'KUA Pilangkenceng mengintegrasikan nilai-nilai keagamaan dengan kepedulian lingkungan hidup melalui program ecotheology yang inovatif.', isi:'Program Ecotheology KUA Pilangkenceng hadir sebagai wujud nyata integrasi antara nilai-nilai keagamaan Islam dengan kepedulian terhadap lingkungan hidup.\n\nDalam Islam, menjaga alam adalah bagian dari amanah kekhalifahan manusia di bumi. Program ini mencakup kegiatan penanaman pohon, pengelolaan sampah berbasis nilai agama, serta penyuluhan lingkungan di masjid dan majelis taklim.' },
+      { id:'D3', judul:'Tips Membangun Keluarga Sakinah Mawaddah Warahmah', kategori:'Keluarga', tanggal:'2025-05-10', ringkasan:'Kiat-kiat praktis membangun rumah tangga harmonis berdasarkan nilai-nilai ajaran Islam untuk pasangan baru menikah.', isi:'Keluarga sakinah adalah dambaan setiap pasangan. Berikut beberapa kiat membangunnya:\n\n1. Komunikasi yang terbuka dan penuh kasih\n2. Menjalankan ibadah bersama\n3. Saling menghormati peran masing-masing\n4. Menyelesaikan masalah dengan musyawarah\n5. Aktif mengikuti bimbingan perkawinan dari KUA\n\nKUA Pilangkenceng menyediakan layanan konseling keluarga sakinah untuk pasangan yang membutuhkan bimbingan.' },
+      { id:'D4', judul:'Panduan Ikrar Wakaf dan Penggantian Nadzir', kategori:'Wakaf', tanggal:'2025-05-05', ringkasan:'Informasi lengkap mengenai prosedur ikrar wakaf, pembuatan Akta Ikrar Wakaf (AIW), dan tata cara penggantian nadzir di KUA.', isi:'Wakaf adalah salah satu instrumen ekonomi Islam yang penting. Untuk melaksanakan ikrar wakaf di KUA Pilangkenceng, berikut prosedurnya:\n\n1. Datang ke KUA bersama wakif dan nadzir\n2. Menyiapkan sertifikat tanah atau dokumen kepemilikan\n3. Mengisi formulir permohonan AIW\n4. Menandatangani Akta Ikrar Wakaf di hadapan PPAIW\n5. Mendaftarkan ke BPN untuk sertifikasi wakaf\n\nLayanan ini tersedia di KUA Pilangkenceng pada jam kerja.' },
+      { id:'D5', judul:'Pengumuman: Jadwal Operasional KUA Pilangkenceng', kategori:'Pengumuman', tanggal:'2025-06-06', ringkasan:'Informasi resmi jadwal jam pelayanan dan operasional KUA Kecamatan Pilangkenceng untuk masyarakat.', isi:'Jam Pelayanan KUA Kecamatan Pilangkenceng:\n\nSenin – Kamis: 08.00 – 16.00 WIB\nJumat: 08.00 – 16.30 WIB\nIstirahat: 12.00 – 13.00 WIB\nSabtu – Minggu: Tutup\n\nUntuk informasi lebih lanjut, hubungi kami via WhatsApp: 085119505451 atau email: kuapilangkenceng@gmail.com\n\nAlamat: Jl. Tirtotejo, Ds. Kenongorejo, Kec. Pilangkenceng, Kab. Madiun.' },
+      { id:'D6', judul:'Layanan Pengukuran Arah Kiblat untuk Masjid dan Musholla', kategori:'Penyuluhan', tanggal:'2025-04-28', ringkasan:'KUA Pilangkenceng menyediakan layanan pengukuran dan penentuan arah kiblat yang akurat menggunakan metode ilmiah.', isi:'Ketepatan arah kiblat merupakan hal penting dalam pelaksanaan shalat. KUA Pilangkenceng menyediakan layanan pengukuran arah kiblat gratis untuk masjid, musholla, dan rumah warga.\n\nMetode yang digunakan: Rashdul Qiblat (bayangan matahari) dan kompas digital terstandarisasi.\n\nUntuk mengajukan permohonan pengukuran kiblat, hubungi KUA Pilangkenceng melalui nomor WhatsApp: 085119505451.' }
+    ];
+  }
+
+  /* ── FILTER & SEARCH ── */
+  function filterKategori(kat, btnEl) {
+    kategoriAktif = kat;
+    halamanAktif  = 1;
+    // Update tombol aktif
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('aktif'));
+    if (btnEl) btnEl.classList.add('aktif');
+    terapkanFilter();
+  }
+
+  function handleSearch(q) {
+    querySearch   = q.toLowerCase();
+    halamanAktif  = 1;
+    if (document.getElementById('searchInput')) {
+      document.getElementById('searchInput').value = q;
+    }
+    terapkanFilter();
+  }
+
+  function terapkanFilter() {
+    artikelTampil = semuaArtikel.filter(a => {
+      const cocokKat = kategoriAktif === 'semua' || a.kategori === kategoriAktif;
+      const cocokQ   = !querySearch ||
+        (a.judul     || '').toLowerCase().includes(querySearch) ||
+        (a.ringkasan || '').toLowerCase().includes(querySearch) ||
+        (a.kategori  || '').toLowerCase().includes(querySearch);
+      return cocokKat && cocokQ;
+    });
+    render();
+  }
+
+  /* ── RENDER GRID ── */
+  function render() {
+    const grid  = document.getElementById('artikelGrid');
+    const start = (halamanAktif - 1) * PER_HALAMAN;
+    const slice = artikelTampil.slice(start, start + PER_HALAMAN);
+
+    if (slice.length === 0) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <h3>Artikel tidak ditemukan</h3>
+          <p>Coba kata kunci lain atau pilih kategori berbeda.</p>
+        </div>`;
+      document.getElementById('pagination').innerHTML = '';
+      return;
+    }
+
+    grid.innerHTML = slice.map((a, i) => {
+      const featured = i === 0 && halamanAktif === 1 && kategoriAktif === 'semua' && !querySearch;
+      const thumb = a.thumbnail
+        ? `<img src="${a.thumbnail}" alt="${a.judul}" loading="lazy">`
+        : getEmoji(a.kategori);
+      return `
+        <div class="acard${featured ? ' featured' : ''}" onclick="bukaModal('${a.id}')">
+          <div class="acard-thumb">${thumb}</div>
+          <div class="acard-body">
+            <div class="acard-meta-top">
+              <span class="acard-cat">${a.kategori || 'Informasi'}</span>
+              <span class="acard-date">${formatTgl(a.tanggal)}</span>
+            </div>
+            <h3>${a.judul}</h3>
+            <p>${(a.ringkasan || '').substring(0, 120)}${(a.ringkasan||'').length > 120 ? '...' : ''}</p>
+            <div class="acard-footer">
+              <span class="acard-author">KUA Pilangkenceng</span>
+              <span class="acard-read">Baca selengkapnya →</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    renderPagination();
+    // Reveal animasi
+    setTimeout(() => grid.querySelectorAll('.acard').forEach(c => c.style.opacity = '1'), 50);
+  }
+
+  /* ── PAGINATION ── */
+  function renderPagination() {
+    const total  = Math.ceil(artikelTampil.length / PER_HALAMAN);
+    const pg     = document.getElementById('pagination');
+    if (total <= 1) { pg.innerHTML = ''; return; }
+
+    let html = `<button class="page-btn" onclick="gantiHalaman(${halamanAktif-1})" ${halamanAktif===1?'disabled':''}>‹</button>`;
+    for (let i = 1; i <= total; i++) {
+      html += `<button class="page-btn${i===halamanAktif?' aktif':''}" onclick="gantiHalaman(${i})">${i}</button>`;
+    }
+    html += `<button class="page-btn" onclick="gantiHalaman(${halamanAktif+1})" ${halamanAktif===total?'disabled':''}>›</button>`;
+    pg.innerHTML = html;
+  }
+
+  function gantiHalaman(h) {
+    const total = Math.ceil(artikelTampil.length / PER_HALAMAN);
+    if (h < 1 || h > total) return;
+    halamanAktif = h;
+    render();
+    window.scrollTo({ top: 300, behavior: 'smooth' });
+  }
+
+  /* ── SIDEBAR ── */
+  function renderSidebar() {
+    // Hitung per kategori
+    const map = {};
+    semuaArtikel.forEach(a => { map[a.kategori] = (map[a.kategori] || 0) + 1; });
+    ['Pernikahan','Wakaf','Keluarga','Ecotheology','Penyuluhan','Pengumuman'].forEach(k => {
+      const el = document.getElementById('kc-' + k.toLowerCase());
+      if (el) el.textContent = map[k] || 0;
+    });
+
+    // Artikel terbaru (3 teratas)
+    const terbaru = [...semuaArtikel].slice(0, 3);
+    const el = document.getElementById('artikelTerbaru');
+    if (!terbaru.length) { el.innerHTML = '<p style="font-size:12px;color:var(--teks-ringan)">Belum ada artikel.</p>'; return; }
+    el.innerHTML = terbaru.map(a => `
+      <div class="pop-item" onclick="bukaModal('${a.id}')">
+        <div class="pop-thumb">${a.thumbnail ? `<img src="${a.thumbnail}" alt="">` : getEmoji(a.kategori)}</div>
+        <div>
+          <div class="pop-title">${a.judul}</div>
+          <div class="pop-date">${formatTgl(a.tanggal)}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  /* ── MODAL ── */
+  function bukaModal(id) {
+    const a = semuaArtikel.find(x => x.id == id);
+    if (!a) return;
+
+    document.getElementById('modalKat').textContent   = a.kategori || 'Informasi';
+    document.getElementById('modalJudul').textContent = a.judul;
+    document.getElementById('modalMeta').textContent  = formatTgl(a.tanggal) + ' · KUA Pilangkenceng';
+    document.getElementById('modalThumb').innerHTML   = a.thumbnail
+      ? `<img src="${a.thumbnail}" alt="${a.judul}">`
+      : getEmoji(a.kategori);
+
+    // Konten isi — format paragraf
+    const isi = (a.isi || a.ringkasan || '');
+    document.getElementById('modalIsi').innerHTML = isi
+      .split('\n\n').filter(Boolean)
+      .map(p => `<p>${p.replace(/\n/g,'<br>')}</p>`).join('');
+
+    // Link share WA
+    const pesan = `Assalamu'alaikum, saya menemukan artikel menarik dari KUA Pilangkenceng:\n\n*${a.judul}*\n\nhttps://kuapilangkenceng.github.io/artikel.html`;
+    document.getElementById('btnWaShare').href = 'https://wa.me/?text=' + encodeURIComponent(pesan);
+
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function tutupModal(e) {
+    if (e && e.target !== document.getElementById('modalOverlay') && !e.target.classList.contains('modal-close')) return;
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') tutupModal({target: document.getElementById('modalOverlay')}); });
+
+  /* ── NAVBAR DROPDOWN ── */
+  function toggleDropdown() {
+    document.getElementById('navDropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', e => {
+    const dd = document.getElementById('navDropdown');
+    if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+  });
+
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── INIT ── */
+  loadArtikel();
+</script>
+
+</body>
+</html>
