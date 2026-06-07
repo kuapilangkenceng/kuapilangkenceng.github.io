@@ -891,25 +891,27 @@ document.addEventListener('DOMContentLoaded', () => {
   loadConfig();
 });
 
-// ── Load config dari Apps Script (action=getconfig) ────────────────────────
+// ── Load config dari Apps Script (action=getConfig) ─────────────────────────
 async function loadConfig() {
   try {
-    const url  = APPS_URL + '?action=getconfig';
+    const url  = APPS_URL + '?action=getConfig&_=' + Date.now();
     const resp = await fetch(url);
     const json = await resp.json();
-    if (!json.ok) throw new Error(json.error || 'Gagal ambil config');
 
-    // Cari kategori konseling
-    const cat = (json.forms.kategori || []).find(c => c.id === KATEGORI);
-    if (!cat || !cat.layanan || !cat.layanan.length) {
-      throw new Error('Kategori konseling tidak ditemukan di config');
-    }
-    CONFIG = cat.layanan;
+    // Struktur response: json.forms = flat {id: formObj}, json.kategori = {id: label}
+    // Filter form dengan kategori "Konseling & Rekomendasi"
+    const katLabel = json.kategori && json.kategori[KATEGORI];
+    if (!katLabel) throw new Error('Kategori konseling tidak ditemukan di config');
+
+    CONFIG = Object.values(json.forms || {})
+      .filter(function(f){ return f.kategori === katLabel; });
+
+    if (!CONFIG.length) throw new Error('Tidak ada layanan konseling di config');
     renderLayananGrid();
   } catch (err) {
     document.getElementById('layananGrid').innerHTML =
       '<p style="color:var(--danger);grid-column:1/-1;padding:20px;text-align:center">' +
-      '⚠️ Gagal memuat konfigurasi layanan.<br><small>' + err.message + '</small></p>';
+      '&#9888;&#65039; Gagal memuat konfigurasi layanan.<br><small>' + err.message + '</small></p>';
   }
 }
 
