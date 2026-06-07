@@ -2,7 +2,15 @@
 <html lang="id">
 <head>
   <!-- Config global KUA -->
-  <script src="https://kuapilangkenceng.github.io/config.js"></script>
+  <script src="https://kuapilangkenceng.github.io/config.js">
+function filterLayanan(kat, el) {
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#layananGridStatic .lcard').forEach(card => {
+    card.style.display = (kat === 'semua' || card.dataset.kat === kat) ? '' : 'none';
+  });
+}
+</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Layanan Konseling & Surat Rekomendasi – KUA Kecamatan Pilangkenceng, Kabupaten Madiun"/>
@@ -544,7 +552,35 @@ footer {
 .layanan-card:nth-child(8) { animation-delay: .40s; }
 .layanan-card:nth-child(9) { animation-delay: .45s; }
 @keyframes fadeUp { to { opacity:1; transform:none; } }
-</style>
+
+    .layanan-grid-static{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+    @media(max-width:900px){.layanan-grid-static{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.layanan-grid-static{grid-template-columns:1fr}}
+    .lcard{border:1px solid var(--hijau-border,#c8ddd0);border-radius:12px;overflow:hidden;background:#fff;transition:transform .2s,box-shadow .2s;display:flex;flex-direction:column}
+    .lcard:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(27,94,53,.1)}
+    .lcard-head{padding:1.125rem 1.125rem .75rem;display:flex;align-items:flex-start;gap:12px}
+    .lcard-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .lcard-num{font-size:10px;font-weight:700;color:#9ca3af;letter-spacing:.5px}
+    .lcard-head h3{font-size:13.5px;font-weight:700;color:#1b5e35;line-height:1.35;margin-top:2px}
+    .lcard-body{padding:0 1.125rem 1.125rem;flex:1;display:flex;flex-direction:column;gap:.75rem}
+    .lcard-desc{font-size:12.5px;color:#5a6a63;line-height:1.55}
+    .syarat-label{font-size:10.5px;font-weight:700;color:#1b5e35;letter-spacing:.3px;margin-bottom:4px}
+    .syarat-list{list-style:none;display:flex;flex-direction:column;gap:4px}
+    .syarat-list li{font-size:12px;color:#5a6a63;padding-left:14px;position:relative}
+    .syarat-list li::before{content:"✓";position:absolute;left:0;color:#1b5e35;font-weight:700;font-size:10px}
+    .lcard-footer{margin-top:auto;padding-top:.75rem;border-top:1px solid #e0ece5}
+    .badge-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}
+    .badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px}
+    .badge-free{background:#e8f5ee;color:#1b5e35}
+    .badge-doc{background:#fef3e2;color:#92680a}
+    .badge-online{background:#e8f0fb;color:#1a56b0}
+    .btn-daftar{background:#1b5e35;color:#fff;border:none;padding:8px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;width:100%;transition:background .2s;display:block;text-align:center;text-decoration:none}
+    .btn-daftar:hover{background:#14472a}
+    .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.75rem}
+    .ftab{padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #c8ddd0;color:#5a6a63;background:#fff;transition:all .2s}
+    .ftab:hover{border-color:#1b5e35;color:#1b5e35}
+    .ftab.active{background:#1b5e35;color:#fff;border-color:#1b5e35}
+  </style>
 </head>
 
 <body>
@@ -595,7 +631,7 @@ footer {
       </div>
       <a href="index.html#informasi">Informasi</a>
       <a href="index.html#kontak">Kontak</a>
-      <a href="https://kuapilangkenceng.github.io/ptsp/index.html" class="btn-ptsp" target="_blank">🔒 Login Petugas</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" class="btn-ptsp" target="_blank">🔒 Login Petugas</a>
     </div>
   </div>
 </nav>
@@ -621,6 +657,228 @@ footer {
     <p id="loadingText">Memproses permohonan…</p>
   </div>
 </div>
+
+
+<!-- ── GRID PENJELASAN 9 LAYANAN (statis, seperti Nikah) ── -->
+<section style="padding:48px 0 0">
+  <div class="container">
+    <div style="background:#fff7e6;border:1px solid #f5c842;border-radius:10px;padding:14px 18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:24px">
+      <span style="font-size:20px;flex-shrink:0">ℹ️</span>
+      <div>
+        <strong style="font-size:13px;color:#92680a">Semua layanan konseling & rekomendasi di KUA Pilangkenceng tidak dipungut biaya (GRATIS)</strong>
+        <p style="font-size:12px;color:#7a5c0a;margin-top:3px">Klik tombol pada layanan yang dibutuhkan untuk mengisi formulir permohonan secara online.</p>
+      </div>
+    </div>
+    <div style="font-size:18px;font-weight:800;color:#1b5e35;margin-bottom:4px">9 Sub-Layanan Konseling &amp; Rekomendasi</div>
+    <div class="filter-bar">
+      <div class="ftab active" onclick="filterLayanan('semua',this)">Semua (9)</div>
+      <div class="ftab" onclick="filterLayanan('bimbingan',this)">Bimbingan</div>
+      <div class="ftab" onclick="filterLayanan('konseling',this)">Konseling</div>
+      <div class="ftab" onclick="filterLayanan('rekomendasi',this)">Surat Rekomendasi</div>
+    </div>
+    <div class="layanan-grid-static" id="layananGridStatic">
+
+      <!-- 01. PEMBINAAN MAJELIS TAKLIM -->
+      <div class="lcard" data-kat="bimbingan">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">📚</div>
+          <div>
+            <div class="lcard-num">LAYANAN 01</div>
+            <h3>Pembinaan Majelis Taklim</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Bimbingan dan pembinaan kelembagaan Majelis Taklim agar memenuhi standar administrasi dan kegiatan keagamaan.</p>
+          <div>
+            <div class="syarat-label">FOKUS PEMBINAAN</div>
+            <ul class="syarat-list"><li>Administrasi kepengurusan Majelis Taklim</li><li>Kurikulum dan jadwal kajian rutin</li><li>Laporan kegiatan keagamaan</li><li>Koordinasi dengan Kemenag</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-online">Form Digital</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_pembinaan_majelis" target="_blank" class="btn-daftar">Daftar Pembinaan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02. BIMBINGAN REMAJA PRA-NIKAH -->
+      <div class="lcard" data-kat="bimbingan">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#e8f0fb">👫</div>
+          <div>
+            <div class="lcard-num">LAYANAN 02</div>
+            <h3>Bimbingan Remaja Pra-Nikah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Bimbingan persiapan pernikahan bagi remaja usia produktif sebagai bekal membangun keluarga sakinah.</p>
+          <div>
+            <div class="syarat-label">MATERI BIMBINGAN</div>
+            <ul class="syarat-list"><li>Fikih munakahat & hak kewajiban</li><li>Kesehatan reproduksi remaja</li><li>Manajemen konflik keluarga</li><li>Perencanaan ekonomi rumah tangga</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-online">Form Digital</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_bimtek_remaja_nikah" target="_blank" class="btn-daftar">Daftar Bimbingan →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03. BIMBINGAN REMAJA DI SEKOLAH -->
+      <div class="lcard" data-kat="bimbingan">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#e8f0fb">🏫</div>
+          <div>
+            <div class="lcard-num">LAYANAN 03</div>
+            <h3>Bimbingan Remaja di Sekolah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Program bimbingan keagamaan dan akhlak bagi siswa di sekolah/madrasah dalam wilayah Kecamatan Pilangkenceng.</p>
+          <div>
+            <div class="syarat-label">SASARAN PROGRAM</div>
+            <ul class="syarat-list"><li>Siswa SD/MI, SMP/MTs, SMA/MA</li><li>Materi akhlak & karakter islami</li><li>Koordinasi dengan guru agama</li><li>Kunjungan KUA ke sekolah</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-online">Form Digital</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_bimtek_remaja_sekolah" target="_blank" class="btn-daftar">Ajukan Program →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04. KONSELING KELUARGA SAKINAH -->
+      <div class="lcard" data-kat="konseling">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#fef3e2">🏠</div>
+          <div>
+            <div class="lcard-num">LAYANAN 04</div>
+            <h3>Konseling Keluarga Sakinah</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Layanan konseling dan mediasi pasangan/keluarga dalam menyelesaikan permasalahan rumah tangga secara Islami.</p>
+          <div>
+            <div class="syarat-label">TOPIK KONSELING</div>
+            <ul class="syarat-list"><li>Konflik suami istri & komunikasi</li><li>Permasalahan wali & kewarisan</li><li>Ancaman perceraian & mediasi</li><li>Konsultasi pola asuh anak</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-online">Tatap Muka / WA</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_keluarga_sakinah" target="_blank" class="btn-daftar">Ajukan Konseling →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05. REKOMENDASI BANTUAN MASJID -->
+      <div class="lcard" data-kat="rekomendasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">🕌</div>
+          <div>
+            <div class="lcard-num">LAYANAN 05</div>
+            <h3>Rekomendasi Bantuan Masjid</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat rekomendasi dari KUA untuk pengajuan bantuan pembangunan atau renovasi Masjid/Musholla.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list"><li>Surat permohonan bermaterai dari takmir</li><li>Profil masjid (nama, alamat, tahun berdiri)</li><li>Foto kondisi masjid/musholla</li><li>SK kepengurusan takmir</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-doc">Surat Resmi</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=rekomendasi_bantuan_masjid" target="_blank" class="btn-daftar">Ajukan Rekomendasi →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 06. REKOMENDASI MAJELIS TAKLIM -->
+      <div class="lcard" data-kat="rekomendasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">📜</div>
+          <div>
+            <div class="lcard-num">LAYANAN 06</div>
+            <h3>Rekomendasi Majelis Taklim</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat rekomendasi KUA untuk legalitas dan pengakuan kelembagaan Majelis Taklim.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list"><li>Surat permohonan dari pengurus</li><li>Susunan pengurus Majelis Taklim</li><li>Jadwal kegiatan kajian rutin</li><li>Daftar anggota (minimal 15 orang)</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-doc">Surat Resmi</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=rekomendasi_majelis_taklim" target="_blank" class="btn-daftar">Ajukan Rekomendasi →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 07. REKOMENDASI TPQ / MADIN -->
+      <div class="lcard" data-kat="rekomendasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#eaf5ee">📖</div>
+          <div>
+            <div class="lcard-num">LAYANAN 07</div>
+            <h3>Rekomendasi TPQ / Madin</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat rekomendasi KUA untuk lembaga Taman Pendidikan Quran (TPQ) atau Madrasah Diniyah (Madin).</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list"><li>Surat permohonan bermaterai</li><li>Profil lembaga TPQ/Madin</li><li>Data pengajar/ustadz-ustadzah</li><li>Jumlah santri & jadwal belajar</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-doc">Surat Resmi</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=rekomendasi_tpq_madin" target="_blank" class="btn-daftar">Ajukan Rekomendasi →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 08. REKOMENDASI SKT MAJELIS TAKLIM -->
+      <div class="lcard" data-kat="rekomendasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#f0ecfb">📋</div>
+          <div>
+            <div class="lcard-num">LAYANAN 08</div>
+            <h3>Rekomendasi SKT Majelis Taklim</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat Keterangan Terdaftar (SKT) Majelis Taklim yang dikeluarkan melalui rekomendasi KUA.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list"><li>Surat permohonan dari ketua pengurus</li><li>AD/ART atau aturan kelompok</li><li>Domisili dan sekretariat</li><li>Surat pengantar dari desa/kelurahan</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-doc">SKT Resmi</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=rekomendasi_skt_majelis" target="_blank" class="btn-daftar">Ajukan SKT →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 09. REKOMENDASI SKT MASJID -->
+      <div class="lcard" data-kat="rekomendasi">
+        <div class="lcard-head">
+          <div class="lcard-icon" style="background:#f0ecfb">🏛️</div>
+          <div>
+            <div class="lcard-num">LAYANAN 09</div>
+            <h3>Rekomendasi SKT Masjid</h3>
+          </div>
+        </div>
+        <div class="lcard-body">
+          <p class="lcard-desc">Surat rekomendasi KUA untuk proses penerbitan Surat Keterangan Terdaftar (SKT) Masjid/Musholla.</p>
+          <div>
+            <div class="syarat-label">DOKUMEN DIPERLUKAN</div>
+            <ul class="syarat-list"><li>Fotocopy KTP 3 pengurus takmir</li><li>Surat keterangan dari desa</li><li>Denah/sketsa lokasi masjid</li><li>Akta atau bukti kepemilikan tanah</li></ul>
+          </div>
+          <div class="lcard-footer">
+            <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-doc">SKT Resmi</span></div>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=rekomendasi_skt_masjid" target="_blank" class="btn-daftar">Ajukan Rekomendasi →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ── END GRID PENJELASAN ── -->
 
 <!-- ── MAIN ── -->
 <main class="main">
@@ -682,7 +940,7 @@ footer {
           <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-wakaf.html" style="color:inherit;text-decoration:none">Layanan Wakaf</a></li>
           <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-kiblat.html" style="color:inherit;text-decoration:none">Pengukuran Kiblat</a></li>
           <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="layanan-konseling.html" style="color:inherit;text-decoration:none">Konseling &amp; Rekomendasi</a></li>
-          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="https://kuapilangkenceng.github.io/ptsp/index.html" target="_blank" style="color:inherit;text-decoration:none">Cek Status Berkas</a></li>
+          <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" style="color:inherit;text-decoration:none">Cek Status Berkas</a></li>
           <li style="font-size:12px;opacity:.72;padding:3px 0"><a href="https://kuapilangkenceng.github.io/ptsp/admin.html" target="_blank" style="color:inherit;text-decoration:none">Login Admin</a></li>
         </ul>
       </div>
