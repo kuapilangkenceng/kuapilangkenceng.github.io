@@ -1937,22 +1937,27 @@ function renderGenerate() {
       var dokBadge = ada ? '<span class="badge selesai">&#10003; Ada</span>' : '<span class="badge baru">&#8987; Belum</span>';
       var nm = (r.nama_pemohon||'').replace(/'/g,"\'");
       var lb = (r.jenis_label||'').replace(/'/g,"\'");
-      var btn = '<button class="btn-dok'+(ada?' sudah':'')+'" onclick="bukaModalGenerate(''+r.id+'',''+r.jenis_layanan+'',''+nm+'',''+lb+'',''+(r.dok_url||'')+'')">'+(ada?'&#128196; Lihat / Re-generate':'&#128196; Generate')+'</button>';
+            var dokUrl = r.dok_url || '';
+      var btn = '<button class="btn-dok' + (ada ? ' sudah' : '') + '" onclick="bukaModalGenerate(' +
+        JSON.stringify(r.id) + ',' + JSON.stringify(r.jenis_layanan) + ',' +
+        JSON.stringify(r.nama_pemohon||'') + ',' + JSON.stringify(r.jenis_label||'') + ',' +
+        JSON.stringify(dokUrl) + ')">' +
+        (ada ? '&#128196; Lihat / Re-generate' : '&#128196; Generate') + '</button>';
       return '<tr><td class="id-col">'+r.id+'</td><td class="nama-col">'+(r.nama_pemohon||'&#8212;')+'</td><td>'+(r.jenis_label||'&#8212;')+'</td><td>'+(r.kategori||'&#8212;')+'</td><td class="nowrap">'+formatTs(r.timestamp)+'</td><td>'+badgeHtml(r.status_layanan)+'</td><td>'+dokBadge+'</td><td>'+btn+'</td></tr>';
     }).join('');
   }
-  document.getElementById('gen-pg-info').textContent = (start+1)+'\u2013'+Math.min(start+GEN_PER_PAGE,total)+' dari '+total;
+  document.getElementById('gen-pg-info').textContent = (start+1)+'–'+Math.min(start+GEN_PER_PAGE,total)+' dari '+total;
   var btns = document.getElementById('gen-pg-btns');
   btns.innerHTML = '';
   var prev = document.createElement('button');
-  prev.className='page-btn'; prev.textContent='\u2039'; prev.disabled=(genPage===1);
+  prev.className='page-btn'; prev.textContent='‹'; prev.disabled=(genPage===1);
   prev.onclick=function(){ genPage--; renderGenerate(); };
   btns.appendChild(prev);
   for (var p=Math.max(1,genPage-2); p<=Math.min(totalPages,genPage+2); p++) {
     (function(pp){ var b=document.createElement('button'); b.className='page-btn'+(pp===genPage?' active':''); b.textContent=pp; b.onclick=function(){ genPage=pp; renderGenerate(); }; btns.appendChild(b); })(p);
   }
   var nxt=document.createElement('button');
-  nxt.className='page-btn'; nxt.textContent='\u203a'; nxt.disabled=(genPage===totalPages);
+  nxt.className='page-btn'; nxt.textContent='›'; nxt.disabled=(genPage===totalPages);
   nxt.onclick=function(){ genPage++; renderGenerate(); };
   btns.appendChild(nxt);
 }
