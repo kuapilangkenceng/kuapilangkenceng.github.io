@@ -21,7 +21,7 @@ const KUA = {
 
     // Ganti dengan URL deploy Apps Script Anda
     // Format: https://script.google.com/macros/s/XXXX/exec
-    api    : "https://script.google.com/macros/s/AKfycbzV1e8HR4L_tBRjnhkebipR7rTuapGH6xaQxP_SNmEyYatLxl1aoRarzkPMKu02FhtC/exec",  // [WAJIB DIISI]
+    api    : "https://script.google.com/macros/s/AKfycby5GZEM258F7Nv4dIN5LYvS5H-C0UQhThWZlesLbrRDHcVc59BuyRM0iV_Aoo6mmEvv/exec",  // [WAJIB DIISI]
 
     // ID Google Sheets utama (ada di URL spreadsheet)
     sheetsId: "17TPFJ32oaWfqe4zW9uY8bPG1vfs56vOxr9g4DDJV_aY",            // [WAJIB DIISI]
