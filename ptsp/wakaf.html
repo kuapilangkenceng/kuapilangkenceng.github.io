@@ -4,7 +4,7 @@
 <script src="../config.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>PTSP Digital - KUA Kecamatan Pilangkenceng</title>
+<title>Layanan Wakaf - PTSP Digital KUA Pilangkenceng</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
@@ -83,28 +83,17 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 .page{display:none}.page.active{display:block}.fade-in{animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:600px){main{padding:16px 12px 60px}.header-inner{padding:10px 14px}.header-badge{display:none}.form-card-body{padding:16px 14px}}
 </style>
-<style>
-.kategori-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:22px}
-.kategori-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:20px 12px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;text-decoration:none;display:block;color:inherit}
-.kategori-card:hover{border-color:var(--green-mid);transform:translateY(-2px);box-shadow:var(--shadow)}
-.kat-icon{font-size:32px;display:block;margin-bottom:8px}.kat-label{font-size:12px;font-weight:700;color:var(--ink-soft);line-height:1.3}
-.kat-count{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--ink);font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px}
-@media(max-width:600px){.kategori-grid{grid-template-columns:repeat(2,1fr)}}
-</style>
 </head>
 <body>
 <div class="session-bar" id="session-bar"><span class="session-dot"></span><span id="session-info">Petugas: -</span><button onclick="logout()">Keluar</button></div>
 <header><div class="header-inner">
 <a href="https://kuapilangkenceng.github.io" style="color:rgba(255,255,255,0.75);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:6px">&#127968; Beranda</a>
-<div class="header-logo">&#128203;</div>
-<div class="header-text"><div class="header-title">PTSP Digital KUA Pilangkenceng</div><div class="header-sub">Kementerian Agama &middot; Kab. Madiun</div></div>
+<div class="header-logo">&#127968;</div>
+<div class="header-text"><div class="header-title">Layanan Wakaf</div><div class="header-sub">PTSP Digital &middot; KUA Pilangkenceng</div></div>
 <div class="header-badge">&#9679; ONLINE</div>
 <button id="btn-login-header" onclick="toggleLoginPanel()">&#128272; Petugas</button>
 </div></header>
-<div class="marquee-bar"><div class="marquee-inner">
-<span>&#128203; Layanan: Nikah &middot; Wakaf &middot; Kiblat &middot; SKT Masjid &middot; Konseling &amp; Rekomendasi&nbsp;&nbsp;&nbsp;</span>
-<span>&#128203; Layanan: Nikah &middot; Wakaf &middot; Kiblat &middot; SKT Masjid &middot; Konseling &amp; Rekomendasi&nbsp;&nbsp;&nbsp;</span>
-</div></div>
+<div class="marquee-bar"><div class="marquee-inner"><span>&#127968; Layanan Wakaf: Ikrar Wakaf (e-AIW) &middot; Penggantian Nadzir&nbsp;&nbsp;&nbsp;</span><span>&#127968; Layanan Wakaf: Ikrar Wakaf (e-AIW) &middot; Penggantian Nadzir&nbsp;&nbsp;&nbsp;</span></div></div>
 <main>
 <div id="login-box">
 <h3>&#128272; Login Petugas</h3>
@@ -113,45 +102,32 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 <div class="form-group"><label class="form-label">Password</label><input class="form-control" id="inp-password" type="password" placeholder="Password" autocomplete="current-password"/></div>
 <button class="btn-submit" onclick="doLogin()" id="btn-do-login">Masuk</button>
 </div>
-<div class="section-label">PTSP Digital</div>
-<div class="section-title">Pilih Kategori Layanan</div>
-<div class="kategori-grid" id="kategori-grid">
-<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+<div class="page active fade-in" id="page-layanan">
+<a href="index.html" class="btn-back">&#8592; Semua Layanan</a>
+<div class="section-label" id="kat-label-el"></div>
+<div class="section-title">Pilih Jenis Layanan</div>
+<div class="layanan-list" id="layanan-list"><div class="skeleton"></div><div class="skeleton"></div></div>
 </div>
+<div class="page fade-in" id="page-form">
+<button class="btn-back" onclick="goPage('page-layanan')">&#8592; Kembali</button>
+<div class="breadcrumb" id="form-breadcrumb"></div>
+<div class="autofill-banner" id="autofill-banner">Data berhasil diisi otomatis.</div>
+<div class="form-card"><div class="form-card-header"><h2 id="form-title">-</h2><p id="form-desc">-</p></div><div class="form-card-body" id="form-body"></div></div>
+</div>
+<div class="page fade-in" id="page-success"><div class="form-card"><div class="form-card-body"><div class="success-screen">
+<div class="success-icon">&#10003;</div>
+<h2 style="font-size:20px;font-weight:800;margin-bottom:6px">Layanan Berhasil Dikirim!</h2>
+<div class="success-id" id="success-id">LYN-...</div>
+<p>Simpan nomor ini sebagai bukti pengajuan.</p>
+<button class="btn-ulang" onclick="resetAll()">+ Ajukan Layanan Lain</button>
+</div></div></div></div>
 </main>
 <div class="toast" id="toast"></div>
-<script>const API_URL=(typeof KUA_CONFIG!=="undefined"&&KUA_CONFIG.API_URL)?KUA_CONFIG.API_URL:"https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec";
-var session=null;
-try{var _s=sessionStorage.getItem("ptsp_session");if(_s){session=JSON.parse(_s);var _btn=document.getElementById("btn-login-header");if(_btn){_btn.textContent="\u2705 "+session.nama;_btn.classList.add("active");}var _bar=document.getElementById("session-bar");if(_bar){_bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";}}}catch(e){}
-var KAT_PAGES={"Layanan Nikah":"nikah.html","Layanan Wakaf":"wakaf.html","Layanan Kiblat":"kiblat.html","SKT Masjid / Musholla":"skt.html","Konseling & Rekomendasi":"konseling.html"};
-var KAT_ICONS={"Layanan Nikah":"\uD83D\uDC8D","Layanan Wakaf":"\uD83C\uDFE0","Layanan Kiblat":"\uD83E\uDDED","SKT Masjid / Musholla":"\uD83D\uDD4B","Konseling & Rekomendasi":"\uD83E\uDD1D"};
-async function init(){
-  try{var res=await fetch(API_URL+"?action=getConfig&_="+Date.now());var cfg=await res.json();renderGrid(cfg);}catch(e){renderGridFallback();}
-}
-function renderGrid(cfg){
-  var grid=document.getElementById("kategori-grid");grid.innerHTML="";
-  var katCount={};Object.values(cfg.forms||{}).forEach(function(f){katCount[f.kategori]=(katCount[f.kategori]||0)+1;});
-  Object.entries(cfg.kategori||{}).forEach(function(entry){
-    var label=entry[1];var count=katCount[label]||0;if(!count)return;
-    var page=KAT_PAGES[label];if(!page)return;
-    var a=document.createElement("a");a.className="kategori-card";a.href=page;
-    a.innerHTML='<span class="kat-icon">'+(KAT_ICONS[label]||"\uD83D\uDCC2")+'</span><div class="kat-label">'+label+'</div><div class="kat-count">'+count+'</div>';
-    grid.appendChild(a);
-  });
-  if(!grid.children.length)grid.innerHTML='<p style="color:#888;font-size:13px;grid-column:1/-1">Belum ada layanan.</p>';
-}
-function renderGridFallback(){
-  var grid=document.getElementById("kategori-grid");grid.innerHTML="";
-  Object.entries(KAT_PAGES).forEach(function(entry){
-    var a=document.createElement("a");a.className="kategori-card";a.href=entry[1];
-    a.innerHTML='<span class="kat-icon">'+(KAT_ICONS[entry[0]]||"\uD83D\uDCC2")+'</span><div class="kat-label">'+entry[0]+'</div>';
-    grid.appendChild(a);
-  });
-}
-function toggleLoginPanel(){var box=document.getElementById("login-box");var open=box.style.display==="block";box.style.display=open?"none":"block";document.getElementById("btn-login-header").classList.toggle("active",!open);if(!open)document.getElementById("inp-username").focus();}
-async function doLogin(){var u=document.getElementById("inp-username").value.trim();var p=document.getElementById("inp-password").value;var err=document.getElementById("login-error");var btn=document.getElementById("btn-do-login");if(!u||!p){err.style.display="block";err.textContent="Isi username dan password.";return;}btn.disabled=true;btn.textContent="Memverifikasi...";try{var res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"login",username:u,password:p})});var d=await res.json();if(d.ok){session=d.user;sessionStorage.setItem("ptsp_session",JSON.stringify(session));err.style.display="none";document.getElementById("login-box").style.display="none";var btn2=document.getElementById("btn-login-header");btn2.textContent="\u2705 "+session.nama;btn2.classList.add("active");var bar=document.getElementById("session-bar");bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";showToast("Login berhasil!");}else{err.style.display="block";err.textContent=d.error||"Login gagal.";}}catch(e){if(u==="demo"&&p==="demo123"){session={username:"demo",nama:"Petugas Demo",role:"petugas"};sessionStorage.setItem("ptsp_session",JSON.stringify(session));err.style.display="none";document.getElementById("login-box").style.display="none";document.getElementById("btn-login-header").textContent="\u2705 Petugas Demo";document.getElementById("btn-login-header").classList.add("active");document.getElementById("session-bar").classList.add("show");document.getElementById("session-info").textContent="Petugas: Demo (petugas)";showToast("Login demo berhasil!");}else{err.style.display="block";err.textContent="Tidak dapat terhubung ke server.";}}btn.disabled=false;btn.textContent="Masuk";}
-function logout(){session=null;sessionStorage.removeItem("ptsp_session");document.getElementById("btn-login-header").textContent="\uD83D\uDD10 Petugas";document.getElementById("btn-login-header").classList.remove("active");document.getElementById("session-bar").classList.remove("show");showToast("Anda telah keluar.");}
-var _tt;function showToast(msg,isError){isError=isError||false;var t=document.getElementById("toast");t.textContent=msg;t.className="toast show"+(isError?" error":"");clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove("show");},3500);}
-init();</script>
+<script>window.PTSP_KATEGORI_ID="wakaf";window.PTSP_KATEGORI_LABEL="Layanan Wakaf";</script>
+<script src="ptsp-engine.js"></script>
+<script>
+document.getElementById('kat-label-el').textContent = window.PTSP_KATEGORI_LABEL;
+engineInit();
+</script>
 </body>
 </html>
