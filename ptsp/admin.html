@@ -1287,6 +1287,8 @@ function openDetail(id) {
 
   document.getElementById('modal-overlay').classList.add('show');
   _isiGenArea(rec);
+}
+
 function _isiGenArea(rec) {
   var _BISA_GEN = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_pendaftaran','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
   var _ga = document.getElementById('gen-dok-area');
@@ -1303,6 +1305,7 @@ function _isiGenArea(rec) {
       '</button></div>';
   } else { _ga.innerHTML = ''; }
 }
+function selectStatus(el, status) {
   document.querySelectorAll('.btn-status').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
 }
@@ -1737,12 +1740,22 @@ async function doPublish(id) {
         <strong id="gen-info-label">—</strong>
         ID: <span id="gen-info-id">—</span> &nbsp;|&nbsp; Pemohon: <span id="gen-info-nama">—</span>
       </div>
-      <label class="gen-lbl" for="inp-no-surat">
-        Nomor Surat Resmi KUA <span style="color:#c0392b">*</span>
-      </label>
-      <input type="text" id="inp-no-surat" class="gen-inp"
-        placeholder="Contoh: B-452/Kua.13.34.06/PW.01/10/2026"/>
-      <div class="gen-hint">Format: B-[nomor]/Kua.13.34.06/[kode]/[bulan]/[tahun]</div>
+      <label class="gen-lbl">Nomor Surat Resmi KUA <span style="color:#c0392b">*</span></label>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:0;border:1.5px solid #d8e5dc;border-radius:8px;overflow:hidden;flex:1;min-width:220px">
+          <span style="padding:10px 10px;background:#f4f6f5;color:#1a6b45;font-weight:700;font-size:13px;white-space:nowrap;border-right:1px solid #d8e5dc">B-</span>
+          <input type="number" id="inp-no-urut" min="1" max="999"
+            style="width:60px;padding:10px 6px;border:none;outline:none;font-size:14px;font-family:inherit;text-align:center"
+            placeholder="001" oninput="updatePreviewNoSurat()"/>
+          <span style="padding:10px 6px;background:#f4f6f5;color:#888;font-size:13px;border-left:1px solid #d8e5dc;border-right:1px solid #d8e5dc;white-space:nowrap">/Kua.13.34.06/</span>
+          <input type="text" id="inp-kode-surat" maxlength="10"
+            style="width:70px;padding:10px 6px;border:none;outline:none;font-size:14px;font-family:inherit;text-align:center"
+            placeholder="PW.01" oninput="updatePreviewNoSurat()"/>
+          <span id="inp-bln-thn" style="padding:10px 10px;background:#f4f6f5;color:#888;font-size:13px;border-left:1px solid #d8e5dc;white-space:nowrap">/06/2026</span>
+        </div>
+      </div>
+      <div style="margin-top:6px;padding:6px 10px;background:#e8f5ee;border-radius:6px;font-size:12px;color:#1a6b45;font-weight:600" id="preview-no-surat">—</div>
+      <input type="hidden" id="inp-no-surat"/>
     </div>
     <div class="gen-result" id="gen-result">
       <div style="font-weight:700;color:#1a6b45;margin-bottom:6px">✅ Dokumen berhasil dibuat!</div>
@@ -1775,13 +1788,61 @@ function btnDokHtml(r) {
     (ada ? '📄 Lihat' : '📄 Generate') + '</button>';
 }
 
+/* kode surat per jenis layanan */
+var _KODE_SURAT = {
+  'nikah_sk_belum':    'PW.01',
+  'nikah_sk_pernah':   'PW.01',
+  'nikah_itsbat':      'PW.01',
+  'nikah_pendaftaran': 'PW.01',
+  'wakaf_ikrar':       'WK.01',
+  'wakaf_ganti_nadzir':'WK.02',
+  'kiblat_pengukuran_ba':         'KU.01',
+  'kiblat_pengukuran_sertifikat': 'KU.02',
+  'skt_masjid':                   'SK.01',
+  'rekomendasi_bantuan_masjid':   'RK.01',
+  'rekomendasi_majelis_taklim':   'RK.02',
+  'rekomendasi_tpq_madin':        'RK.03',
+  'rekomendasi_skt_majelis':      'RK.04',
+  'rekomendasi_skt_masjid':       'RK.05'
+};
+
+function updatePreviewNoSurat() {
+  var urut  = document.getElementById('inp-no-urut').value || '001';
+  var kode  = document.getElementById('inp-kode-surat').value || 'KUA';
+  var blnThn = document.getElementById('inp-bln-thn').textContent || '';
+  var noSurat = 'B-' + ('000' + parseInt(urut||1)).slice(-3) + '/Kua.13.34.06/' + kode.trim() + blnThn;
+  document.getElementById('inp-no-surat').value = noSurat;
+  document.getElementById('preview-no-surat').textContent = noSurat;
+}
+
+function _autoNoSurat(jenis) {
+  var now   = new Date();
+  var bulan = ('0' + (now.getMonth() + 1)).slice(-2);
+  var tahun = now.getFullYear();
+  var kode  = _KODE_SURAT[jenis] || 'KUA';
+  // Hitung nomor urut dari data yang sudah ada (dok_url count + 1)
+  var urut  = (allData.filter(function(r) { return r.dok_url; }).length + 1);
+  var nomorStr = ('000' + urut).slice(-3);
+  return 'B-' + nomorStr + '/Kua.13.34.06/' + kode + '/' + bulan + '/' + tahun;
+}
+
 function bukaModalGenerate(id, jenis, nama, label, existingUrl) {
   _gId = id; _gJenis = jenis; _gNama = nama; _gLabel = label;
   document.getElementById('gen-info-id').textContent    = id;
   document.getElementById('gen-info-nama').textContent  = nama || '-';
   document.getElementById('gen-info-label').textContent = label || jenis;
-  document.getElementById('inp-no-surat').value         = '';
+  // Isi field nomor urut & kode
+  var now   = new Date();
+  var bulan = ('0' + (now.getMonth() + 1)).slice(-2);
+  var tahun = now.getFullYear();
+  var urut  = allData.filter(function(r) { return r.dok_url; }).length + 1;
+  var kode  = _KODE_SURAT[jenis] || 'KUA';
+  document.getElementById('inp-no-urut').value   = urut;
+  document.getElementById('inp-kode-surat').value = kode;
+  document.getElementById('inp-bln-thn').textContent = '/' + bulan + '/' + tahun;
+  updatePreviewNoSurat();
   document.getElementById('inp-no-surat').classList.remove('invalid');
+  document.getElementById('preview-no-surat').textContent = '—';
   document.getElementById('gen-result').style.display   = 'none';
   document.getElementById('gen-link-extra').innerHTML    = '';
   if (existingUrl) {
@@ -1801,11 +1862,13 @@ document.getElementById('modal-generate').addEventListener('click', function(e) 
 });
 
 async function doGenerateDokumen() {
+  updatePreviewNoSurat();
   var noSurat = document.getElementById('inp-no-surat').value.trim();
   if (!noSurat) {
     document.getElementById('inp-no-surat').classList.add('invalid');
     setTimeout(function() {
       document.getElementById('inp-no-surat').classList.remove('invalid');
+  document.getElementById('preview-no-surat').textContent = '—';
     }, 1500);
     return;
   }
