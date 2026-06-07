@@ -59,6 +59,7 @@ async function doLogin() {
       session = d.user; sessionStorage.setItem('ptsp_session', JSON.stringify(session));
       err.style.display = 'none'; document.getElementById('login-box').style.display = 'none';
       applySessionUI(); showToast('Login berhasil. Selamat datang, ' + session.nama + '!');
+      if (document.getElementById('page-layanan') && document.getElementById('page-layanan').classList.contains('active')) renderLayananList();
     } else { err.style.display='block'; err.textContent = d.error || 'Login gagal.'; }
   } catch(e) {
     if (u==='demo' && p==='demo123') {
@@ -66,6 +67,7 @@ async function doLogin() {
       sessionStorage.setItem('ptsp_session', JSON.stringify(session));
       err.style.display='none'; document.getElementById('login-box').style.display='none';
       applySessionUI(); showToast('Login demo berhasil!');
+      if (document.getElementById('page-layanan') && document.getElementById('page-layanan').classList.contains('active')) renderLayananList();
     } else { err.style.display='block'; err.textContent='Tidak dapat terhubung ke server.'; }
   }
   btn.disabled = false; btn.textContent = 'Masuk';
@@ -94,7 +96,7 @@ function renderLayananList() {
     .filter(function(e){ return e[1].kategori === currentKatLabel; })
     .filter(function(e){
       const f = e[1];
-      if (f.role && Array.isArray(f.role) && !f.role.includes('tamu')) return false;
+      if (f.role && Array.isArray(f.role) && !f.role.includes('tamu') && !session) return false;
       const ov = f.universalOverrides || {};
       return !(['nama_pemohon','kontak'].every(function(k){ return ov[k] && ov[k].hidden; }));
     });
