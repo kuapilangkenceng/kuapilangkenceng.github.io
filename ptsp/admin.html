@@ -851,115 +851,140 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
       </div><!-- /page-users -->
 
 
-      <div class="page" id="page-pelaksanaan">>
-  <div style="max-width:700px;margin:0 auto">
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
-        <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
-        <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
+      <div class="page" id="page-pelaksanaan">
+  <div style="max-width:680px;margin:0 auto;padding:8px 0">
+
+    <!-- HEADER CARD -->
+    <div style="background:linear-gradient(135deg,#1a6b45 0%,#2d8c5e 100%);border-radius:14px;padding:20px 24px;margin-bottom:16px;color:white;display:flex;align-items:center;gap:14px">
+      <div style="width:48px;height:48px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">💒</div>
+      <div>
+        <div style="font-size:17px;font-weight:800;letter-spacing:.2px">Pelaksanaan Nikah</div>
+        <div style="font-size:12px;opacity:.8;margin-top:2px">Finalisasi akad nikah · Hapus jadwal beranda · Terbitkan artikel</div>
       </div>
-      <div style="padding:20px">
-        <!-- Recall dropdown -->
-        <div class="form-group" style="margin-bottom:16px">
-          <label class="form-label" style="font-weight:600;font-size:13px">Pilih Data Pendaftaran Nikah</label>
-          <select id="pel-recall-select" class="form-control" onchange="onPelaksanaanRecall(this.value)" style="width:100%;padding:10px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px">
-            <option value="">-- Memuat data... --</option>
-          </select>
-          <span id="pel-recall-info" style="font-size:11.5px;color:#888;margin-top:4px;display:block"></span>
+    </div>
+
+    <!-- FORM CARD -->
+    <div style="background:white;border:1.5px solid #d8e5dc;border-radius:14px;overflow:hidden;box-shadow:0 2px 16px rgba(26,107,69,.08)">
+
+      <!-- SECTION: Pilih Pendaftaran -->
+      <div style="background:#f0f7f3;border-bottom:1.5px solid #d8e5dc;padding:12px 20px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#1a6b45;margin-bottom:8px">📋 Data Pendaftaran</div>
+        <select id="pel-recall-select" onchange="onPelaksanaanRecall(this.value)"
+          style="width:100%;padding:10px 13px;border:1.5px solid #b8d4c2;border-radius:8px;font-size:13.5px;font-family:inherit;color:#1a1a1a;background:white;cursor:pointer">
+          <option value="">-- Pilih data pendaftaran nikah --</option>
+        </select>
+        <div id="pel-recall-info" style="font-size:11.5px;color:#2d8c5e;margin-top:6px;font-weight:600;display:none"></div>
+      </div>
+
+      <!-- AUTOFILL BANNER -->
+      <div id="pel-autofill-banner" style="background:#e8f5ee;border-bottom:1.5px solid #b8d4c2;padding:9px 20px;font-size:12.5px;color:#1a6b45;font-weight:600;display:none">
+        ✅ Data diisi otomatis dari pendaftaran. Periksa dan lengkapi sebelum menyimpan.
+      </div>
+
+      <!-- FORM BODY -->
+      <div id="pel-form-body" style="padding:20px;display:none">
+
+        <!-- Nama Pengantin -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Pengantin Pria</label>
+            <input id="pel-nama-pa" type="text" placeholder="Nama pengantin pria"
+              style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Pengantin Wanita</label>
+            <input id="pel-nama-pi" type="text" placeholder="Nama pengantin wanita"
+              style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit"/>
+          </div>
         </div>
 
-        <!-- Banner autofill -->
-        <div id="pel-autofill-banner" style="background:#e8f5ee;border:1.5px solid #2d8c5e;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1a6b45;font-weight:600;margin-bottom:14px;display:none">
-          ✅ Data berhasil diisi otomatis dari pendaftaran.
+        <!-- Tanggal & Waktu -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Tanggal Pelaksanaan <span style="color:#c0392b">*</span></label>
+            <input id="pel-tgl" type="date"
+              style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit"/>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Waktu Pelaksanaan</label>
+            <input id="pel-waktu" type="time"
+              style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit"/>
+          </div>
         </div>
 
-        <!-- Form Pelaksanaan -->
-        <div id="pel-form-body" style="display:none">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Nama Pengantin Pria</label>
-              <input class="form-control" id="pel-nama-pa" type="text" placeholder="Nama catin pria"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Pengantin Wanita</label>
-              <input class="form-control" id="pel-nama-pi" type="text" placeholder="Nama catin wanita"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
-              <input class="form-control" id="pel-tgl" type="date" required/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Waktu Pelaksanaan</label>
-              <input class="form-control" id="pel-waktu" type="time"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Tempat Pelaksanaan</label>
-              <select class="form-control" id="pel-tempat">
-                <option>KUA Pilangkenceng</option>
-                <option>Masjid/Musholla</option>
-                <option>Rumah</option>
-                <option>Gedung/Aula</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Penghulu</label>
-              <input class="form-control" id="pel-penghulu" type="text" placeholder="Nama penghulu"/>
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label">Petugas Penerima</label>
-            <select class="form-control" id="pel-petugas">
-              <option>Petugas PTSP</option>
-              <option>Penghulu</option>
-              <option>Penyuluh</option>
-              <option>Operator Layanan</option>
-              <option>Admin Kantor</option>
-              <option>Kepala KUA</option>
+        <!-- Tempat & Penghulu -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Tempat Pelaksanaan</label>
+            <select id="pel-tempat"
+              style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit;background:white">
+              <option>KUA Pilangkenceng</option>
+              <option>Masjid/Musholla</option>
+              <option>Rumah</option>
+              <option>Gedung/Aula</option>
             </select>
           </div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label">Catatan Pelaksanaan</label>
-            <textarea class="form-control" id="pel-catatan" rows="3" placeholder="Catatan tambahan pelaksanaan akad..."></textarea>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Penghulu</label>
+            <select id="pel-penghulu"
+              style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit;background:white">
+              <option>MOHHAMAD SADIKUL ANAM, SH.M.Si</option>
+              <option>AHSANUL MUAHID, S.Ag</option>
+              <option>M. KHOIRUL MUNTOHA AGIL, S.Ag</option>
+            </select>
           </div>
-
-          <!-- Foto upload -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-            <div class="form-group">
-              <label class="form-label">Foto bersama Petugas PTSP</label>
-              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
-                <input type="file" accept="image/*" onchange="handlePelFoto(event,'ptsp')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
-                <div style="font-size:24px">📷</div>
-                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
-              </div>
-              <div id="pel-preview-ptsp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Foto bersama Penghulu</label>
-              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
-                <input type="file" accept="image/*" onchange="handlePelFoto(event,'penghulu')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
-                <div style="font-size:24px">📷</div>
-                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
-              </div>
-              <div id="pel-preview-penghulu" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-            </div>
-          </div>
-
-          <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
-            style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">
-            💒 Simpan Pelaksanaan Nikah
-          </button>
         </div>
 
-        <!-- Placeholder sebelum recall -->
-        <div id="pel-placeholder" style="text-align:center;padding:32px;color:#aaa">
-          <div style="font-size:40px;margin-bottom:8px">📋</div>
-          <div style="font-size:14px">Pilih data pendaftaran di atas untuk memulai</div>
+        <!-- Petugas Penerima -->
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Petugas Penerima</label>
+          <select id="pel-petugas"
+            style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit;background:white">
+            <option>Petugas PTSP</option>
+            <option>Penghulu</option>
+            <option>Penyuluh</option>
+            <option>Operator Layanan</option>
+            <option>Admin Kantor</option>
+            <option>Kepala KUA</option>
+          </select>
         </div>
+
+        <!-- Catatan -->
+        <div style="margin-bottom:16px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:5px">Catatan Pelaksanaan</label>
+          <textarea id="pel-catatan" rows="2" placeholder="Catatan tambahan pelaksanaan akad..."
+            style="width:100%;padding:9px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:13.5px;font-family:inherit;resize:vertical"></textarea>
+        </div>
+
+        <!-- Foto Dokumentasi (3 foto) -->
+        <div style="margin-bottom:20px">
+          <label style="display:block;font-size:12px;font-weight:700;color:#4a4a4a;margin-bottom:8px">📷 Foto Dokumentasi <span style="font-size:11px;color:#888;font-weight:400">(maks. 3 foto)</span></label>
+          <div style="border:2px dashed #b8d4c2;border-radius:10px;padding:16px;text-align:center;cursor:pointer;position:relative;transition:all .2s"
+            id="pel-foto-area" ondragover="event.preventDefault();this.style.borderColor='#1a6b45'" ondragleave="this.style.borderColor='#b8d4c2'"
+            ondrop="handlePelDrop(event)">
+            <input type="file" accept="image/*" multiple id="pel-foto-input" onchange="handlePelFotoMulti(event)"
+              style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+            <div style="font-size:28px;margin-bottom:4px">📸</div>
+            <div style="font-size:13px;font-weight:600;color:#2d8c5e">Klik atau drag foto di sini</div>
+            <div style="font-size:11.5px;color:#888;margin-top:2px">JPG/PNG · Pilih hingga 3 foto sekaligus</div>
+          </div>
+          <div id="pel-foto-previews" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+        </div>
+
+        <!-- TOMBOL SUBMIT -->
+        <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
+          style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;letter-spacing:.3px;box-shadow:0 4px 18px rgba(26,107,69,.3);transition:opacity .2s">
+          💒 Simpan Pelaksanaan Nikah
+        </button>
       </div>
+
+      <!-- PLACEHOLDER sebelum recall -->
+      <div id="pel-placeholder" style="text-align:center;padding:40px 20px;color:#aaa">
+        <div style="font-size:44px;margin-bottom:10px">📋</div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:4px">Pilih data pendaftaran</div>
+        <div style="font-size:12px">Form akan terisi otomatis setelah memilih</div>
+      </div>
+
     </div>
   </div>
 </div><!-- /page-pelaksanaan -->
@@ -2180,7 +2205,7 @@ function renderGenerate() {
 /* ══════════════════════════════════════════════
    PELAKSANAAN NIKAH
 ══════════════════════════════════════════════ */
-let pelFotoData = { ptsp: null, penghulu: null };
+let pelFotoData = [];
 let pelRecallData = {};
 
 function loadPelaksanaan() {
@@ -2243,16 +2268,39 @@ function onPelaksanaanRecall(id) {
   setTimeout(function() { banner.style.display = 'none'; }, 3000);
 }
 
-function handlePelFoto(event, type) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    pelFotoData[type] = e.target.result.split(',')[1];
-    const preview = document.getElementById('pel-preview-' + type);
-    preview.innerHTML = '<img src="' + e.target.result + '" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:2px solid #b8d4c2"/>';
-  };
-  reader.readAsDataURL(file);
+function handlePelFotoMulti(event) {
+  const files = Array.from(event.target.files).slice(0, 3);
+  pelFotoData = [];
+  const previews = document.getElementById('pel-foto-previews');
+  previews.innerHTML = '';
+  files.forEach(function(file, idx) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const b64 = e.target.result.split(',')[1];
+      pelFotoData[idx] = { base64: b64, ext: 'jpg' };
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'position:relative;display:inline-block';
+      wrap.innerHTML = '<img src="' + e.target.result + '" style="width:90px;height:90px;object-fit:cover;border-radius:8px;border:2px solid #b8d4c2"/>' +
+        '<div onclick="removePelFoto(' + idx + ')" style="position:absolute;top:-6px;right:-6px;width:20px;height:20px;background:#c0392b;color:white;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700">✕</div>';
+      previews.appendChild(wrap);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removePelFoto(idx) {
+  pelFotoData[idx] = null;
+  const previews = document.getElementById('pel-foto-previews');
+  const items = previews.children;
+  if (items[idx]) items[idx].remove();
+}
+
+function handlePelDrop(event) {
+  event.preventDefault();
+  document.getElementById('pel-foto-area').style.borderColor = '#b8d4c2';
+  const dt = event.dataTransfer;
+  const fakeEvent = { target: { files: dt.files } };
+  handlePelFotoMulti(fakeEvent);
 }
 
 async function submitPelaksanaan() {
@@ -2268,9 +2316,9 @@ async function submitPelaksanaan() {
 
   try {
     const d = pelRecallData[idPendaftaran] || {};
-    const foto = [];
-    if (pelFotoData.ptsp)     foto.push({ field: 'foto_petugas_ptsp', base64: pelFotoData.ptsp, ext: 'jpg' });
-    if (pelFotoData.penghulu) foto.push({ field: 'foto_penghulu',      base64: pelFotoData.penghulu, ext: 'jpg' });
+    const foto = (pelFotoData || []).filter(Boolean).map(function(f, i) {
+      return { field: 'foto_dokumentasi_' + i, base64: f.base64, ext: f.ext || 'jpg' };
+    });
 
     const payload = {
       action       : 'submit',
@@ -2307,9 +2355,9 @@ async function submitPelaksanaan() {
     document.getElementById('pel-recall-select').value = '';
     document.getElementById('pel-form-body').style.display = 'none';
     document.getElementById('pel-placeholder').style.display = 'block';
-    document.getElementById('pel-preview-ptsp').innerHTML = '';
-    document.getElementById('pel-preview-penghulu').innerHTML = '';
-    pelFotoData = { ptsp: null, penghulu: null };
+    document.getElementById('pel-foto-previews').innerHTML = '';
+    document.getElementById('pel-foto-input').value = '';
+    pelFotoData = [];
 
     // Reload data
     setTimeout(loadPelaksanaan, 1000);
