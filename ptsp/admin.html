@@ -2,8 +2,7 @@
 <html lang="id">
 <head>
   <!-- Config global KUA -->
-  <!-- PTSP v3.0 Step3 -->
-<script src="../config.js?v=step3"></script>
+  <script src="../config.js"></script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Admin Dashboard — PTSP KUA Pilangkenceng</title>
@@ -551,6 +550,8 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 .btn-dok{background:#e8f5ee;color:#1a6b45;border:1.5px solid #b8d4c2;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;margin-left:4px}
 .btn-dok:hover{background:#1a6b45;color:#fff;border-color:#1a6b45}
 .btn-dok.sudah{background:#fdf6e0;color:#b45309;border-color:#e5c84a}
+.card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-header{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);color:white;padding:16px 20px}
 </style>
 </head>
 <body>
@@ -1945,7 +1946,8 @@ async function doGenerateDokumen() {
 }
 </script>
 
-<!-- === PAGE GENERATE DOKUMEN === -->
+
+
 <div class="page" id="page-pelaksanaan">
   <div style="max-width:700px;margin:0 auto">
     <div class="card" style="margin-bottom:16px">
