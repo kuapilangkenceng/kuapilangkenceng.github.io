@@ -550,6 +550,13 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 .btn-dok{background:#e8f5ee;color:#1a6b45;border:1.5px solid #b8d4c2;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s;margin-left:4px}
 .btn-dok:hover{background:#1a6b45;color:#fff;border-color:#1a6b45}
 .btn-dok.sudah{background:#fdf6e0;color:#b45309;border-color:#e5c84a}
+.card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -1947,8 +1954,8 @@ async function doGenerateDokumen() {
 <!-- === PAGE GENERATE DOKUMEN === -->
 <div class="page" id="page-pelaksanaan">
   <div style="max-width:700px;margin:0 auto">
-    <div class="table-card" style="margin-bottom:16px">
-      <div style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
         <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
         <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
       </div>
