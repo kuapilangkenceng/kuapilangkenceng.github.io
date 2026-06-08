@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/responsive.css">
   <title>Artikel & Informasi — KUA Kecamatan Pilangkenceng</title>
   <meta name="description" content="Kumpulan artikel, informasi, dan pengumuman resmi dari KUA Kecamatan Pilangkenceng, Kabupaten Madiun.">
   <meta name="keywords" content="artikel KUA Pilangkenceng, informasi pernikahan, wakaf, keagamaan, Madiun">
@@ -263,6 +264,9 @@
       <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp">🔒 Login Petugas</a>
     </div>
   </div>
+    <button class="nav-hamburger" id="hamburgerBtn" aria-label="Buka menu">
+      <span></span><span></span><span></span>
+    </button>
 </nav>
 
 <!-- HERO MINI -->
@@ -683,6 +687,22 @@
 
   /* ── INIT ── */
   loadArtikel();
+
+  /* ── HAMBURGER MENU ── */
+  (function() {
+    var btn = document.getElementById('hamburgerBtn');
+    var links = document.querySelector('.nav-links');
+    if (!btn || !links) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      links.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!links.contains(e.target) && e.target !== btn) {
+        links.classList.remove('open');
+      }
+    });
+  })();
 </script>
 
 </body>

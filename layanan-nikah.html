@@ -5,6 +5,7 @@
   <script src="https://kuapilangkenceng.github.io/config.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/responsive.css">
   <title>Layanan Nikah — KUA Kecamatan Pilangkenceng</title>
   <meta name="description" content="12 sub-layanan pernikahan KUA Kecamatan Pilangkenceng: pendaftaran nikah, bimwin, SK belum/pernah nikah, itsbat, wali nikah, dan lainnya.">
   <meta name="keywords" content="layanan nikah, KUA Pilangkenceng, pendaftaran nikah, bimwin, itsbat nikah, wali nikah, SK nikah">
@@ -212,6 +213,9 @@
       <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-ptsp">🔒 Login Petugas</a>
     </div>
   </div>
+    <button class="nav-hamburger" id="hamburgerBtn" aria-label="Buka menu">
+      <span></span><span></span><span></span>
+    </button>
 </nav>
 
 <!-- HERO MINI -->
@@ -690,6 +694,22 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.08 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── HAMBURGER MENU ── */
+  (function() {
+    var btn = document.getElementById('hamburgerBtn');
+    var links = document.querySelector('.nav-links');
+    if (!btn || !links) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      links.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!links.contains(e.target) && e.target !== btn) {
+        links.classList.remove('open');
+      }
+    });
+  })();
 </script>
 </body>
 </html>

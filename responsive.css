@@ -1,0 +1,227 @@
+/*
+ * responsive.css — KUA Pilangkenceng
+ * Handler responsive untuk semua halaman di kuapilangkenceng.github.io
+ * Di-link di setiap halaman: <link rel="stylesheet" href="/responsive.css">
+ * (atau href="../responsive.css" untuk halaman di subfolder ptsp/)
+ */
+
+/* ══════════════════════════════════════════════
+   HAMBURGER BUTTON (semua halaman)
+   ══════════════════════════════════════════════ */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+  margin-left: auto;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 2px;
+  transition: all .25s;
+}
+
+/* ══════════════════════════════════════════════
+   TABLET — ≤ 900px
+   ══════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* NAVBAR */
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    top: 56px; left: 0; right: 0;
+    background: var(--hijau-tua, #1b5e35);
+    padding: 1rem 1.25rem 1.25rem;
+    gap: .75rem;
+    z-index: 9999;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  }
+  .nav-links.open a,
+  .nav-links.open .nav-dropdown-toggle {
+    font-size: 14px;
+    padding: 6px 0;
+    width: 100%;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .nav-links.open .btn-ptsp {
+    width: 100%;
+    justify-content: center;
+    margin-top: .5rem;
+  }
+  .nav-dropdown-menu {
+    position: static !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: rgba(255,255,255,0.05) !important;
+    border-radius: 6px;
+    margin-top: 4px;
+    min-width: auto !important;
+  }
+  .nav-brand-text span { display: none; }
+
+  /* HERO BERANDA */
+  .hero { min-height: auto; }
+  .hero-inner {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    padding: 2rem 1.25rem 1.5rem !important;
+  }
+  .hero h1 { font-size: 2rem; }
+  .hero p { max-width: 100%; font-size: 13px; }
+  .slideshow-card { height: 280px !important; }
+
+  /* RUNNING TEXT */
+  .running-inner { padding: 0 1rem; }
+
+  /* HERO MINI (layanan pages) */
+  .hero-mini-inner {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    padding: 1.5rem 1.25rem !important;
+  }
+  .hero-mini-stats { gap: 1.25rem; }
+
+  /* MENU CEPAT */
+  .menu-grid { grid-template-columns: repeat(4, 1fr) !important; gap: .6rem !important; }
+
+  /* LAYANAN GRIDS */
+  .layanan-grid { grid-template-columns: 1fr 1fr !important; }
+  .layanan-lain-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* ALUR */
+  .alur-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* PROFIL */
+  .profil-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+  .struktur-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .kontak-grid { grid-template-columns: 1fr 1fr !important; }
+  .desa-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* ARTIKEL */
+  .artikel-grid { grid-template-columns: 1fr !important; }
+  .artikel-wrap { grid-template-columns: 1fr !important; }
+  .artikel-sidebar { display: none; }
+
+  /* GALERI */
+  .galeri-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* STATS BAR */
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* FOOTER */
+  .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 1.5rem !important; }
+  .footer-bottom { flex-direction: column; text-align: center; gap: .5rem; }
+
+  /* SECTION PADDING */
+  section,
+  .section,
+  .alur-section,
+  .cta-section { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  .container { padding: 0 1.25rem; }
+}
+
+/* ══════════════════════════════════════════════
+   MOBILE — ≤ 540px
+   ══════════════════════════════════════════════ */
+@media (max-width: 540px) {
+
+  /* NAVBAR */
+  .navbar-inner { height: 52px; padding: 0 1rem; }
+  .nav-brand-text strong { font-size: 12px; }
+
+  /* HERO BERANDA */
+  .hero-inner { padding: 1.5rem 1rem 1.25rem !important; gap: 1rem !important; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero-badge { font-size: 9.5px; }
+  .hero-btns { flex-direction: column; }
+  .btn-hero-primary,
+  .btn-hero-outline { width: 100%; justify-content: center; font-size: 12.5px; padding: 10px 14px; }
+  .hero-stat strong { font-size: 1.2rem; }
+  .slideshow-card { height: 220px !important; }
+  .slide-dots { padding: 5px 0 3px; }
+
+  /* RUNNING TEXT */
+  .running-label { display: none; }
+  .running-text { font-size: 11px; }
+
+  /* HERO MINI */
+  .hero-mini { padding: 1.25rem 1rem !important; }
+  .hero-mini h1 { font-size: 1.35rem; }
+  .hero-mini-stats { flex-wrap: wrap; gap: .75rem; }
+
+  /* MENU CEPAT */
+  .menu-grid { grid-template-columns: repeat(4, 1fr) !important; gap: .4rem !important; }
+  .menu-item { padding: .6rem .35rem; }
+  .menu-icon { width: 34px; height: 34px; font-size: 16px; }
+  .menu-item p { font-size: 9px; }
+
+  /* LAYANAN */
+  .layanan-grid { grid-template-columns: 1fr !important; }
+  .layanan-lain-grid { grid-template-columns: 1fr !important; }
+  .syarat-umum-grid { grid-template-columns: 1fr !important; }
+  .kategori-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* ALUR */
+  .alur-grid { grid-template-columns: 1fr !important; gap: .6rem !important; }
+
+  /* PROFIL */
+  .struktur-grid { grid-template-columns: 1fr !important; }
+  .kontak-grid { grid-template-columns: 1fr !important; }
+  .desa-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* GALERI */
+  .galeri-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* ARTIKEL */
+  .filter-bar { flex-wrap: wrap; gap: .4rem; }
+  .filter-btn { font-size: 11px; padding: 4px 10px; }
+
+  /* CTA */
+  .cta-btns { flex-direction: column; align-items: stretch; }
+  .btn-cta-primary,
+  .btn-cta-wa { width: 100%; justify-content: center; }
+
+  /* FOOTER */
+  .footer-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+
+  /* SECTION */
+  section,
+  .section,
+  .alur-section,
+  .cta-section { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .section-hd { flex-direction: column; align-items: flex-start; gap: .4rem; }
+
+  /* PTSP FORMS */
+  .ptsp-wrap { padding: 1rem !important; }
+  .form-row { grid-template-columns: 1fr !important; }
+}
+
+/* ══════════════════════════════════════════════
+   PTSP PAGES (ptsp/*.html) — ≤ 900px
+   ══════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .ptsp-layout { grid-template-columns: 1fr !important; }
+  .ptsp-sidebar { display: none; }
+  .ptsp-main { padding: 1rem !important; }
+  .ptsp-header { padding: 1rem !important; }
+  .form-grid-2 { grid-template-columns: 1fr !important; }
+  .admin-layout { grid-template-columns: 1fr !important; }
+  .admin-sidebar { display: none; }
+}
