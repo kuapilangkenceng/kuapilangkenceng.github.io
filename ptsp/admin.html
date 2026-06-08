@@ -608,6 +608,9 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
         <span class="icon">📰</span> Artikel
         <span class="nav-badge" id="badge-draft" style="display:none">0</span>
       </div>
+      <div class="nav-item" onclick="showPage('page-pelaksanaan')" id="nav-pelaksanaan">
+        <span class="icon">💒</span> Pelaksanaan Nikah
+      </div>
       <div class="nav-item" onclick="showPage('page-generate')" id="nav-generate">
         <span class="icon">&#128196;</span> Generate Dokumen
         <span class="nav-badge" id="badge-gen" style="display:none">0</span>
@@ -1376,15 +1379,16 @@ function closeLightbox() {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const titles = { 'page-dashboard': 'Dashboard', 'page-layanan': 'Data Layanan', 'page-users': 'Manajemen User', 'page-artikel': 'Artikel', 'page-generate': 'Generate Dokumen' };
+  const titles = { 'page-dashboard': 'Dashboard', 'page-layanan': 'Data Layanan', 'page-users': 'Manajemen User', 'page-artikel': 'Artikel', 'page-generate': 'Generate Dokumen', 'page-pelaksanaan': 'Pelaksanaan Nikah' };
   document.getElementById('page-title').textContent = titles[id] || '';
   // Nav active
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navMap = { 'page-dashboard': 'nav-dashboard', 'page-layanan': 'nav-layanan', 'page-users': 'nav-users', 'page-artikel': 'nav-artikel', 'page-generate': 'nav-generate' };
+  const navMap = { 'page-dashboard': 'nav-dashboard', 'page-layanan': 'nav-layanan', 'page-users': 'nav-users', 'page-artikel': 'nav-artikel', 'page-generate': 'nav-generate', 'page-pelaksanaan': 'nav-pelaksanaan' };
   if (navMap[id]) document.getElementById(navMap[id]).classList.add('active');
   if (id === 'page-users') loadUsers();
   if (id === 'page-artikel') loadArtikel();
   if (id === 'page-generate') loadGenerate();
+  if (id === 'page-pelaksanaan') loadPelaksanaan();
   // Tutup sidebar mobile
   if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
 }
@@ -1941,6 +1945,119 @@ async function doGenerateDokumen() {
 </script>
 
 <!-- === PAGE GENERATE DOKUMEN === -->
+<div class="page" id="page-pelaksanaan">
+  <div style="max-width:700px;margin:0 auto">
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
+        <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
+        <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
+      </div>
+      <div style="padding:20px">
+        <!-- Recall dropdown -->
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-weight:600;font-size:13px">Pilih Data Pendaftaran Nikah</label>
+          <select id="pel-recall-select" class="form-control" onchange="onPelaksanaanRecall(this.value)" style="width:100%;padding:10px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px">
+            <option value="">-- Memuat data... --</option>
+          </select>
+          <span id="pel-recall-info" style="font-size:11.5px;color:#888;margin-top:4px;display:block"></span>
+        </div>
+
+        <!-- Banner autofill -->
+        <div id="pel-autofill-banner" style="background:#e8f5ee;border:1.5px solid #2d8c5e;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1a6b45;font-weight:600;margin-bottom:14px;display:none">
+          ✅ Data berhasil diisi otomatis dari pendaftaran.
+        </div>
+
+        <!-- Form Pelaksanaan -->
+        <div id="pel-form-body" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Nama Pengantin Pria</label>
+              <input class="form-control" id="pel-nama-pa" type="text" placeholder="Nama catin pria"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Pengantin Wanita</label>
+              <input class="form-control" id="pel-nama-pi" type="text" placeholder="Nama catin wanita"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
+              <input class="form-control" id="pel-tgl" type="date" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu Pelaksanaan</label>
+              <input class="form-control" id="pel-waktu" type="time"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tempat Pelaksanaan</label>
+              <select class="form-control" id="pel-tempat">
+                <option>KUA Pilangkenceng</option>
+                <option>Masjid/Musholla</option>
+                <option>Rumah</option>
+                <option>Gedung/Aula</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Penghulu</label>
+              <input class="form-control" id="pel-penghulu" type="text" placeholder="Nama penghulu"/>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Petugas Penerima</label>
+            <select class="form-control" id="pel-petugas">
+              <option>Petugas PTSP</option>
+              <option>Penghulu</option>
+              <option>Penyuluh</option>
+              <option>Operator Layanan</option>
+              <option>Admin Kantor</option>
+              <option>Kepala KUA</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Catatan Pelaksanaan</label>
+            <textarea class="form-control" id="pel-catatan" rows="3" placeholder="Catatan tambahan pelaksanaan akad..."></textarea>
+          </div>
+
+          <!-- Foto upload -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="form-group">
+              <label class="form-label">Foto bersama Petugas PTSP</label>
+              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
+                <input type="file" accept="image/*" onchange="handlePelFoto(event,'ptsp')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+                <div style="font-size:24px">📷</div>
+                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
+              </div>
+              <div id="pel-preview-ptsp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Foto bersama Penghulu</label>
+              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
+                <input type="file" accept="image/*" onchange="handlePelFoto(event,'penghulu')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+                <div style="font-size:24px">📷</div>
+                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
+              </div>
+              <div id="pel-preview-penghulu" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+            </div>
+          </div>
+
+          <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
+            style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">
+            💒 Simpan Pelaksanaan Nikah
+          </button>
+        </div>
+
+        <!-- Placeholder sebelum recall -->
+        <div id="pel-placeholder" style="text-align:center;padding:32px;color:#aaa">
+          <div style="font-size:40px;margin-bottom:8px">📋</div>
+          <div style="font-size:14px">Pilih data pendaftaran di atas untuk memulai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-pelaksanaan -->
+
 <div class="page" id="page-generate">
   <div class="filter-bar" style="margin-bottom:16px">
     <input type="text" id="gen-f-q" placeholder="Cari nama / ID..." oninput="filterGenerate()"/>
@@ -2057,6 +2174,152 @@ function renderGenerate() {
   nxt.onclick=function(){ genPage++; renderGenerate(); };
   btns.appendChild(nxt);
 }
+
+/* ══════════════════════════════════════════════
+   PELAKSANAAN NIKAH
+══════════════════════════════════════════════ */
+let pelFotoData = { ptsp: null, penghulu: null };
+let pelRecallData = {};
+
+function loadPelaksanaan() {
+  const sel = document.getElementById('pel-recall-select');
+  sel.innerHTML = '<option value="">-- Memuat data pendaftaran... --</option>';
+  fetch(API + '?action=getpendaftarannikah&t=' + Date.now())
+    .then(r => r.json())
+    .then(res => {
+      if (!res.ok || !res.data.length) {
+        sel.innerHTML = '<option value="">-- Belum ada data pendaftaran --</option>';
+        return;
+      }
+      pelRecallData = {};
+      sel.innerHTML = '<option value="">-- Pilih data pendaftaran --</option>';
+      res.data.forEach(function(d) {
+        pelRecallData[d.id] = d;
+        const namaPA = d.data.nama_pa || '-';
+        const namaPI = d.data.nama_pi || '-';
+        const tgl    = String(d.timestamp).substring(0, 10);
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = d.id + ' | ' + namaPA + ' ↔ ' + namaPI + ' (' + tgl + ')';
+        sel.appendChild(opt);
+      });
+    })
+    .catch(function() {
+      sel.innerHTML = '<option value="">-- Gagal memuat data --</option>';
+    });
+}
+
+function onPelaksanaanRecall(id) {
+  const body = document.getElementById('pel-form-body');
+  const placeholder = document.getElementById('pel-placeholder');
+  const banner = document.getElementById('pel-autofill-banner');
+  const info = document.getElementById('pel-recall-info');
+
+  if (!id) {
+    body.style.display = 'none';
+    placeholder.style.display = 'block';
+    banner.style.display = 'none';
+    info.textContent = '';
+    return;
+  }
+
+  const d = pelRecallData[id];
+  if (!d) return;
+
+  // Autofill
+  document.getElementById('pel-nama-pa').value  = d.data.nama_pa  || '';
+  document.getElementById('pel-nama-pi').value  = d.data.nama_pi  || '';
+  document.getElementById('pel-tgl').value      = d.data.tgl_akad || '';
+  document.getElementById('pel-waktu').value    = d.data.waktu_akad || '';
+
+  // Info status
+  info.textContent = 'Status pendaftaran: ' + (d.status || '-') + ' | Pemohon: ' + d.nama_pemohon;
+
+  placeholder.style.display = 'none';
+  body.style.display = 'block';
+  banner.style.display = 'block';
+  setTimeout(function() { banner.style.display = 'none'; }, 3000);
+}
+
+function handlePelFoto(event, type) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    pelFotoData[type] = e.target.result.split(',')[1];
+    const preview = document.getElementById('pel-preview-' + type);
+    preview.innerHTML = '<img src="' + e.target.result + '" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:2px solid #b8d4c2"/>';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitPelaksanaan() {
+  const idPendaftaran = document.getElementById('pel-recall-select').value;
+  if (!idPendaftaran) { showToast('Pilih data pendaftaran terlebih dahulu', true); return; }
+
+  const tgl = document.getElementById('pel-tgl').value;
+  if (!tgl) { showToast('Tanggal pelaksanaan wajib diisi', true); return; }
+
+  const btn = document.getElementById('btn-submit-pelaksanaan');
+  btn.disabled = true;
+  btn.textContent = '⏳ Menyimpan...';
+
+  try {
+    const d = pelRecallData[idPendaftaran] || {};
+    const foto = [];
+    if (pelFotoData.ptsp)     foto.push({ field: 'foto_petugas_ptsp', base64: pelFotoData.ptsp, ext: 'jpg' });
+    if (pelFotoData.penghulu) foto.push({ field: 'foto_penghulu',      base64: pelFotoData.penghulu, ext: 'jpg' });
+
+    const payload = {
+      action       : 'submit',
+      kategori     : 'Nikah',
+      jenis_layanan: 'nikah_pelaksanaan',
+      jenis_label  : 'Pelaksanaan Nikah',
+      nama_pemohon : d.nama_pemohon || document.getElementById('pel-nama-pa').value,
+      kontak       : d.kontak || '',
+      petugas_ptsp : document.getElementById('pel-petugas').value,
+      foto         : foto,
+      data         : {
+        id_pendaftaran  : idPendaftaran,
+        nama_pa         : document.getElementById('pel-nama-pa').value,
+        nama_pi         : document.getElementById('pel-nama-pi').value,
+        tgl_pelaksanaan : tgl,
+        waktu_pelaksanaan: document.getElementById('pel-waktu').value,
+        tempat_pelaksanaan: document.getElementById('pel-tempat').value,
+        nama_penghulu   : document.getElementById('pel-penghulu').value,
+        catatan         : document.getElementById('pel-catatan').value
+      }
+    };
+
+    // 1. Submit pelaksanaan ke DataLayanan
+    const res = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (!result.ok) throw new Error(result.error || 'Submit gagal');
+
+    // 2. Hapus jadwal dari JadwalNikah
+    await fetch(API + '?action=hapusjadwal&id_pendaftaran=' + encodeURIComponent(idPendaftaran) + '&t=' + Date.now());
+
+    showToast('✅ Pelaksanaan Nikah berhasil disimpan! ID: ' + result.id);
+
+    // Reset form
+    document.getElementById('pel-recall-select').value = '';
+    document.getElementById('pel-form-body').style.display = 'none';
+    document.getElementById('pel-placeholder').style.display = 'block';
+    document.getElementById('pel-preview-ptsp').innerHTML = '';
+    document.getElementById('pel-preview-penghulu').innerHTML = '';
+    pelFotoData = { ptsp: null, penghulu: null };
+
+    // Reload data
+    setTimeout(loadPelaksanaan, 1000);
+
+  } catch(err) {
+    showToast('❌ Gagal: ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💒 Simpan Pelaksanaan Nikah';
+  }
+}
+
 </script>
 
 </body>
