@@ -1,4 +1,4 @@
-/* ptsp-engine.js — Shared Form Engine PTSP KUA Pilangkenceng */
+﻿/* ptsp-engine.js — Shared Form Engine PTSP KUA Pilangkenceng */
 const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.API_URL)
   ? KUA_CONFIG.API_URL
   : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
@@ -128,12 +128,6 @@ function showForm(jenis) {
   if ((CONFIG.publishMode||{})[jenis]==='kegiatan' && session && CONFIG.consentField) {
     addST(body,'Izin Publikasi'); const d=document.createElement('div'); d.className='consent-box'; renderField(d,CONFIG.consentField); body.appendChild(d);
   }
-  const pg = document.createElement('div'); pg.className='form-group';
-  pg.innerHTML = '<label class="form-label">Petugas Penerima</label><input class="form-control" id="field_petugas_ptsp" type="text" value="'+(session?session.nama:'')+'" placeholder="Nama petugas (isi jika tidak login)" '+(session?'readonly':'')+'/>';
-  body.appendChild(pg);
-  const sg = document.createElement('div'); sg.className='form-group'; sg.id='group_foto_selfie_petugas';
-  sg.innerHTML = '<label class="form-label">Foto Selfie bersama Petugas <span style="color:#aaa;font-size:11px">(opsional)</span></label><div class="photo-upload-area" id="photo_area_foto_selfie_petugas" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="handleDrop(event,\'foto_selfie_petugas\')"><input type="file" class="photo-input" id="field_foto_selfie_petugas" accept="image/*" onchange="handlePhotoInput(event,\'foto_selfie_petugas\')"/><span class="photo-upload-icon">\uD83E\uDD33</span><div class="photo-upload-label">Foto bersama petugas KUA</div><div class="photo-upload-sub">JPG, PNG \u00B7 Maks 5MB</div></div><div class="photo-previews" id="previews_foto_selfie_petugas"></div>';
-  body.appendChild(sg);
   const sw = document.createElement('div'); sw.style.marginTop='20px';
   sw.innerHTML = '<button class="btn-submit" id="btn-submit" onclick="submitForm()">\uD83D\uDCE4 Kirim Layanan</button>';
   body.appendChild(sw);
@@ -260,7 +254,7 @@ async function submitForm() {
     else if(field.type==='checkbox'){data[fname]=Array.from(document.querySelectorAll('[name="'+fname+'"]:checked')).map(function(c){return c.value;});}
     else if(field.type!=='photo'){data[fname]=el.value.trim();}
   });
-  const petugas=(document.getElementById('field_petugas_ptsp')||{value:''}).value.trim()||(session?session.nama:'');
+  const petugas=(document.getElementById('field_petugas_penerima')||document.getElementById('field_petugas_ptsp')||{value:''}).value.trim()||(session?session.nama:'');
   const payload={action:'submit',jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,foto:photoFiles.map(function(p){return {mimeType:p.mimeType,base64:p.base64};})};
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
   try{
