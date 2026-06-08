@@ -1,4 +1,4 @@
-﻿/* ptsp-engine.js — Shared Form Engine PTSP KUA Pilangkenceng */
+/* ptsp-engine.js — Shared Form Engine PTSP KUA Pilangkenceng */
 const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.API_URL)
   ? KUA_CONFIG.API_URL
   : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
@@ -162,14 +162,39 @@ function renderField(parent, field) {
     const now = new Date();
     const bulan = String(now.getMonth()+1).padStart(2,'0');
     const tahun = now.getFullYear();
-    const suffix = '/Kua.13.34.06/PW.01/' + bulan + '/' + tahun;
-    inp = '<div style="display:flex;align-items:center;gap:6px">' +
-      '<span style="font-size:14px;color:#4a4a4a;font-weight:600;white-space:nowrap">B-</span>' +
-      '<input type="text" id="field_'+fname+'_nomor" class="form-control" style="width:80px;flex-shrink:0" placeholder="256" oninput="updateNoSurat(\''+fname+'\',this.value)" inputmode="numeric"/>' +
-      '<span style="font-size:13px;color:#888;white-space:nowrap">'+suffix+'</span>' +
-      '<input type="hidden" id="field_'+fname+'" name="'+fname+'"/>' +
+    const _kodeSurat = [
+      'PW.01 — Perkawinan, Rujuk, Talak & Cerai',
+      'PW.02 — Kepenghuluan & Keluarga Sakinah',
+      'PW.03 — Pembinaan Syariah',
+      'PW.04 — Hisab Rukyat & Bina Syariah',
+      'BA — Bimbingan & Penyuluhan Agama',
+      'HM — Kehumasan & Keprotokolan',
+      'A.01/SK — Surat Keterangan',
+      'A.02/U — Undangan',
+      'A.03/P — Permohonan / Proposal',
+      'A.04/SP — Surat Pengantar',
+      'A.05/PL — Pemberitahuan / Laporan',
+      'A.06/SR — Surat Rekomendasi',
+      'KP.01 — Tata Usaha Kepegawaian',
+      'KP.02 — Pendidikan & Latihan',
+      'KP.03 — KORPRI / Dharma Wanita',
+      'KP.04 — Penilaian & Hukuman',
+      'KU — Keuangan',
+      'OT — Organisasi & Tata Laksana',
+      'RT — Kerumahtanggaan'
+    ];
+    const _kodeOpts = _kodeSurat.map(function(k){
+      const kode = k.split(' — ')[0];
+      return '<option value="'+kode+'">'+k+'</option>';
+    }).join('');
+    inp = '<div style="display:grid;grid-template-columns:60px 1fr auto auto;align-items:center;gap:6px">' +
+      '<span style="font-size:14px;color:#4a4a4a;font-weight:700">B-</span>' +
+      '<input type="text" id="field_'+fname+'_nomor" class="form-control" placeholder="256" oninput="updateNoSurat(\''+fname+'\',null)" inputmode="numeric" style="min-width:0"/>' +
+      '<select id="field_'+fname+'_kode" class="form-control" onchange="updateNoSurat(\''+fname+'\',null)" style="min-width:0">'+_kodeOpts+'</select>' +
+      '<span style="font-size:13px;color:#888;white-space:nowrap">/'+bulan+'/'+tahun+'</span>' +
       '</div>' +
-      '<div style="margin-top:5px;font-size:11.5px;color:#2d8c5e;font-weight:600" id="preview_'+fname+'">Format: B-[nomor]'+suffix+'</div>';
+      '<input type="hidden" id="field_'+fname+'" name="'+fname+'"/>' +
+      '<div style="margin-top:5px;font-size:11.5px;color:#2d8c5e;font-weight:600" id="preview_'+fname+'">Ketik nomor urut dan pilih kode surat</div>';
   } else if (f.type==='autocomplete') {
     inp = '<div class="autocomplete-wrap"><input class="form-control" id="field_'+fname+'" name="'+fname+'" type="text" placeholder="'+(f.placeholder||'Ketik untuk mencari...')+'" '+(f.required?'required':'')+' oninput="handleAutocomplete(event,\''+fname+'\',\''+currentJenis+'\')"/><div class="autocomplete-dropdown" id="ac_'+fname+'"></div></div>';
   }
@@ -283,14 +308,16 @@ var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
 
-function updateNoSurat(fname, val) {
-  const now = new Date();
-  const bulan = String(now.getMonth()+1).padStart(2,'0');
-  const tahun = now.getFullYear();
-  const suffix = '/Kua.13.34.06/PW.01/' + bulan + '/' + tahun;
-  const full = val ? 'B-' + val + suffix : '';
-  const hidden = document.getElementById('field_' + fname);
+function updateNoSurat(fname) {
+  const now    = new Date();
+  const bulan  = String(now.getMonth()+1).padStart(2,'0');
+  const tahun  = now.getFullYear();
+  const nomor  = (document.getElementById('field_' + fname + '_nomor') || {}).value || '';
+  const kodeEl = document.getElementById('field_' + fname + '_kode');
+  const kode   = kodeEl ? kodeEl.value : 'PW.01';
+  const full   = nomor ? 'B-' + nomor + '/Kua.13.34.06/' + kode + '/' + bulan + '/' + tahun : '';
+  const hidden  = document.getElementById('field_' + fname);
   const preview = document.getElementById('preview_' + fname);
-  if (hidden) hidden.value = full;
-  if (preview) preview.textContent = full || ('Format: B-[nomor]' + suffix);
+  if (hidden)  hidden.value = full;
+  if (preview) preview.textContent = full || 'Ketik nomor urut dan pilih kode surat';
 }
