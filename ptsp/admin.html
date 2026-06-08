@@ -551,7 +551,6 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 .btn-dok:hover{background:#1a6b45;color:#fff;border-color:#1a6b45}
 .btn-dok.sudah{background:#fdf6e0;color:#b45309;border-color:#e5c84a}
 .card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
-.card-header{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);color:white;padding:16px 20px}
 </style>
 </head>
 <body>
@@ -850,6 +849,120 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 
         </div>
       </div><!-- /page-users -->
+
+
+      <div class="page" id="page-pelaksanaan">>
+  <div style="max-width:700px;margin:0 auto">
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
+        <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
+        <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
+      </div>
+      <div style="padding:20px">
+        <!-- Recall dropdown -->
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-weight:600;font-size:13px">Pilih Data Pendaftaran Nikah</label>
+          <select id="pel-recall-select" class="form-control" onchange="onPelaksanaanRecall(this.value)" style="width:100%;padding:10px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px">
+            <option value="">-- Memuat data... --</option>
+          </select>
+          <span id="pel-recall-info" style="font-size:11.5px;color:#888;margin-top:4px;display:block"></span>
+        </div>
+
+        <!-- Banner autofill -->
+        <div id="pel-autofill-banner" style="background:#e8f5ee;border:1.5px solid #2d8c5e;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1a6b45;font-weight:600;margin-bottom:14px;display:none">
+          ✅ Data berhasil diisi otomatis dari pendaftaran.
+        </div>
+
+        <!-- Form Pelaksanaan -->
+        <div id="pel-form-body" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Nama Pengantin Pria</label>
+              <input class="form-control" id="pel-nama-pa" type="text" placeholder="Nama catin pria"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Pengantin Wanita</label>
+              <input class="form-control" id="pel-nama-pi" type="text" placeholder="Nama catin wanita"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
+              <input class="form-control" id="pel-tgl" type="date" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu Pelaksanaan</label>
+              <input class="form-control" id="pel-waktu" type="time"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tempat Pelaksanaan</label>
+              <select class="form-control" id="pel-tempat">
+                <option>KUA Pilangkenceng</option>
+                <option>Masjid/Musholla</option>
+                <option>Rumah</option>
+                <option>Gedung/Aula</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Penghulu</label>
+              <input class="form-control" id="pel-penghulu" type="text" placeholder="Nama penghulu"/>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Petugas Penerima</label>
+            <select class="form-control" id="pel-petugas">
+              <option>Petugas PTSP</option>
+              <option>Penghulu</option>
+              <option>Penyuluh</option>
+              <option>Operator Layanan</option>
+              <option>Admin Kantor</option>
+              <option>Kepala KUA</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Catatan Pelaksanaan</label>
+            <textarea class="form-control" id="pel-catatan" rows="3" placeholder="Catatan tambahan pelaksanaan akad..."></textarea>
+          </div>
+
+          <!-- Foto upload -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="form-group">
+              <label class="form-label">Foto bersama Petugas PTSP</label>
+              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
+                <input type="file" accept="image/*" onchange="handlePelFoto(event,'ptsp')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+                <div style="font-size:24px">📷</div>
+                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
+              </div>
+              <div id="pel-preview-ptsp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Foto bersama Penghulu</label>
+              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
+                <input type="file" accept="image/*" onchange="handlePelFoto(event,'penghulu')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+                <div style="font-size:24px">📷</div>
+                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
+              </div>
+              <div id="pel-preview-penghulu" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+            </div>
+          </div>
+
+          <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
+            style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">
+            💒 Simpan Pelaksanaan Nikah
+          </button>
+        </div>
+
+        <!-- Placeholder sebelum recall -->
+        <div id="pel-placeholder" style="text-align:center;padding:32px;color:#aaa">
+          <div style="font-size:40px;margin-bottom:8px">📋</div>
+          <div style="font-size:14px">Pilih data pendaftaran di atas untuk memulai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-pelaksanaan -->
 
     </div><!-- /content -->
   </div><!-- /main -->
@@ -1946,120 +2059,6 @@ async function doGenerateDokumen() {
 }
 </script>
 
-
-
-<div class="page" id="page-pelaksanaan">
-  <div style="max-width:700px;margin:0 auto">
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
-        <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
-        <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
-      </div>
-      <div style="padding:20px">
-        <!-- Recall dropdown -->
-        <div class="form-group" style="margin-bottom:16px">
-          <label class="form-label" style="font-weight:600;font-size:13px">Pilih Data Pendaftaran Nikah</label>
-          <select id="pel-recall-select" class="form-control" onchange="onPelaksanaanRecall(this.value)" style="width:100%;padding:10px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px">
-            <option value="">-- Memuat data... --</option>
-          </select>
-          <span id="pel-recall-info" style="font-size:11.5px;color:#888;margin-top:4px;display:block"></span>
-        </div>
-
-        <!-- Banner autofill -->
-        <div id="pel-autofill-banner" style="background:#e8f5ee;border:1.5px solid #2d8c5e;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1a6b45;font-weight:600;margin-bottom:14px;display:none">
-          ✅ Data berhasil diisi otomatis dari pendaftaran.
-        </div>
-
-        <!-- Form Pelaksanaan -->
-        <div id="pel-form-body" style="display:none">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Nama Pengantin Pria</label>
-              <input class="form-control" id="pel-nama-pa" type="text" placeholder="Nama catin pria"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Pengantin Wanita</label>
-              <input class="form-control" id="pel-nama-pi" type="text" placeholder="Nama catin wanita"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
-              <input class="form-control" id="pel-tgl" type="date" required/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Waktu Pelaksanaan</label>
-              <input class="form-control" id="pel-waktu" type="time"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Tempat Pelaksanaan</label>
-              <select class="form-control" id="pel-tempat">
-                <option>KUA Pilangkenceng</option>
-                <option>Masjid/Musholla</option>
-                <option>Rumah</option>
-                <option>Gedung/Aula</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Penghulu</label>
-              <input class="form-control" id="pel-penghulu" type="text" placeholder="Nama penghulu"/>
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label">Petugas Penerima</label>
-            <select class="form-control" id="pel-petugas">
-              <option>Petugas PTSP</option>
-              <option>Penghulu</option>
-              <option>Penyuluh</option>
-              <option>Operator Layanan</option>
-              <option>Admin Kantor</option>
-              <option>Kepala KUA</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label">Catatan Pelaksanaan</label>
-            <textarea class="form-control" id="pel-catatan" rows="3" placeholder="Catatan tambahan pelaksanaan akad..."></textarea>
-          </div>
-
-          <!-- Foto upload -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-            <div class="form-group">
-              <label class="form-label">Foto bersama Petugas PTSP</label>
-              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
-                <input type="file" accept="image/*" onchange="handlePelFoto(event,'ptsp')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
-                <div style="font-size:24px">📷</div>
-                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
-              </div>
-              <div id="pel-preview-ptsp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Foto bersama Penghulu</label>
-              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
-                <input type="file" accept="image/*" onchange="handlePelFoto(event,'penghulu')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
-                <div style="font-size:24px">📷</div>
-                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
-              </div>
-              <div id="pel-preview-penghulu" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-            </div>
-          </div>
-
-          <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
-            style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">
-            💒 Simpan Pelaksanaan Nikah
-          </button>
-        </div>
-
-        <!-- Placeholder sebelum recall -->
-        <div id="pel-placeholder" style="text-align:center;padding:32px;color:#aaa">
-          <div style="font-size:40px;margin-bottom:8px">📋</div>
-          <div style="font-size:14px">Pilih data pendaftaran di atas untuk memulai</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!-- /page-pelaksanaan -->
 
 <div class="page" id="page-generate">
   <div class="filter-bar" style="margin-bottom:16px">
