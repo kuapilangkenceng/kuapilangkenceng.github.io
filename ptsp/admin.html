@@ -2184,7 +2184,7 @@ let pelRecallData = {};
 function loadPelaksanaan() {
   const sel = document.getElementById('pel-recall-select');
   sel.innerHTML = '<option value="">-- Memuat data pendaftaran... --</option>';
-  fetch(API + '?action=getpendaftarannikah&t=' + Date.now())
+  fetch(API_URL + '?action=getpendaftarannikah&t=' + Date.now())
     .then(r => r.json())
     .then(res => {
       if (!res.ok || !res.data.length) {
@@ -2292,12 +2292,12 @@ async function submitPelaksanaan() {
     };
 
     // 1. Submit pelaksanaan ke DataLayanan
-    const res = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
+    const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
     const result = await res.json();
     if (!result.ok) throw new Error(result.error || 'Submit gagal');
 
     // 2. Hapus jadwal dari JadwalNikah
-    await fetch(API + '?action=hapusjadwal&id_pendaftaran=' + encodeURIComponent(idPendaftaran) + '&t=' + Date.now());
+    await fetch(API_URL + '?action=hapusjadwal&id_pendaftaran=' + encodeURIComponent(idPendaftaran) + '&t=' + Date.now());
 
     showToast('✅ Pelaksanaan Nikah berhasil disimpan! ID: ' + result.id);
 
