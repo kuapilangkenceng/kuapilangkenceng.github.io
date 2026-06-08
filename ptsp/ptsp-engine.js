@@ -158,6 +158,18 @@ function renderField(parent, field) {
     inp = '<div class="check-group" id="field_'+fname+'">'+opts+'</div>';
   } else if (f.type==='photo') {
     inp = '<div class="photo-upload-area" id="photo_area_'+fname+'" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="handleDrop(event,\''+fname+'\')"><input type="file" class="photo-input" id="field_'+fname+'" accept="image/*" '+(f.multiple?'multiple':'')+' onchange="handlePhotoInput(event,\''+fname+'\')"/><span class="photo-upload-icon">\uD83D\uDCF7</span><div class="photo-upload-label">Klik atau seret foto ke sini</div><div class="photo-upload-sub">JPG, PNG \u00B7 Maks 5MB per foto</div></div><div class="photo-previews" id="previews_'+fname+'"></div>';
+  } else if (f.type==='surat_kua') {
+    const now = new Date();
+    const bulan = String(now.getMonth()+1).padStart(2,'0');
+    const tahun = now.getFullYear();
+    const suffix = '/Kua.13.34.06/PW.01/' + bulan + '/' + tahun;
+    inp = '<div style="display:flex;align-items:center;gap:6px">' +
+      '<span style="font-size:14px;color:#4a4a4a;font-weight:600;white-space:nowrap">B-</span>' +
+      '<input type="text" id="field_'+fname+'_nomor" class="form-control" style="width:80px;flex-shrink:0" placeholder="256" oninput="updateNoSurat(\''+fname+'\',this.value)" inputmode="numeric"/>' +
+      '<span style="font-size:13px;color:#888;white-space:nowrap">'+suffix+'</span>' +
+      '<input type="hidden" id="field_'+fname+'" name="'+fname+'"/>' +
+      '</div>' +
+      '<div style="margin-top:5px;font-size:11.5px;color:#2d8c5e;font-weight:600" id="preview_'+fname+'">Format: B-[nomor]'+suffix+'</div>';
   } else if (f.type==='autocomplete') {
     inp = '<div class="autocomplete-wrap"><input class="form-control" id="field_'+fname+'" name="'+fname+'" type="text" placeholder="'+(f.placeholder||'Ketik untuk mencari...')+'" '+(f.required?'required':'')+' oninput="handleAutocomplete(event,\''+fname+'\',\''+currentJenis+'\')"/><div class="autocomplete-dropdown" id="ac_'+fname+'"></div></div>';
   }
@@ -202,100 +214,21 @@ function applyAutofill(srcData,map,triggerField) { let filled=0; Object.entries(
 function setupAutofill(cfg) { document.addEventListener('click',function(e){ if(!e.target.closest('.autocomplete-wrap')) document.querySelectorAll('.autocomplete-dropdown').forEach(function(d){d.style.display='none';}); }); }
 
 function triggerAutofillBimwin() {
-  // Tambah dropdown recall di atas form-body
-  if (document.getElementById('bimwin-recall-wrap')) return;
-  const body = document.getElementById('form-body');
-  if (!body) return;
-
-  const wrap = document.createElement('div');
-  wrap.id = 'bimwin-recall-wrap';
-  wrap.style.cssText = 'background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px';
-  wrap.innerHTML = '<label class="form-label" style="color:var(--green);font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px">📋 Recall Data Pendaftaran Nikah</label>' +
-    '<select id="bimwin-recall-sel" class="form-control" onchange="applyBimwinRecall(this.value)">' +
-    '<option value="">-- Memuat data pendaftaran... --</option></select>' +
-    '<div id="bimwin-recall-info" style="font-size:11.5px;color:var(--green);margin-top:5px;font-weight:600;display:none"></div>';
-  body.insertBefore(wrap, body.firstChild);
-
-  // Load data pendaftaran
-  fetch(API_URL + '?action=getpendaftarannikah&t=' + Date.now())
-    .then(function(r){ return r.json(); })
-    .then(function(res) {
-      const sel = document.getElementById('bimwin-recall-sel');
-      if (!sel) return;
-      if (!res.ok || !res.data || !res.data.length) {
-        sel.innerHTML = '<option value="">-- Belum ada data pendaftaran --</option>';
-        return;
-      }
-      window._bimwinRecallData = {};
-      sel.innerHTML = '<option value="">-- Pilih data pendaftaran --</option>';
-      res.data.forEach(function(d) {
-        window._bimwinRecallData[d.id] = d;
-        const namaPA = d.data.nama_pa || '-';
-        const namaPI = d.data.nama_pi || '-';
-        const tgl    = String(d.timestamp).substring(0, 10);
-        const opt    = document.createElement('option');
-        opt.value    = d.id;
-        opt.textContent = d.id + ' | ' + namaPA + ' ↔ ' + namaPI + ' (' + tgl + ')';
-        sel.appendChild(opt);
-      });
-    })
-    .catch(function() {
-      const sel = document.getElementById('bimwin-recall-sel');
-      if (sel) sel.innerHTML = '<option value="">-- Gagal memuat data --</option>';
-    });
-}
-
-function applyBimwinRecall(id) {
-  if (!id || !window._bimwinRecallData) return;
-  const d = window._bimwinRecallData[id];
-  if (!d) return;
-
-  // Map field dari pendaftaran ke form bimwin
-  const map = {
-    nama_pemohon    : d.nama_pemohon,
-    kontak          : d.kontak,
-    nama_pa         : d.data.nama_pa,
-    nama_pi         : d.data.nama_pi,
-    tempat_lahir_pa : d.data.tempat_lahir_pa,
-    tgl_lahir_pa    : d.data.tgl_lahir_pa,
-    tempat_lahir_pi : d.data.tempat_lahir_pi,
-    tgl_lahir_pi    : d.data.tgl_lahir_pi,
-    desa_pa         : d.data.desa_pa,
-    desa_pi         : d.data.desa_pi
-  };
-
-  let filled = 0;
-  Object.entries(map).forEach(function(kv) {
-    const el = document.getElementById('field_' + kv[0]);
-    if (el && kv[1] !== undefined && kv[1] !== '') {
-      el.value = kv[1];
-      filled++;
-    }
+  const namaField=document.getElementById('field_nama_pa'); if(!namaField) return;
+  namaField.placeholder='Ketik nama catin pria untuk autofill...';
+  namaField.addEventListener('input',function(){
+    clearTimeout(this._afTimer); this._afTimer=setTimeout(async function(){
+      const q=namaField.value.trim(); if(q.length<3) return;
+      try{ const res=await fetch(API_URL+'?action=lookup&jenis=nikah_pendaftaran&field=nama_pa&q='+encodeURIComponent(q)); const json=await res.json(); if(json.results&&json.results.length) showAutofillBimwinDropdown(json.results,namaField); }catch(e){}
+    },500);
   });
-
-  // Tambah id_pendaftaran sebagai hidden
-  let hidden = document.getElementById('field_id_pendaftaran_ref');
-  if (!hidden) {
-    hidden = document.createElement('input');
-    hidden.type = 'hidden';
-    hidden.id   = 'field_id_pendaftaran_ref';
-    hidden.name = 'id_pendaftaran_ref';
-    document.getElementById('form-body').appendChild(hidden);
-  }
-  hidden.value = id;
-
-  const info = document.getElementById('bimwin-recall-info');
-  if (info) {
-    info.textContent = '✅ Data terisi dari ' + d.id + ' | Status: ' + (d.status || '-');
-    info.style.display = 'block';
-  }
-
-  if (filled > 0) {
-    document.getElementById('autofill-banner').style.display = 'block';
-    evalAllConditions();
-  }
 }
-
+function showAutofillBimwinDropdown(results,anchor) {
+  let dd=document.getElementById('bimwin-af-dd');
+  if(!dd){ dd=document.createElement('div'); dd.id='bimwin-af-dd'; dd.style.cssText='position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--green);border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12)'; anchor.parentElement.style.position='relative'; anchor.parentElement.appendChild(dd); }
+  dd.innerHTML=''; results.forEach(function(r){ const item=document.createElement('div'); item.style.cssText='padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #eee'; item.textContent=r.label; item.onmouseenter=function(){item.style.background='var(--green-light)';}; item.onmouseleave=function(){item.style.background='';}; item.onclick=function(){ applyAutofill(r.data,{nama_pa:'nama_pa',nama_pi:'nama_pi',ttl_pa:'ttl_pa',ttl_pi:'ttl_pi',desa_pa:'desa_pa',desa_pi:'desa_pi',kontak:'kontak',nama_pemohon:'nama_pemohon'},'nama_pa'); dd.remove(); showToast('Data catin terisi otomatis dari pendaftaran'); }; dd.appendChild(item); });
+  dd.style.display=results.length?'block':'none';
+}
 
 function renderBannerEcoteologyLuar(containerEl) {
   const lama=document.getElementById('banner-eco-luar'); if(lama) lama.remove();
@@ -348,3 +281,16 @@ async function submitForm() {
 function resetAll() { currentJenis=null; photoFiles=[]; renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
+
+
+function updateNoSurat(fname, val) {
+  const now = new Date();
+  const bulan = String(now.getMonth()+1).padStart(2,'0');
+  const tahun = now.getFullYear();
+  const suffix = '/Kua.13.34.06/PW.01/' + bulan + '/' + tahun;
+  const full = val ? 'B-' + val + suffix : '';
+  const hidden = document.getElementById('field_' + fname);
+  const preview = document.getElementById('preview_' + fname);
+  if (hidden) hidden.value = full;
+  if (preview) preview.textContent = full || ('Format: B-[nomor]' + suffix);
+}
