@@ -506,6 +506,131 @@
     /* ── SCROLL REVEAL ── */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
     .reveal.visible { opacity: 1; transform: none; }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE — TABLET (≤768px) & MOBILE (≤480px)
+       ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* NAVBAR */
+      .navbar-inner { padding: 0 1rem; height: 56px; }
+      .nav-links { display: none; }
+      .nav-brand-text strong { font-size: 12px; }
+      .nav-brand-text span { display: none; }
+
+      /* HERO */
+      .hero { min-height: auto; }
+      .hero-inner {
+        grid-template-columns: 1fr; gap: 1.5rem;
+        padding: 2rem 1rem 1.5rem;
+      }
+      .hero h1 { font-size: 1.85rem; }
+      .hero-tagline { font-size: .9rem; }
+      .hero p { font-size: 13px; margin-bottom: 1.25rem; max-width: 100%; }
+      .hero-stats { gap: 1.25rem; }
+      .hero-stat strong { font-size: 1.3rem; }
+      .slideshow-card { height: 280px; }
+
+      /* RUNNING TEXT */
+      .running-inner { padding: 0 1rem; }
+      .running-text { font-size: 11px; }
+
+      /* MENU CEPAT */
+      .menu-cepat { padding: 1.25rem 1rem 1rem; }
+      .menu-grid { grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+      .menu-icon { width: 38px; height: 38px; font-size: 18px; }
+      .menu-item p { font-size: 10px; }
+
+      /* LAYANAN UNGGULAN */
+      .layanan-grid { grid-template-columns: 1fr; }
+      .mid-col { order: -1; }
+
+      /* ALUR */
+      .alur-grid { grid-template-columns: 1fr 1fr; }
+
+      /* LAYANAN LAIN */
+      .layanan-lain-grid { grid-template-columns: 1fr 1fr; }
+
+      /* PROFIL */
+      .profil-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .wilayah-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* ARTIKEL */
+      .artikel-grid { grid-template-columns: 1fr; }
+
+      /* GALERI */
+      .galeri-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* STATS */
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* FOOTER */
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; text-align: center; gap: .5rem; }
+
+      /* SECTION */
+      section { padding: 2rem 1rem; }
+      .alur-section { padding: 2rem 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      /* HERO */
+      .hero-inner { padding: 1.5rem 1rem 1.25rem; gap: 1.25rem; }
+      .hero h1 { font-size: 1.55rem; }
+      .hero-badge { font-size: 10px; padding: 3px 10px; }
+      .hero-btns { flex-direction: column; }
+      .btn-hero-primary, .btn-hero-outline { width: 100%; justify-content: center; padding: 10px 16px; font-size: 12.5px; }
+      .hero-stats { gap: 1rem; }
+      .hero-stat strong { font-size: 1.2rem; }
+      .slideshow-card { height: 240px; }
+
+      /* MENU CEPAT */
+      .menu-grid { grid-template-columns: repeat(4, 1fr); gap: .4rem; }
+      .menu-item { padding: .625rem .375rem; }
+      .menu-icon { width: 34px; height: 34px; font-size: 16px; }
+      .menu-item p { font-size: 9.5px; }
+
+      /* ALUR */
+      .alur-grid { grid-template-columns: 1fr; gap: .75rem; }
+
+      /* LAYANAN LAIN */
+      .layanan-lain-grid { grid-template-columns: 1fr; }
+
+      /* GALERI */
+      .galeri-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* FOOTER */
+      .footer-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .navbar-inner { height: 52px; }
+
+      /* RUNNING TEXT */
+      .running-label { display: none; }
+
+      /* SECTION */
+      section { padding: 1.5rem 1rem; }
+      .alur-section { padding: 1.5rem 1rem; }
+      .section-hd { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    }
+
+    /* HAMBURGER MENU */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      background: none; border: none; padding: 4px;
+    }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.85); border-radius: 2px; transition: all .25s; }
+    @media (max-width: 768px) {
+      .nav-hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column; align-items: flex-start;
+        position: absolute; top: 56px; left: 0; right: 0;
+        background: var(--hijau-tua); padding: 1rem 1.25rem 1.25rem;
+        gap: .75rem; z-index: 999; border-top: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      }
+      .nav-links.open a { font-size: 14px; padding: 6px 0; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .nav-links.open .btn-ptsp { width: 100%; justify-content: center; margin-top: .5rem; }
+      .nav-dropdown-menu { position: static; opacity: 1; pointer-events: auto; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,0.05); border-radius: var(--radius); margin-top: 4px; min-width: auto; }
+      .nav-dropdown.open .nav-dropdown-menu { transform: none; }
+    }
   </style>
 </head>
 <body>
@@ -575,6 +700,9 @@
         🔒 Login Petugas
       </a>
     </div>
+    <button class="nav-hamburger" id="hamburgerBtn" aria-label="Buka menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -1234,6 +1362,22 @@
       animCount('s4', 18, '', 900);
     }, 400);
   });
+
+  /* ── HAMBURGER MENU ── */
+  (function() {
+    var btn = document.getElementById('hamburgerBtn');
+    var links = document.querySelector('.nav-links');
+    if (!btn || !links) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      links.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!links.contains(e.target) && e.target !== btn) {
+        links.classList.remove('open');
+      }
+    });
+  })();
 
   /* ── ACTIVE NAV ON SCROLL ── */
   const sections = document.querySelectorAll('section[id], div[id]');
