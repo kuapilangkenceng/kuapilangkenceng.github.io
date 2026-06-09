@@ -1265,35 +1265,23 @@
     if (!slides.length) return;
     var cur = 0;
     if (dotsEl) {
-      slides.forEach(function(_, i) {
+      slides.forEach(function(s, i) {
         var d = document.createElement('button');
         d.className = 'hero-dot' + (i === 0 ? ' active' : '');
-        d.setAttribute('aria-label', 'Slide ' + (i+1));
+        d.setAttribute('aria-label', 'Slide ' + (i + 1));
         d.onclick = function() { goTo(i); };
         dotsEl.appendChild(d);
       });
     }
     function goTo(n) {
       slides[cur].classList.remove('active');
-      if (dotsEl) dotsEl.children[cur].classList.remove('active');
+      if (dotsEl && dotsEl.children[cur]) dotsEl.children[cur].classList.remove('active');
       cur = (n + slides.length) % slides.length;
       slides[cur].classList.add('active');
-      if (dotsEl) dotsEl.children[cur].classList.add('active');
+      if (dotsEl && dotsEl.children[cur]) dotsEl.children[cur].classList.add('active');
       if (capEl) capEl.textContent = slides[cur].getAttribute('data-caption') || '';
     }
     setInterval(function() { goTo(cur + 1); }, 4000);
-  })(); 'Slide ' + (i+1));
-      d.onclick = function() { goTo(i); };
-      dotsEl.appendChild(d);
-    });
-    function goTo(n) {
-      slides[cur].classList.remove('active');
-      dotsEl.children[cur].classList.remove('active');
-      cur = (n + slides.length) % slides.length;
-      slides[cur].classList.add('active');
-      dotsEl.children[cur].classList.add('active');
-    }
-    setInterval(function() { goTo(cur + 1); }, 3000);
   })();
 
   /* ── INIT ── */
