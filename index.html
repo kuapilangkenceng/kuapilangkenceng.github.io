@@ -1179,9 +1179,7 @@
       var rows = (data.jadwal || []).slice(0, 8);
       if (!rows.length) { box.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--teks-ringan);font-size:12px">Belum ada pengumuman.</div>'; return; }
       box.innerHTML = rows.map(function(r) {
-        var _r=r.tanggal_akad||r.tanggal||'', tgl='-';
-        if(_r){try{var _d=new Date(_r),_b=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];tgl=_d.getDate()+' '+_b[_d.getMonth()]+' '+_d.getFullYear();}catch(x){tgl=_r;}}
-        var pa=r.nama_pa||r.nama_calon_suami||'-', pi=r.nama_pi||r.nama_calon_istri||'-', desa=r.desa||r.desa_pa||'-', tmpt=r.tempat_akad||'';
+        var tgl=r.tanggal_akad||'-', pa=r.nama_pa||'-', pi=r.nama_pi||'-', desa=r.desa||'-', tmpt=r.tempat_akad||'';
         return '<div style="padding:8px 0;border-bottom:1px solid rgba(0,0,0,.07);display:grid;grid-template-columns:80px 1fr;gap:6px">'+
           '<div style="font-size:11px;font-weight:700;color:var(--hijau)">'+tgl+'</div>'+
           '<div><div style="font-size:12.5px;font-weight:600">'+pa+' &amp; '+pi+'</div>'+
