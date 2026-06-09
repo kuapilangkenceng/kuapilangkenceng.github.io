@@ -213,12 +213,12 @@
     .slide-bg {
       width: 100%; height: 100%; display: flex; align-items: flex-end;
       background: linear-gradient(160deg, rgba(20,70,40,0.75) 0%, rgba(10,35,20,0.92) 100%);
+      background-size: cover; background-position: center top;
       position: relative; min-height: 220px;
     }
-    .slide-bg::before {
-      content: attr(data-icon); position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 64px; opacity: .35;
+    .slide-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
     }
     .slide-caption { padding: 0 14px 12px; position: relative; z-index: 1; }
     .slide-caption span { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.92); letter-spacing: .3px; }
@@ -732,63 +732,68 @@
       <div class="slideshow-card">
         <div class="slide-track" id="slideTrack">
           <div class="slide active">
-            <div class="slide-bg" data-icon="🏛️">
+            <div class="slide-bg" style="background-image:url('assets/img/Gedung.jpg')">
               <div class="slide-caption"><span>Gedung KUA Pilangkenceng</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👨‍💼">
+            <div class="slide-bg" style="background-image:url('assets/img/Kepala KUA_Penghulu Ahli Muda.jpg')">
               <div class="slide-caption"><span>Kepala KUA</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="⚖️">
-              <div class="slide-caption"><span>Penghulu</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/Agil_Penghulu Ahli Pertama.jpg')">
+              <div class="slide-caption"><span>Penghulu Ahli Pertama</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="🎤">
-              <div class="slide-caption"><span>Penyuluh Agama Islam Ahli Pertama</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/ahsanul_Penghulu Ahli Pertama.jpg')">
+              <div class="slide-caption"><span>Penghulu Ahli Pertama</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👩‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/Aziz_Penyuluh Agama Ahli Pertama.jpg')">
+              <div class="slide-caption"><span>Penyuluh Agama Ahli Pertama</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👩‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/rozif_Penyuluh Agama Ahli Pertama.jpg')">
+              <div class="slide-caption"><span>Penyuluh Agama Ahli Pertama</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👩‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/anwar_PENGELOLA LAYANAN OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Pengelola Layanan Operasional</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👨‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/Hasyim_PENGELOLA UMUM OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Pengelola Umum Operasional</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👨‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/abidin_OPERATOR LAYANAN OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Operator Layanan Operasional</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👨‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/isma_OPERATOR LAYANAN OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Operator Layanan Operasional</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👨‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/mucharrom_OPERATOR LAYANAN OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Operator Layanan Operasional</span></div>
             </div>
           </div>
           <div class="slide">
-            <div class="slide-bg" data-icon="👨‍💼">
-              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            <div class="slide-bg" style="background-image:url('assets/img/siti_OPERATOR LAYANAN OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Operator Layanan Operasional</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" style="background-image:url('assets/img/Zulaika_OPERATOR LAYANAN OPERASIONAL.jpg')">
+              <div class="slide-caption"><span>Operator Layanan Operasional</span></div>
             </div>
           </div>
         </div>
