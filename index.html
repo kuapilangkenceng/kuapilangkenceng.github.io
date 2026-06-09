@@ -163,22 +163,28 @@
       border-radius: var(--radius-lg); padding: 1.5rem; backdrop-filter: blur(4px);
     }
 
-    /* ── HERO FULLSCREEN SLIDESHOW ── */
-    .hero-slideshow { position: absolute; inset: 0; z-index: 0; }
-    .hero-slide { position: absolute; inset: 0; background-size: cover; background-position: center top; opacity: 0; transition: opacity 1.2s ease; }
-    .hero-slide.active { opacity: 1; }
-    .hero-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, rgba(8,32,16,0.90) 0%, rgba(8,32,16,0.78) 40%, rgba(8,32,16,0.30) 70%, rgba(0,0,0,0.05) 100%); }
-    @media (max-width: 768px) {
-      .hero-slide:not(:first-child) { display: none !important; }
-      .hero-dots-bar { display: none; }
-      .hero-photo-caption { display: none; }
-      .hero-slide { background-position: right center; }
-      .hero-overlay { background: linear-gradient(to bottom, rgba(8,32,16,0.80) 0%, rgba(8,32,16,0.55) 100%); }
-    }
-    .hero-photo-caption { position: absolute; bottom: 1.25rem; right: 1.5rem; z-index: 3; background: rgba(0,0,0,0.5); color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
-    .hero-dots-bar { position: absolute; bottom: 1.25rem; left: 50%; transform: translateX(-50%); z-index: 3; display: flex; gap: 6px; }
+    /* ── HERO 3 LAYER ── */
+    /* Layer 1: Gedung background permanen */
+    .hero-bg-gedung { position: absolute; inset: 0; z-index: 0; background: url('assets/img/Gedung.jpg') center/cover no-repeat; }
+    /* Layer 2: Green overlay gradasi */
+    .hero-green-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(to right, rgba(8,32,16,0.92) 0%, rgba(8,32,16,0.80) 38%, rgba(15,60,30,0.55) 62%, rgba(27,94,53,0.25) 100%); }
+    /* Layer 3: Slideshow foto pegawai PNG transparan */
+    .hero-pegawai-wrap { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+    .hero-pegawai-slide { position: absolute; bottom: 0; right: 0; height: 100%; width: 55%; display: flex; align-items: flex-end; justify-content: flex-end; opacity: 0; transition: opacity 1.2s ease; }
+    .hero-pegawai-slide.active { opacity: 1; }
+    .hero-pegawai-slide img { height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: bottom right; filter: drop-shadow(-8px 0 24px rgba(0,0,0,0.4)); }
+    /* Caption & dots */
+    .hero-photo-caption { position: absolute; bottom: 1.25rem; right: 1.5rem; z-index: 4; background: rgba(0,0,0,0.45); color: rgba(255,255,255,0.85); font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
+    .hero-dots-bar { position: absolute; bottom: 1.25rem; left: 50%; transform: translateX(-50%); z-index: 4; display: flex; gap: 6px; }
     .hero-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.35); border: none; padding: 0; cursor: pointer; transition: background .3s, transform .3s; }
     .hero-dot.active { background: var(--emas); transform: scale(1.3); }
+    /* Mobile: sembunyikan layer 3, hanya gedung + overlay */
+    @media (max-width: 768px) {
+      .hero-pegawai-wrap { display: none; }
+      .hero-dots-bar { display: none; }
+      .hero-photo-caption { display: none; }
+      .hero-green-overlay { background: linear-gradient(to bottom, rgba(8,32,16,0.78) 0%, rgba(8,32,16,0.50) 100%); }
+    }
     .kepala-info { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
     .kepala-avatar {
       width: 52px; height: 52px; border-radius: 50%;
@@ -709,24 +715,28 @@
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
-  <div class="hero-slideshow" id="heroSlideshow">
-    <div class="hero-slide  active" style="background-image:url('assets/img/Gedung.jpg')" data-caption="Gedung KUA Pilangkenceng"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/Kepala KUA_Penghulu Ahli Muda.jpg')" data-caption="Kepala KUA"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/Agil_Penghulu Ahli Pertama.jpg')" data-caption="Penghulu Ahli Pertama"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/ahsanul_Penghulu Ahli Pertama.jpg')" data-caption="Penghulu Ahli Pertama"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/Aziz_Penyuluh Agama Ahli Pertama.jpg')" data-caption="Penyuluh Agama Ahli Pertama"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/rozif_Penyuluh Agama Ahli Pertama.jpg')" data-caption="Penyuluh Agama Ahli Pertama"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/anwar_PENGELOLA LAYANAN OPERASIONAL.jpg')" data-caption="Pengelola Layanan Operasional"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/Hasyim_PENGELOLA UMUM OPERASIONAL.jpg')" data-caption="Pengelola Umum Operasional"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/abidin_OPERATOR LAYANAN OPERASIONAL.jpg')" data-caption="Operator Layanan Operasional"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/isma_OPERATOR LAYANAN OPERASIONAL.jpg')" data-caption="Operator Layanan Operasional"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/mucharrom_OPERATOR LAYANAN OPERASIONAL.jpg')" data-caption="Operator Layanan Operasional"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/siti_OPERATOR LAYANAN OPERASIONAL.jpg')" data-caption="Operator Layanan Operasional"></div>
-    <div class="hero-slide" style="background-image:url('assets/img/Zulaika_OPERATOR LAYANAN OPERASIONAL.jpg')" data-caption="Operator Layanan Operasional"></div>
+  <!-- Layer 1: Gedung background permanen -->
+  <div class="hero-bg-gedung"></div>
+  <!-- Layer 2: Green overlay -->
+  <div class="hero-green-overlay"></div>
+  <!-- Layer 3: Slideshow pegawai PNG transparan (desktop only) -->
+  <div class="hero-pegawai-wrap" id="heroPegawaiWrap">
+    <div class="hero-pegawai-slide active" data-caption="Kepala KUA"><img src="assets/img/Kepala KUA_Penghulu Ahli Muda.png" alt="Kepala KUA" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Penghulu Ahli Pertama"><img src="assets/img/Agil_Penghulu Ahli Pertama.png" alt="Penghulu Ahli Pertama" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Penghulu Ahli Pertama"><img src="assets/img/ahsanul_Penghulu Ahli Pertama.png" alt="Penghulu Ahli Pertama" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Penyuluh Agama Ahli Pertama"><img src="assets/img/Aziz_Penyuluh Agama Ahli Pertama.png" alt="Penyuluh Agama Ahli Pertama" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Penyuluh Agama Ahli Pertama"><img src="assets/img/rozif_Penyuluh Agama Ahli Pertama.png" alt="Penyuluh Agama Ahli Pertama" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Pengelola Layanan Operasional"><img src="assets/img/anwar_PENGELOLA LAYANAN OPERASIONAL.png" alt="Pengelola Layanan Operasional" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Pengelola Umum Operasional"><img src="assets/img/Hasyim_PENGELOLA UMUM OPERASIONAL.png" alt="Pengelola Umum Operasional" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Operator Layanan Operasional"><img src="assets/img/abidin_OPERATOR LAYANAN OPERASIONAL.png" alt="Operator Layanan Operasional" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Operator Layanan Operasional"><img src="assets/img/isma_OPERATOR LAYANAN OPERASIONAL.png" alt="Operator Layanan Operasional" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Operator Layanan Operasional"><img src="assets/img/mucharrom_OPERATOR LAYANAN OPERASIONAL.png" alt="Operator Layanan Operasional" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Operator Layanan Operasional"><img src="assets/img/siti_OPERATOR LAYANAN OPERASIONAL.png" alt="Operator Layanan Operasional" loading="lazy"/></div>
+    <div class="hero-pegawai-slide" data-caption="Operator Layanan Operasional"><img src="assets/img/Zulaika_OPERATOR LAYANAN OPERASIONAL.png" alt="Operator Layanan Operasional" loading="lazy"/></div>
   </div>
-  <div class="hero-overlay"></div>
+  <!-- Konten teks -->
   <div class="hero-inner">
-    <div style="max-width:580px">
+    <div style="max-width:560px">
       <div class="hero-badge">🌙 KUA Kecamatan Pilangkenceng</div>
       <h1>Melayani Umat<br>dengan Ikhlas &amp;<br>Profesional</h1>
       <p class="hero-tagline">"Pelayanan Prima, Keluarga Harmonis, Masyarakat Sejahtera"</p>
@@ -742,7 +752,7 @@
       </div>
     </div>
   </div>
-  <div class="hero-photo-caption" id="heroCaption">Gedung KUA Pilangkenceng</div>
+  <div class="hero-photo-caption" id="heroCaption">Kepala KUA</div>
   <div class="hero-dots-bar" id="heroDots"></div>
 </section>
 
@@ -1264,15 +1274,17 @@
   }, { threshold: 0.1 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  /* ──/* ── HERO SLIDESHOW FULLSCREEN ── */
+  /* ──/* ── HERO SLIDESHOW PEGAWAI ── */
   (function() {
-    var slides = document.querySelectorAll('#heroSlideshow .hero-slide');
+    var wrap = document.getElementById('heroPegawaiWrap');
+    if (!wrap || window.getComputedStyle(wrap).display === 'none') return;
+    var slides = wrap.querySelectorAll('.hero-pegawai-slide');
     var dotsEl = document.getElementById('heroDots');
     var capEl  = document.getElementById('heroCaption');
     if (!slides.length) return;
     var cur = 0;
     if (dotsEl) {
-      slides.forEach(function(s, i) {
+      slides.forEach(function(_, i) {
         var d = document.createElement('button');
         d.className = 'hero-dot' + (i === 0 ? ' active' : '');
         d.setAttribute('aria-label', 'Slide ' + (i + 1));
