@@ -449,7 +449,7 @@
 </footer>
 
 <script>
-  const API_URL = window.KUA ? KUA.URL.api : 'https://script.google.com/macros/s/AKfycbzV1e8HR4L_tBRjnhkebipR7rTuapGH6xaQxP_SNmEyYatLxl1aoRarzkPMKu02FhtC/exec';
+  const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.API_URL) ? KUA_CONFIG.API_URL : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
 
   /* ── STATE ── */
   let semuaArtikel = [];
@@ -480,7 +480,7 @@
   /* ── LOAD ARTIKEL DARI API ── */
   async function loadArtikel() {
     try {
-      const res  = await fetch(API_URL + '?action=getartikel&status=Publikasi&limit=100&t=' + Date.now());
+      const res  = await fetch(API_URL + '?action=getartikel&status=Published&limit=100&t=' + Date.now());
       const data = await res.json();
 
       if ((data.ok || data.status === 'ok') && (data.results || data.data || data.artikel)) {
