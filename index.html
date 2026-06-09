@@ -1,158 +1,1395 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<script src="../config.js"></script>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link rel="stylesheet" href="/responsive.css">
-<title>PTSP Digital - KUA Kecamatan Pilangkenceng</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<style>
-:root{--green:#1a6b45;--green-mid:#2d8c5e;--green-light:#e8f5ee;--gold:#c49a28;--gold-light:#fdf6e0;--cream:#fafaf7;--ink:#1a1a1a;--ink-soft:#4a4a4a;--ink-muted:#888;--border:#d8e5dc;--border-mid:#b8d4c2;--red:#c0392b;--red-light:#fdecea;--white:#ffffff;--radius:12px;--radius-sm:8px;--shadow:0 2px 16px rgba(26,107,69,.10);--shadow-lg:0 8px 40px rgba(26,107,69,.15);--font-main:'Plus Jakarta Sans',sans-serif;--transition:all .22s ease}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
-body{font-family:var(--font-main);background:var(--cream);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6}
-header{background:linear-gradient(135deg,var(--green) 0%,#14533a 100%);color:var(--white);position:sticky;top:0;z-index:100;box-shadow:0 2px 20px rgba(0,0,0,.25)}
-.header-inner{display:flex;align-items:center;gap:14px;padding:12px 24px;max-width:900px;margin:0 auto}
-.header-logo{width:48px;height:48px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid rgba(255,255,255,.3)}
-.header-text{flex:1}.header-title{font-size:15px;font-weight:800;letter-spacing:.3px;line-height:1.2}.header-sub{font-size:11.5px;opacity:.78;font-weight:400;margin-top:1px}
-.header-badge{background:var(--gold);color:var(--ink);font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.5px;white-space:nowrap}
-#btn-login-header{background:rgba(255,255,255,.15);color:var(--white);border:1.5px solid rgba(255,255,255,.35);padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap;font-family:var(--font-main)}
-#btn-login-header:hover{background:rgba(255,255,255,.25)}#btn-login-header.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
-.marquee-bar{background:var(--gold);color:var(--ink);font-size:12px;font-weight:600;padding:5px 0;overflow:hidden}
-.marquee-inner{display:inline-flex;animation:marquee 28s linear infinite;white-space:nowrap;gap:60px}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-main{max-width:900px;margin:0 auto;padding:24px 16px 60px}
-.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:6px}
-.section-title{font-size:20px;font-weight:800;color:var(--ink);margin-bottom:16px}
-#login-box{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow);max-width:400px;margin:0 auto 24px;display:none}
-#login-box h3{font-size:16px;font-weight:800;color:var(--green);margin-bottom:16px}
-.login-error{background:var(--red-light);color:var(--red);padding:9px 13px;border-radius:var(--radius-sm);font-size:13px;margin-bottom:14px;display:none}
-.layanan-list{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
-.layanan-item{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:var(--transition)}
-.layanan-item:hover{border-color:var(--green-mid);background:var(--green-light);transform:translateX(3px)}
-.layanan-num{width:28px;height:28px;background:var(--green-light);color:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0}
-.layanan-info{flex:1}.layanan-name{font-size:13.5px;font-weight:700}.layanan-desc{font-size:11.5px;color:var(--ink-muted);margin-top:1px}.layanan-arrow{color:var(--ink-muted);font-size:16px}
-.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-muted);margin-bottom:16px;flex-wrap:wrap}
-.breadcrumb span{cursor:pointer}.breadcrumb span:hover{color:var(--green)}.breadcrumb .sep{color:var(--border-mid)}.breadcrumb .current{color:var(--ink);font-weight:600}
-.form-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;margin-bottom:20px}
-.form-card-header{background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);color:var(--white);padding:18px 22px}
-.form-card-header h2{font-size:17px;font-weight:800}.form-card-header p{font-size:12.5px;opacity:.85;margin-top:3px}
-.form-card-body{padding:22px}
-.form-section-title{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--green);padding:10px 0 8px;border-bottom:1.5px solid var(--green-light);margin-bottom:14px;margin-top:6px}
-.form-group{margin-bottom:16px}.form-label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px}.form-label .req{color:var(--red);margin-left:2px}
-.form-help{font-size:11.5px;color:var(--ink-muted);margin-top:4px;display:block}
-.form-control{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--font-main);color:var(--ink);background:var(--white);transition:var(--transition);outline:none}
-.form-control:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,107,69,.1)}.form-control::placeholder{color:#bbb}
-textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor:pointer}
-.radio-group,.check-group{display:flex;flex-direction:column;gap:8px}
-.radio-opt,.check-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);font-size:13.5px}
-.radio-opt:hover,.check-opt:hover{border-color:var(--green-mid);background:var(--green-light)}
-.radio-opt input,.check-opt input{accent-color:var(--green);width:16px;height:16px;cursor:pointer}
-.radio-opt.selected,.check-opt.selected{border-color:var(--green);background:var(--green-light);font-weight:600}
-.autocomplete-wrap{position:relative}.autocomplete-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--white);border:1.5px solid var(--green);border-top:none;border-radius:0 0 var(--radius-sm) var(--radius-sm);z-index:50;max-height:200px;overflow-y:auto;box-shadow:var(--shadow-lg);display:none}
-.autocomplete-item{padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s}.autocomplete-item:hover{background:var(--green-light)}.autocomplete-item:last-child{border-bottom:none}
-.photo-upload-area{border:2px dashed var(--border-mid);border-radius:var(--radius);padding:22px;text-align:center;cursor:pointer;transition:var(--transition);position:relative}
-.photo-upload-area:hover,.photo-upload-area.dragover{border-color:var(--green);background:var(--green-light)}
-.photo-upload-icon{font-size:32px;margin-bottom:8px;display:block}.photo-upload-label{font-size:13px;font-weight:600;color:var(--green)}.photo-upload-sub{font-size:11.5px;color:var(--ink-muted);margin-top:3px}
-.photo-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.photo-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.photo-thumb{width:72px;height:72px;border-radius:var(--radius-sm);object-fit:cover;border:2px solid var(--border)}
-.photo-thumb-wrap{position:relative;display:inline-block}
-.photo-thumb-del{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--red);color:white;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700}
-.consent-box{background:var(--gold-light);border:1.5px solid #e5c84a;border-radius:var(--radius);padding:14px 16px}
-.autofill-banner{background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:var(--radius-sm);padding:10px 14px;font-size:12.5px;color:var(--green);font-weight:600;margin-bottom:14px;display:none}
-.btn-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--green) 0%,var(--green-mid) 100%);color:var(--white);border:none;border-radius:var(--radius);font-size:15px;font-weight:800;font-family:var(--font-main);cursor:pointer;transition:var(--transition);letter-spacing:.3px;box-shadow:0 4px 18px rgba(26,107,69,.3)}
-.btn-submit:hover:not(:disabled){opacity:.9;transform:translateY(-1px)}.btn-submit:disabled{opacity:.6;cursor:not-allowed}
-.btn-submit.loading::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;margin-left:10px;vertical-align:middle}
-@keyframes spin{to{transform:rotate(360deg)}}
-.btn-back{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1.5px solid var(--border);color:var(--ink-soft);padding:9px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);font-family:var(--font-main);margin-bottom:14px;text-decoration:none}
-.btn-back:hover{border-color:var(--green);color:var(--green)}
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:var(--white);padding:14px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;box-shadow:var(--shadow-lg);z-index:999;transition:transform .3s ease;max-width:90vw;text-align:center}
-.toast.show{transform:translateX(-50%) translateY(0)}.toast.error{background:var(--red)}
-.success-screen{text-align:center;padding:40px 20px}.success-icon{font-size:64px;margin-bottom:12px;animation:pop .4s ease}
-@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-.success-id{display:inline-block;background:var(--green-light);color:var(--green);font-size:22px;font-weight:800;padding:12px 28px;border-radius:var(--radius);border:2px solid var(--green-mid);margin:12px 0 8px;letter-spacing:1px}
-.success-screen p{color:var(--ink-soft);font-size:14px;margin-bottom:20px}
-.btn-ulang{background:var(--green);color:white;padding:12px 28px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-main);transition:var(--transition)}.btn-ulang:hover{opacity:.9}
-.field-error{font-size:11.5px;color:var(--red);margin-top:4px;display:none}.form-control.invalid{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
-.session-bar{background:linear-gradient(90deg,#0d4d2e 0%,var(--green) 100%);color:rgba(255,255,255,.9);padding:9px 24px;display:none;align-items:center;gap:10px;font-size:12.5px}
-.session-bar.show{display:flex}.session-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;flex-shrink:0}
-.session-bar span{flex:1}.session-bar button{background:rgba(255,255,255,.15);color:white;border:none;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-main)}
-.skeleton{background:linear-gradient(90deg,#eee 25%,#f5f5f5 50%,#eee 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-sm);height:60px;margin-bottom:8px}
-@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
-.page{display:none}.page.active{display:block}.fade-in{animation:fadeIn .3s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){main{padding:16px 12px 60px}.header-inner{padding:10px 14px}.header-badge{display:none}.form-card-body{padding:16px 14px}}
-</style>
-<style>
-.kategori-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:22px}
-.kategori-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius);padding:20px 12px;text-align:center;cursor:pointer;transition:var(--transition);position:relative;text-decoration:none;display:block;color:inherit}
-.kategori-card:hover{border-color:var(--green-mid);transform:translateY(-2px);box-shadow:var(--shadow)}
-.kat-icon{font-size:32px;display:block;margin-bottom:8px}.kat-label{font-size:12px;font-weight:700;color:var(--ink-soft);line-height:1.3}
-.kat-count{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--ink);font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px}
-@media(max-width:600px){.kategori-grid{grid-template-columns:repeat(2,1fr)}}
-</style>
+  <!-- Config global KUA -->
+  <script src="https://kuapilangkenceng.github.io/config.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KUA Kecamatan Pilangkenceng — Kantor Urusan Agama</title>
+  <meta name="description" content="Website resmi KUA Kecamatan Pilangkenceng, Kabupaten Madiun. Layanan pernikahan, wakaf, kepenghuluan, dan keagamaan untuk masyarakat.">
+  <meta name="keywords" content="KUA Pilangkenceng, Kantor Urusan Agama, Nikah, Wakaf, Madiun, PTSP Digital">
+  <meta property="og:title" content="KUA Kecamatan Pilangkenceng">
+  <meta property="og:description" content="Melayani Umat dengan Ikhlas dan Profesional — KUA Kecamatan Pilangkenceng, Kab. Madiun">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kuapilangkenceng.github.io">
+  <link rel="canonical" href="https://kuapilangkenceng.github.io">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hijau-tua: #1b5e35;
+      --hijau: #237a3e;
+      --hijau-muda: #2ea04f;
+      --hijau-terang: #eaf5ee;
+      --hijau-border: #c3dfc9;
+      --emas: #c9a030;
+      --emas-muda: #fdf3dc;
+      --putih: #ffffff;
+      --abu: #f4f6f4;
+      --teks: #1a2b1e;
+      --teks-abu: #536356;
+      --teks-ringan: #8fa392;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --font-display: 'Playfair Display', serif;
+      --radius: 10px;
+      --radius-lg: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); color: var(--teks); background: var(--putih); font-size: 14px; line-height: 1.65; }
+    img { max-width: 100%; display: block; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: var(--hijau-tua);
+      position: sticky; top: 0; z-index: 1000;
+      border-bottom: 2px solid rgba(201,160,48,0.4);
+    }
+    .navbar-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; height: 64px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 10px; }
+    .nav-logo {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--emas); display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .nav-brand-text strong { display: block; font-size: 13px; font-weight: 700; color: #fff; line-height: 1.25; }
+    .nav-brand-text span { font-size: 10px; color: rgba(255,255,255,0.6); }
+    .nav-links { display: flex; align-items: center; gap: 1.25rem; }
+    .nav-links a {
+      color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 500;
+      padding: 4px 0; border-bottom: 2px solid transparent; transition: all .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--emas); border-bottom-color: var(--emas); }
+
+    /* ── DROPDOWN LAYANAN ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-toggle {
+      color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 500;
+      padding: 4px 0; border-bottom: 2px solid transparent; transition: all .2s;
+      background: none; border-top: none; border-left: none; border-right: none;
+      cursor: pointer; display: flex; align-items: center; gap: 4px; font-family: var(--font);
+    }
+    .nav-dropdown-toggle:hover, .nav-dropdown.open .nav-dropdown-toggle {
+      color: var(--emas); border-bottom-color: var(--emas);
+    }
+    .nav-dropdown-toggle .dd-arrow {
+      font-size: 9px; transition: transform .2s; display: inline-block;
+    }
+    .nav-dropdown.open .dd-arrow { transform: rotate(180deg); }
+    .nav-dropdown-menu {
+      position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%);
+      background: var(--putih); border-radius: var(--radius-lg);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18); min-width: 220px;
+      border: 1px solid var(--hijau-border); overflow: hidden;
+      opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(-6px);
+      transition: opacity .2s, transform .2s;
+    }
+    .nav-dropdown.open .nav-dropdown-menu {
+      opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0);
+    }
+    .dd-section-label {
+      font-size: 9.5px; font-weight: 700; color: var(--teks-ringan);
+      letter-spacing: .6px; padding: 8px 14px 4px; text-transform: uppercase;
+    }
+    .dd-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 14px; font-size: 12.5px; font-weight: 500; color: var(--teks);
+      transition: background .15s; text-decoration: none; border-bottom: none;
+    }
+    .dd-item:hover { background: var(--hijau-terang); color: var(--hijau-tua); }
+    .dd-item.dd-active { color: var(--hijau); font-weight: 600; }
+    .dd-item-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+    .dd-item-text strong { display: block; font-size: 12px; font-weight: 600; color: inherit; line-height: 1.2; }
+    .dd-item-text span { font-size: 10.5px; color: var(--teks-abu); }
+    .dd-badge-soon {
+      margin-left: auto; font-size: 9px; font-weight: 700;
+      background: #fff3e0; color: #b45309; border: 1px solid #fbbf24;
+      padding: 1px 6px; border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+    }
+    .dd-divider { height: 1px; background: var(--hijau-border); margin: 4px 0; }
+    .btn-ptsp {
+      background: var(--emas); color: var(--hijau-tua);
+      padding: 8px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+      display: flex; align-items: center; gap: 6px; border: none; cursor: pointer;
+      transition: opacity .2s; white-space: nowrap;
+    }
+    .btn-ptsp:hover { opacity: .88; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--hijau-tua);
+      min-height: 480px; display: flex; align-items: center;
+      position: relative; overflow: hidden;
+      width: 100%; box-sizing: border-box;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--hijau-tua) 0%, #1f6b38 45%, rgba(35,122,62,0.85) 100%);
+    }
+    .hero-pattern {
+      position: absolute; inset: 0; opacity: 0.06;
+      background-image: repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%);
+      background-size: 20px 20px;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; padding: 3rem 1.5rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: stretch;
+      position: relative; z-index: 1; width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(201,160,48,0.2); border: 1px solid rgba(201,160,48,0.45);
+      color: var(--emas); padding: 4px 14px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; letter-spacing: .5px; margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display); color: #fff;
+      font-size: 2.6rem; line-height: 1.2; margin-bottom: .75rem;
+    }
+    .hero-tagline {
+      color: var(--emas); font-style: italic; font-size: 1rem;
+      font-weight: 500; margin-bottom: 1rem;
+    }
+    .hero p { color: rgba(255,255,255,0.75); font-size: 13.5px; margin-bottom: 1.75rem; max-width: 440px; }
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-hero-primary {
+      background: var(--emas); color: var(--hijau-tua);
+      padding: 11px 22px; border-radius: 8px; font-weight: 700; font-size: 13px;
+      display: inline-flex; align-items: center; gap: 7px; transition: opacity .2s;
+    }
+    .btn-hero-primary:hover { opacity: .88; }
+    .btn-hero-outline {
+      background: transparent; color: #fff;
+      padding: 11px 22px; border-radius: 8px; font-weight: 600; font-size: 13px;
+      border: 1.5px solid rgba(255,255,255,0.45); transition: border-color .2s;
+      display: inline-flex; align-items: center; gap: 7px;
+    }
+    .btn-hero-outline:hover { border-color: rgba(255,255,255,0.8); }
+    .hero-stats { display: flex; gap: 2rem; margin-top: 2rem; }
+    .hero-stat strong { display: block; font-size: 1.6rem; font-weight: 700; color: var(--emas); }
+    .hero-stat span { font-size: 11px; color: rgba(255,255,255,0.6); }
+    .hero-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg); padding: 1.5rem; backdrop-filter: blur(4px);
+    }
+    .kepala-info { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+    .kepala-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--emas); display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .kepala-info h3 { color: #fff; font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .kepala-info span { color: rgba(255,255,255,0.6); font-size: 11px; }
+    .hero-contact-list { list-style: none; }
+    .hero-contact-list li {
+      display: flex; align-items: flex-start; gap: 8px;
+      color: rgba(255,255,255,0.75); font-size: 12px; padding: 4px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-contact-list li:last-child { border-bottom: none; }
+    .hero-contact-list .ic { color: var(--emas); font-size: 13px; margin-top: 1px; flex-shrink: 0; }
+    .jam-box {
+      margin-top: 1rem; background: rgba(201,160,48,0.12);
+      border: 1px solid rgba(201,160,48,0.3); border-radius: 8px; padding: 10px 12px;
+    }
+    .jam-box p { color: var(--emas); font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+    .jam-row { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.7); padding: 2px 0; }
+
+    /* ── SLIDESHOW ── */
+    .slideshow-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-lg); overflow: hidden;
+      height: 100%; display: flex; flex-direction: column;
+    }
+    .slide-track { position: relative; flex: 1; min-height: 220px; overflow: hidden; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .slide { position: absolute; inset: 0; opacity: 0; transition: opacity .7s ease; }
+    .slide.active { opacity: 1; }
+    .slide-bg {
+      width: 100%; height: 100%; display: flex; align-items: flex-end;
+      background: linear-gradient(160deg, rgba(20,70,40,0.75) 0%, rgba(10,35,20,0.92) 100%);
+      position: relative; min-height: 220px;
+    }
+    .slide-bg::before {
+      content: attr(data-icon); position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px; opacity: .35;
+    }
+    .slide-caption { padding: 0 14px 12px; position: relative; z-index: 1; }
+    .slide-caption span { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.92); letter-spacing: .3px; }
+    .slide-dots { display: flex; justify-content: center; gap: 5px; padding: 7px 0 5px; background: rgba(0,0,0,0.18); }
+    .sdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.25); transition: background .3s, transform .3s; cursor: pointer; border: none; padding: 0; }
+    .sdot.active { background: var(--emas); transform: scale(1.3); }
+
+    /* ── RUNNING TEXT ── */
+    .running-bar { background: var(--hijau-muda); overflow: hidden; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.12); border-bottom: 1px solid rgba(0,0,0,0.08); }
+    .running-inner { display: flex; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; gap: 10px; overflow: hidden; }
+    .running-label { background: var(--emas); color: var(--hijau-tua); font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; }
+    .running-wrap { overflow: hidden; flex: 1; min-width: 0; }
+    .running-text { display: inline-block; white-space: nowrap; animation: marquee 32s linear infinite; font-size: 12px; color: #fff; font-weight: 500; }
+    @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+    /* ── SECTION BASE ── */
+    section { padding: 3rem 1.5rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-hd { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; }
+    .section-title {
+      font-size: 1.25rem; font-weight: 700; color: var(--teks);
+      padding-bottom: .4rem; position: relative;
+    }
+    .section-title::after {
+      content: ''; position: absolute; left: 0; bottom: 0;
+      width: 36px; height: 3px; background: var(--hijau); border-radius: 2px;
+    }
+    .lihat-semua { font-size: 12px; color: var(--hijau); font-weight: 600; }
+    .lihat-semua:hover { text-decoration: underline; }
+
+    /* ── MENU CEPAT ── */
+    .menu-cepat { background: var(--putih); padding: 2rem 1.5rem 1.5rem; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: .75rem; }
+    .menu-item {
+      background: var(--abu); border: 1px solid var(--hijau-border);
+      border-radius: var(--radius); padding: .875rem .5rem;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
+      cursor: pointer; transition: all .2s; text-align: center;
+      text-decoration: none;
+    }
+    .menu-item:hover { background: var(--hijau-terang); transform: translateY(-3px); border-color: var(--hijau-muda); }
+    .menu-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .menu-item p { font-size: 11px; font-weight: 600; color: var(--teks); line-height: 1.35; }
+    .mi-g { background: var(--hijau-terang); }
+    .mi-b { background: #e8f0fb; }
+    .mi-a { background: #fef3e2; }
+    .mi-t { background: #e3f4f1; }
+    .mi-p { background: #f0ecfb; }
+    .mi-r { background: #fdecea; }
+
+    /* ── LAYANAN UNGGULAN ── */
+    .layanan-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .lcard {
+      border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+      overflow: hidden; background: var(--putih);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .lcard:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(27,94,53,.1); }
+    .lcard-thumb {
+      height: 130px; background: var(--hijau-terang);
+      display: flex; align-items: center; justify-content: center; font-size: 48px;
+    }
+    .lcard-body { padding: 1rem 1.125rem 1.125rem; }
+    .lbadge {
+      display: inline-block; background: var(--hijau-terang); color: var(--hijau);
+      font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+      letter-spacing: .3px; margin-bottom: .5rem;
+    }
+    .lcard-body h3 { font-size: 14px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .35rem; }
+    .lcard-body p { font-size: 12px; color: var(--teks-abu); margin-bottom: .75rem; line-height: 1.55; }
+    .cklist { list-style: none; margin-bottom: .875rem; }
+    .cklist li { font-size: 12px; color: var(--teks-abu); display: flex; align-items: baseline; gap: 6px; padding: 2px 0; }
+    .cklist li::before { content: '✓'; color: var(--hijau-muda); font-weight: 700; font-size: 11px; flex-shrink: 0; }
+    .btn-lcard {
+      background: var(--hijau); color: #fff; border: none;
+      padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 600;
+      cursor: pointer; width: 100%; transition: background .2s; display: block; text-align: center;
+    }
+    .btn-lcard:hover { background: var(--hijau-tua); }
+    .btn-lcard-outline {
+      background: transparent; color: var(--hijau);
+      border: 1.5px solid var(--hijau); padding: 7px 16px;
+      border-radius: 7px; font-size: 12px; font-weight: 600;
+      cursor: pointer; width: 100%; transition: all .2s; display: block; text-align: center;
+      margin-top: 6px;
+    }
+    .btn-lcard-outline:hover { background: var(--hijau-terang); }
+
+    /* Cek status & Jadwal column */
+    .mid-col { display: flex; flex-direction: column; gap: 1rem; }
+    .cek-box, .jadwal-box {
+      border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+      padding: 1.125rem; background: var(--abu);
+    }
+    .box-title { font-size: 13px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .25rem; }
+    .box-sub { font-size: 11px; color: var(--teks-abu); margin-bottom: .75rem; }
+    .cek-input {
+      width: 100%; border: 1px solid var(--hijau-border); border-radius: 7px;
+      padding: 8px 12px; font-size: 12.5px; font-family: var(--font);
+      background: var(--putih); color: var(--teks); margin-bottom: 8px;
+      outline: none; transition: border-color .2s;
+    }
+    .cek-input:focus { border-color: var(--hijau); }
+    .btn-cek {
+      background: var(--hijau); color: #fff; border: none;
+      padding: 8px 16px; border-radius: 7px; font-size: 12px; font-weight: 600;
+      cursor: pointer; width: 100%;
+    }
+    .jadwal-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: .625rem; }
+    .jadwal-link { font-size: 11px; color: var(--hijau); font-weight: 600; }
+    .jadwal-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .jadwal-table th { color: var(--teks-ringan); text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--hijau-border); font-size: 10.5px; font-weight: 600; }
+    .jadwal-table td { padding: 5px 6px; border-bottom: 1px solid #eef2ef; color: var(--teks); }
+    .jadwal-table tr:last-child td { border-bottom: none; }
+
+    /* ── ALUR ── */
+    .alur-section { background: var(--abu); }
+    .alur-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .alur-card {
+      background: var(--hijau-terang); border: 1px solid var(--hijau-border);
+      border-radius: var(--radius-lg); padding: 1.25rem; text-align: center;
+      position: relative;
+    }
+    .alur-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--hijau); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; margin: 0 auto .625rem;
+    }
+    .alur-icon { font-size: 28px; margin-bottom: .5rem; }
+    .alur-card h4 { font-size: 13px; font-weight: 700; color: var(--hijau-tua); margin-bottom: .25rem; }
+    .alur-card p { font-size: 11.5px; color: var(--teks-abu); }
+    .alur-arrow {
+      display: flex; align-items: center; justify-content: center;
+      color: var(--hijau-muda); font-size: 20px; padding-top: 2rem;
+    }
+
+    /* ── LAYANAN LAIN ── */
+    .layanan-lain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .ll-card {
+      border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+      padding: 1.125rem; background: var(--putih); display: flex; align-items: flex-start; gap: 12px;
+      transition: transform .2s;
+    }
+    .ll-card:hover { transform: translateY(-2px); background: var(--hijau-terang); }
+    .ll-icon {
+      width: 42px; height: 42px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+    }
+    .ll-card h4 { font-size: 13px; font-weight: 700; color: var(--hijau-tua); margin-bottom: 3px; }
+    .ll-card p { font-size: 11.5px; color: var(--teks-abu); line-height: 1.5; }
+    .ll-badge-soon {
+      display: inline-block; background: #fff3e0; color: #b45309;
+      border: 1px solid #fbbf24; font-size: 10px; font-weight: 600;
+      padding: 1px 8px; border-radius: 20px; margin-top: 4px;
+    }
+
+    /* ── PROFIL / VISI MISI ── */
+    .profil-section { background: var(--hijau-tua); color: #fff; }
+    .profil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+    .profil-section .section-title { color: #fff; }
+    .profil-section .section-title::after { background: var(--emas); }
+    .visi-box {
+      background: rgba(201,160,48,0.12); border: 1px solid rgba(201,160,48,0.3);
+      border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .visi-box h4 { color: var(--emas); font-size: 12px; font-weight: 700; letter-spacing: .5px; margin-bottom: .5rem; }
+    .visi-box p { color: rgba(255,255,255,0.85); font-size: 13px; line-height: 1.65; font-style: italic; }
+    .misi-list { list-style: none; }
+    .misi-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      color: rgba(255,255,255,0.8); font-size: 12.5px; padding: 6px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .misi-list li:last-child { border-bottom: none; }
+    .misi-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--hijau-muda); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+    .wilayah-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: .75rem; }
+    .desa-chip {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px; padding: 5px 8px; font-size: 11px; color: rgba(255,255,255,0.7); text-align: center;
+    }
+
+    /* ── ARTIKEL ── */
+    .artikel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .acard {
+      border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+      overflow: hidden; background: var(--putih); transition: transform .2s;
+    }
+    .acard:hover { transform: translateY(-3px); }
+    .acard-thumb {
+      height: 110px; background: var(--hijau-terang);
+      display: flex; align-items: center; justify-content: center; font-size: 38px;
+    }
+    .acard-body { padding: 1rem; }
+    .acard-cat { font-size: 10px; font-weight: 700; color: var(--hijau); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .acard-body h3 { font-size: 13px; font-weight: 700; color: var(--teks); line-height: 1.4; margin-bottom: 5px; }
+    .acard-body p { font-size: 11.5px; color: var(--teks-abu); line-height: 1.5; margin-bottom: 8px; }
+    .acard-meta { font-size: 10.5px; color: var(--teks-ringan); display: flex; gap: 10px; }
+    .loading-artikel { text-align: center; padding: 2rem; color: var(--teks-abu); font-size: 13px; }
+
+    /* ── GALERI ── */
+    .galeri-section { background: var(--abu); }
+    .galeri-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .75rem; }
+    .galeri-item {
+      border-radius: var(--radius); overflow: hidden; aspect-ratio: 4/3;
+      background: var(--hijau-terang); display: flex; align-items: center; justify-content: center;
+      position: relative; cursor: pointer;
+    }
+    .galeri-item:hover .goverlay { opacity: 1; }
+    .goverlay {
+      position: absolute; inset: 0; background: rgba(27,94,53,.72);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .25s;
+    }
+    .goverlay span { color: #fff; font-size: 20px; }
+    .glabel {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(27,94,53,.75); color: #fff; font-size: 10px;
+      font-weight: 600; padding: 5px 8px; text-align: center;
+    }
+    .gicon { font-size: 32px; }
+
+    /* ── STATS ── */
+    .stats-section { background: linear-gradient(135deg, var(--hijau-tua) 0%, #1f6b38 100%); }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.1); border-radius: var(--radius-lg); overflow: hidden; }
+    .stat-item { background: rgba(255,255,255,0.06); padding: 1.75rem 1rem; text-align: center; }
+    .stat-item strong { display: block; font-family: var(--font-display); font-size: 2.2rem; color: var(--emas); }
+    .stat-item span { font-size: 11.5px; color: rgba(255,255,255,0.65); margin-top: 4px; display: block; }
+
+    /* ── WA CENTER ── */
+    .wa-section { background: var(--hijau-terang); border-top: 1px solid var(--hijau-border); }
+    .wa-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .wa-text h3 { font-size: 1.1rem; font-weight: 700; color: var(--hijau-tua); margin-bottom: .25rem; }
+    .wa-text p { font-size: 13px; color: var(--teks-abu); }
+    .wa-btn {
+      background: #25D366; color: #fff; padding: 12px 24px;
+      border-radius: 8px; font-weight: 700; font-size: 14px;
+      display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+      transition: opacity .2s;
+    }
+    .wa-btn:hover { opacity: .88; }
+
+    /* ── FOOTER ── */
+    footer { background: var(--hijau-tua); color: #fff; padding: 2.5rem 1.5rem 1.5rem; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem; margin-bottom: 2rem; }
+    .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: .875rem; }
+    .footer-logo {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--emas); display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .footer-brand-name { font-size: 13px; font-weight: 700; }
+    .footer-brand-sub { font-size: 10px; opacity: .6; }
+    footer p { font-size: 12px; opacity: .7; line-height: 1.65; margin-bottom: .35rem; }
+    footer h4 { font-size: 11.5px; font-weight: 700; color: var(--emas); margin-bottom: .75rem; letter-spacing: .4px; }
+    footer ul { list-style: none; }
+    footer ul li { font-size: 12px; opacity: .72; padding: 3px 0; cursor: pointer; transition: opacity .2s; }
+    footer ul li:hover { opacity: 1; color: var(--emas); }
+    .fjam-row { display: flex; justify-content: space-between; font-size: 11.5px; opacity: .72; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .fjam-row:last-child { border-bottom: none; }
+    .sosmed { display: flex; gap: 8px; margin-top: .875rem; }
+    .smd-btn {
+      width: 32px; height: 32px; border-radius: 7px;
+      background: rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center;
+      font-size: 14px; cursor: pointer; transition: background .2s; font-weight: 700;
+    }
+    .smd-btn:hover { background: var(--emas); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,.1); padding-top: 1.25rem;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .footer-bottom p { font-size: 11px; opacity: .45; margin: 0; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE — TABLET (≤768px) & MOBILE (≤480px)
+       ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      /* NAVBAR */
+      .navbar-inner { padding: 0 1rem; height: 56px; }
+      .nav-links { display: none; }
+      .nav-brand-text strong { font-size: 12px; }
+      .nav-brand-text span { display: none; }
+
+      /* HERO */
+      .hero { min-height: auto; }
+      .hero-inner {
+        grid-template-columns: 1fr; gap: 1.5rem;
+        padding: 2rem 1rem 1.5rem;
+      }
+      .hero h1 { font-size: 1.85rem; }
+      .hero-tagline { font-size: .9rem; }
+      .hero p { font-size: 13px; margin-bottom: 1.25rem; max-width: 100%; }
+      .hero-stats { gap: 1.25rem; }
+      .hero-stat strong { font-size: 1.3rem; }
+      .slideshow-card { height: 280px; }
+
+      /* RUNNING TEXT */
+      .running-inner { padding: 0 1rem; }
+      .running-text { font-size: 11px; }
+
+      /* MENU CEPAT */
+      .menu-cepat { padding: 1.25rem 1rem 1rem; }
+      .menu-grid { grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+      .menu-icon { width: 38px; height: 38px; font-size: 18px; }
+      .menu-item p { font-size: 10px; }
+
+      /* LAYANAN UNGGULAN */
+      .layanan-grid { grid-template-columns: 1fr; }
+      .mid-col { order: -1; }
+
+      /* ALUR */
+      .alur-grid { grid-template-columns: 1fr 1fr; }
+
+      /* LAYANAN LAIN */
+      .layanan-lain-grid { grid-template-columns: 1fr 1fr; }
+
+      /* PROFIL */
+      .profil-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+      .wilayah-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* ARTIKEL */
+      .artikel-grid { grid-template-columns: 1fr; }
+
+      /* GALERI */
+      .galeri-grid { grid-template-columns: repeat(3, 1fr); }
+
+      /* STATS */
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* FOOTER */
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+      .footer-bottom { flex-direction: column; text-align: center; gap: .5rem; }
+
+      /* SECTION */
+      section { padding: 2rem 1rem; }
+      .alur-section { padding: 2rem 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      /* HERO */
+      .hero-inner { padding: 1.5rem 1rem 1.25rem; gap: 1.25rem; }
+      .hero h1 { font-size: 1.55rem; }
+      .hero-badge { font-size: 10px; padding: 3px 10px; }
+      .hero-btns { flex-direction: column; }
+      .btn-hero-primary, .btn-hero-outline { width: 100%; justify-content: center; padding: 10px 16px; font-size: 12.5px; }
+      .hero-stats { gap: 1rem; }
+      .hero-stat strong { font-size: 1.2rem; }
+      .slideshow-card { height: 240px; }
+
+      /* MENU CEPAT */
+      .menu-grid { grid-template-columns: repeat(4, 1fr); gap: .4rem; }
+      .menu-item { padding: .625rem .375rem; }
+      .menu-icon { width: 34px; height: 34px; font-size: 16px; }
+      .menu-item p { font-size: 9.5px; }
+
+      /* ALUR */
+      .alur-grid { grid-template-columns: 1fr; gap: .75rem; }
+
+      /* LAYANAN LAIN */
+      .layanan-lain-grid { grid-template-columns: 1fr; }
+
+      /* GALERI */
+      .galeri-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* FOOTER */
+      .footer-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .navbar-inner { height: 52px; }
+
+      /* RUNNING TEXT */
+      .running-label { display: none; }
+
+      /* SECTION */
+      section { padding: 1.5rem 1rem; }
+      .alur-section { padding: 1.5rem 1rem; }
+      .section-hd { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    }
+
+    /* HAMBURGER MENU */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px; cursor: pointer;
+      background: none; border: none; padding: 4px;
+    }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: rgba(255,255,255,0.85); border-radius: 2px; transition: all .25s; }
+    @media (max-width: 768px) {
+      .nav-hamburger { display: flex; }
+      .nav-links.open {
+        display: flex; flex-direction: column; align-items: flex-start;
+        position: absolute; top: 56px; left: 0; right: 0;
+        background: var(--hijau-tua); padding: 1rem 1.25rem 1.25rem;
+        gap: .75rem; z-index: 999; border-top: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      }
+      .nav-links.open a { font-size: 14px; padding: 6px 0; width: 100%; border-bottom: 1px solid rgba(255,255,255,0.06); }
+      .nav-links.open .btn-ptsp { width: 100%; justify-content: center; margin-top: .5rem; }
+      .nav-dropdown-menu { position: static; opacity: 1; pointer-events: auto; transform: none; box-shadow: none; border: none; background: rgba(255,255,255,0.05); border-radius: var(--radius); margin-top: 4px; min-width: auto; }
+      .nav-dropdown.open .nav-dropdown-menu { transform: none; }
+    }
+  </style>
 </head>
 <body>
-<div class="session-bar" id="session-bar"><span class="session-dot"></span><span id="session-info">Petugas: -</span><button onclick="logout()">Keluar</button></div>
-<header><div class="header-inner">
-<a href="https://kuapilangkenceng.github.io" style="color:rgba(255,255,255,0.75);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:6px">&#127968; Beranda</a>
-<div class="header-logo">&#128203;</div>
-<div class="header-text"><div class="header-title">PTSP Digital KUA Pilangkenceng</div><div class="header-sub">Kementerian Agama &middot; Kab. Madiun</div></div>
-<div class="header-badge">&#9679; ONLINE</div>
-<button id="btn-login-header" onclick="toggleLoginPanel()">&#128272; Petugas</button>
-</div></header>
-<div class="marquee-bar"><div class="marquee-inner">
-<span>&#128203; Layanan: Nikah &middot; Wakaf &middot; Kiblat &middot; SKT Masjid &middot; Konseling &amp; Rekomendasi&nbsp;&nbsp;&nbsp;</span>
-<span>&#128203; Layanan: Nikah &middot; Wakaf &middot; Kiblat &middot; SKT Masjid &middot; Konseling &amp; Rekomendasi&nbsp;&nbsp;&nbsp;</span>
-</div></div>
-<main>
-<div id="login-box">
-<h3>&#128272; Login Petugas</h3>
-<div class="login-error" id="login-error"></div>
-<div class="form-group"><label class="form-label">Username</label><input class="form-control" id="inp-username" type="text" placeholder="Username petugas" autocomplete="username"/></div>
-<div class="form-group"><label class="form-label">Password</label><input class="form-control" id="inp-password" type="password" placeholder="Password" autocomplete="current-password"/></div>
-<button class="btn-submit" onclick="doLogin()" id="btn-do-login">Masuk</button>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-brand">
+      <div class="nav-logo">🕌</div>
+      <div class="nav-brand-text">
+        <strong>KUA PILANGKENCENG</strong>
+        <span>Kantor Urusan Agama — Kab. Madiun</span>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Beranda</a>
+      <a href="index.html#profil">Profil</a>
+      <div class="nav-dropdown" id="navDropdown">
+        <button class="nav-dropdown-toggle" onclick="toggleDropdown()">
+          Layanan <span class="dd-arrow">▼</span>
+        </button>
+        <div class="nav-dropdown-menu">
+          <div class="dd-section-label">Layanan Aktif</div>
+          <a href="layanan-nikah.html" class="dd-item">
+            <span class="dd-item-icon">💒</span>
+            <div class="dd-item-text">
+              <strong>Layanan Nikah</strong>
+              <span>12 sub-layanan pernikahan</span>
+            </div>
+          </a>
+          <a href="layanan-wakaf.html" class="dd-item">
+            <span class="dd-item-icon">🕌</span>
+            <div class="dd-item-text">
+              <strong>Layanan Wakaf</strong>
+              <span>Ikrar Wakaf (e-AIW) & Nadzir</span>
+            </div>
+          </a>
+          <a href="layanan-kiblat.html" class="dd-item">
+            <span class="dd-item-icon">🌙</span>
+            <div class="dd-item-text">
+              <strong>Pengukuran Kiblat</strong>
+              <span>BA & Sertifikat Arah Kiblat</span>
+            </div>
+          </a>
+          <a href="layanan-konseling.html" class="dd-item">
+            <span class="dd-item-icon">🤝</span>
+            <div class="dd-item-text">
+              <strong>Konseling & Rekomendasi</strong>
+              <span>9 sub-layanan bimbingan & surat</span>
+            </div>
+          </a>
+          <div class="dd-divider"></div>
+          <div class="dd-section-label">Segera Hadir</div>
+          <div class="dd-item" style="opacity:.65;cursor:default">
+            <span class="dd-item-icon">🥩</span>
+            <div class="dd-item-text">
+              <strong>Sertifikasi Halal</strong>
+              <span>Pendampingan produk halal</span>
+            </div>
+            <span class="dd-badge-soon">Fase 8</span>
+          </div>
+        </div>
+      </div>
+      <a href="index.html#informasi">Informasi</a>
+      <a href="index.html#kontak">Kontak</a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" class="btn-ptsp" target="_blank">
+        🔒 Login Petugas
+      </a>
+    </div>
+    <button class="nav-hamburger" id="hamburgerBtn" aria-label="Buka menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">🌙 KUA Kecamatan Pilangkenceng</div>
+      <h1>Melayani Umat<br>dengan Ikhlas &<br>Profesional</h1>
+      <p class="hero-tagline">"Pelayanan Prima, Keluarga Harmonis, Masyarakat Sejahtera"</p>
+      <p>Hadir memberikan pelayanan terbaik dalam urusan pernikahan, kepenghuluan, penyuluhan agama, dan keagamaan untuk masyarakat Kecamatan Pilangkenceng, Kabupaten Madiun.</p>
+      <div class="hero-btns">
+        <a href="layanan-nikah.html" class="btn-hero-primary">
+          📋 Daftar Layanan Online →
+        </a>
+        <a href="layanan-konseling.html" class="btn-hero-outline">🤝 Konseling & Rekomendasi</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong>18</strong><span>Desa Wilayah</span></div>
+        <div class="hero-stat"><strong>35+</strong><span>Sub-Layanan Aktif</span></div>
+        <div class="hero-stat"><strong>PTSP</strong><span>Pelayanan Digital</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="slideshow-card">
+        <div class="slide-track" id="slideTrack">
+          <div class="slide active">
+            <div class="slide-bg" data-icon="🏛️">
+              <div class="slide-caption"><span>Gedung KUA Pilangkenceng</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👨‍💼">
+              <div class="slide-caption"><span>Kepala KUA</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="⚖️">
+              <div class="slide-caption"><span>Penghulu</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="🎤">
+              <div class="slide-caption"><span>Penyuluh Agama Islam Ahli Pertama</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👩‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👩‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👩‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👨‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👨‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👨‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👨‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+          <div class="slide">
+            <div class="slide-bg" data-icon="👨‍💼">
+              <div class="slide-caption"><span>Staf Tata Usaha</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="slide-dots" id="slideDots"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RUNNING TEXT ═══ -->
+<div class="running-bar">
+  <div class="running-inner">
+    <span class="running-label">📢 INFO</span>
+    <div class="running-wrap">
+      <span class="running-text">⏰ Jam Pelayanan: Senin–Kamis 08.00–16.00 &nbsp;|&nbsp; Jumat 08.00–16.30 &nbsp;|&nbsp; Istirahat 12.00–13.00 &nbsp;|&nbsp; Sabtu–Minggu Tutup &nbsp;&nbsp;&nbsp;&nbsp; 📋 KUA Pilangkenceng melayani pendaftaran nikah, wakaf, kiblat, konseling, dan rekomendasi secara digital melalui sistem PTSP Digital &nbsp;&nbsp;&nbsp;&nbsp; 📍 Jl. Tirtotejo, Ds. Kenongorejo, Kec. Pilangkenceng, Kab. Madiun 63154 &nbsp;&nbsp;&nbsp;&nbsp; 📱 085119505451 &nbsp;|&nbsp; kuapilangkenceng@gmail.com</span>
+    </div>
+  </div>
 </div>
-<div class="section-label">PTSP Digital</div>
-<div class="section-title">Pilih Kategori Layanan</div>
-<div class="kategori-grid" id="kategori-grid">
-<div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+
+<!-- ═══ MENU CEPAT ═══ -->
+<div class="menu-cepat">
+  <div class="container">
+    <div class="section-hd" style="margin-bottom:1rem">
+      <p class="section-title">Menu Cepat</p>
+    </div>
+    <div class="menu-grid">
+      <a href="layanan-nikah.html" class="menu-item">
+        <div class="menu-icon mi-g">&#128146;</div><p>Layanan Pernikahan</p>
+      </a>
+      <a href="layanan-wakaf.html" class="menu-item">
+        <div class="menu-icon mi-r">&#128336;</div><p>Layanan Wakaf</p>
+      </a>
+      <a href="layanan-kiblat.html" class="menu-item">
+        <div class="menu-icon mi-t">&#129517;</div><p>Kiblat</p>
+      </a>
+      <a href="layanan-konseling.html" class="menu-item">
+        <div class="menu-icon mi-p">&#129309;</div><p>Konseling</p>
+      </a>
+      <a href="layanan-konseling.html" class="menu-item">
+        <div class="menu-icon mi-a">&#128220;</div><p>Surat Permohonan</p>
+      </a>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="menu-item">
+        <div class="menu-icon mi-b">&#128203;</div><p>Cek Status</p>
+      </a>
+      <a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank" class="menu-item">
+        <div class="menu-icon mi-g">&#127807;</div><p>Ecotheology</p>
+      </a>
+      <a href="https://kuapilangkenceng.github.io/album-masjid/" class="menu-item">
+        <div class="menu-icon mi-r">&#128332;</div><p>Album Masjid</p>
+      </a>
+    </div>
+  </div>
 </div>
-</main>
-<div class="toast" id="toast"></div>
-<script>const API_URL=(typeof KUA_CONFIG!=="undefined"&&KUA_CONFIG.API_URL)?KUA_CONFIG.API_URL:"https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec";
-var session=null;
-try{var _s=sessionStorage.getItem("ptsp_session");if(_s){session=JSON.parse(_s);var _btn=document.getElementById("btn-login-header");if(_btn){_btn.textContent="\u2705 "+session.nama;_btn.classList.add("active");}var _bar=document.getElementById("session-bar");if(_bar){_bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";}}}catch(e){}
-var KAT_PAGES={"Layanan Nikah":"nikah.html","Layanan Wakaf":"wakaf.html","Layanan Kiblat":"kiblat.html","SKT Masjid / Musholla":"skt.html","Konseling & Rekomendasi":"konseling.html"};
-var KAT_ICONS={"Layanan Nikah":"\uD83D\uDC8D","Layanan Wakaf":"\uD83C\uDFE0","Layanan Kiblat":"\uD83E\uDDED","SKT Masjid / Musholla":"\uD83D\uDD4B","Konseling & Rekomendasi":"\uD83E\uDD1D"};
-async function init(){
-  try{var res=await fetch(API_URL+"?action=getConfig&_="+Date.now());var cfg=await res.json();renderGrid(cfg);}catch(e){renderGridFallback();}
-}
-function renderGrid(cfg){
-  var grid=document.getElementById("kategori-grid");grid.innerHTML="";
-  var katCount={};Object.values(cfg.forms||{}).forEach(function(f){katCount[f.kategori]=(katCount[f.kategori]||0)+1;});
-  Object.entries(cfg.kategori||{}).forEach(function(entry){
-    var label=entry[1];var count=katCount[label]||0;if(!count)return;
-    var page=KAT_PAGES[label];if(!page)return;
-    var a=document.createElement("a");a.className="kategori-card";a.href=page;
-    a.innerHTML='<span class="kat-icon">'+(KAT_ICONS[label]||"\uD83D\uDCC2")+'</span><div class="kat-label">'+label+'</div><div class="kat-count">'+count+'</div>';
-    grid.appendChild(a);
+
+<!-- ═══ ARTIKEL / INFORMASI ═══ -->
+<section id="informasi">
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">Informasi & Artikel</p>
+      <a href="#" class="lihat-semua" id="lihatSemuaArtikel">Lihat Semua →</a>
+    </div>
+    <div class="artikel-grid reveal" id="artikelContainer">
+      <!-- Artikel default (sebelum data dari API dimuat) -->
+      <div class="acard">
+        <div class="acard-thumb">📋</div>
+        <div class="acard-body">
+          <p class="acard-cat">Pernikahan</p>
+          <h3>Syarat & Prosedur Pendaftaran Nikah 2025</h3>
+          <p>Panduan lengkap dokumen yang perlu disiapkan untuk mendaftar nikah di KUA Pilangkenceng...</p>
+          <div class="acard-meta"><span>📅 1 Jun 2025</span><span>👁 KUA Pilangkenceng</span></div>
+        </div>
+      </div>
+      <div class="acard">
+        <div class="acard-thumb">🌿</div>
+        <div class="acard-body">
+          <p class="acard-cat">Ecotheology</p>
+          <h3>Ecotheology: Merawat Lingkungan sebagai Ibadah</h3>
+          <p>KUA Pilangkenceng mengintegrasikan nilai-nilai keagamaan dengan kepedulian terhadap lingkungan hidup...</p>
+          <div class="acard-meta"><span>📅 20 Mei 2025</span><span>👁 KUA Pilangkenceng</span></div>
+        </div>
+      </div>
+      <div class="acard">
+        <div class="acard-thumb">👨‍👩‍👧</div>
+        <div class="acard-body">
+          <p class="acard-cat">Keluarga</p>
+          <h3>Tips Membangun Keluarga Sakinah Mawaddah Warahmah</h3>
+          <p>Kiat-kiat praktis membangun rumah tangga harmonis berdasarkan nilai-nilai ajaran Islam...</p>
+          <div class="acard-meta"><span>📅 10 Mei 2025</span><span>👁 KUA Pilangkenceng</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LAYANAN UNGGULAN ═══ -->
+<section id="layanan">
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">Layanan Unggulan</p>
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="lihat-semua">Semua Layanan →</a>
+    </div>
+    <div class="layanan-grid reveal">
+      <!-- NIKAH -->
+      <div class="lcard">
+        <div class="lcard-thumb">💒</div>
+        <div class="lcard-body">
+          <span class="lbadge">LAYANAN NIKAH</span>
+          <h3>Pendaftaran Nikah Online</h3>
+          <p>Daftarkan pernikahan Anda secara digital melalui sistem PTSP tanpa harus antri di kantor.</p>
+          <ul class="cklist">
+            <li>Isi formulir pendaftaran online</li>
+            <li>Upload berkas persyaratan digital</li>
+            <li>Pilih tanggal & lokasi akad nikah</li>
+            <li>Pantau status pendaftaran real-time</li>
+            <li>Generate surat keterangan otomatis</li>
+          </ul>
+          <a href="layanan-nikah.html" class="btn-lcard">Daftar Sekarang →</a>
+          <a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank" class="btn-lcard-outline">🌿 Form Ecotheology Luar Kantor</a>
+        </div>
+      </div>
+
+      <!-- PENGUMUMAN KEHENDAK NIKAH -->
+      <div class="mid-col">
+        <div class="jadwal-box">
+          <div class="jadwal-hd">
+            <p class="box-title">&#128146; Pengumuman Kehendak Nikah</p>
+            <a href="layanan-nikah.html" class="jadwal-link">Selengkapnya</a>
+          </div>
+          <div id="pengumumanBody" style="font-size:12.5px;padding:0 4px">
+            <div style="text-align:center;padding:1.5rem;color:var(--teks-ringan)">Memuat pengumuman...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIMWIN -->
+      <div class="lcard">
+        <div class="lcard-thumb">📖</div>
+        <div class="lcard-body">
+          <span class="lbadge">BIMWIN</span>
+          <h3>Bimbingan Pra-Nikah</h3>
+          <p>Persiapan pernikahan yang matang melalui bimbingan langsung bersama penghulu KUA Pilangkenceng.</p>
+          <ul class="cklist">
+            <li>Bimbingan perkawinan terstruktur</li>
+            <li>Materi membangun keluarga sakinah</li>
+            <li>Konsultasi langsung dengan penghulu</li>
+            <li>Persiapan administrasi nikah lengkap</li>
+          </ul>
+          <a href="layanan-konseling.html" class="btn-lcard">Daftar Bimwin Online →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ALUR PENDAFTARAN ═══ -->
+<section class="alur-section">
+  <div class="container">
+    <div class="section-hd"><p class="section-title">Alur Pendaftaran Layanan PTSP Digital</p></div>
+    <div class="alur-grid reveal">
+      <div class="alur-card">
+        <div class="alur-num">1</div>
+        <div class="alur-icon">📝</div>
+        <h4>Isi Formulir Online</h4>
+        <p>Lengkapi data melalui form PTSP Digital, tersedia untuk tamu & petugas</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">2</div>
+        <div class="alur-icon">📂</div>
+        <h4>Upload Berkas</h4>
+        <p>Upload foto/scan dokumen persyaratan yang diperlukan sesuai jenis layanan</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">3</div>
+        <div class="alur-icon">✅</div>
+        <h4>Verifikasi Petugas</h4>
+        <p>Petugas KUA memverifikasi kelengkapan dan keabsahan berkas yang diajukan</p>
+      </div>
+      <div class="alur-card">
+        <div class="alur-num">4</div>
+        <div class="alur-icon">📄</div>
+        <h4>Dokumen Selesai</h4>
+        <p>Dokumen diterbitkan, dapat diambil langsung atau diunduh secara digital</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:1.25rem">
+      <a href="https://kuapilangkenceng.github.io/ptsp" target="_blank" class="btn-lcard" style="display:inline-block;width:auto;padding:10px 28px">
+        Mulai Pendaftaran Online →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LAYANAN LAINNYA ═══ -->
+<section>
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">Layanan Lainnya</p>
+    </div>
+    <div class="layanan-lain-grid reveal">
+      <a href="layanan-wakaf.html" class="ll-card" style="text-decoration:none">
+        <div class="ll-icon mi-r">&#128336;</div>
+        <div><h4>Layanan Wakaf</h4>
+          <p>Ikrar Wakaf (e-AIW) dan Penggantian Nadzir untuk pengelolaan aset wakaf.</p>
+          <span style="display:inline-block;background:var(--hijau-terang);color:var(--hijau);border:1px solid var(--hijau-border);font-size:10px;font-weight:600;padding:1px 8px;border-radius:20px;margin-top:4px">&#10003; Aktif</span>
+        </div>
+      </a>
+      <a href="layanan-kiblat.html" class="ll-card" style="text-decoration:none">
+        <div class="ll-icon mi-a">&#129517;</div>
+        <div><h4>Pengukuran Arah Kiblat</h4>
+          <p>Layanan pengukuran dan penentuan arah kiblat yang akurat untuk masjid/musholla.</p>
+          <span style="display:inline-block;background:var(--hijau-terang);color:var(--hijau);border:1px solid var(--hijau-border);font-size:10px;font-weight:600;padding:1px 8px;border-radius:20px;margin-top:4px">&#10003; Aktif</span>
+        </div>
+      </a>
+      <a href="layanan-konseling.html" class="ll-card" style="text-decoration:none">
+        <div class="ll-icon mi-p">&#129309;</div>
+        <div><h4>Konseling Keluarga Sakinah</h4>
+          <p>Bimbingan dan konseling untuk membangun keluarga harmonis berbasis nilai Islam.</p>
+          <span style="display:inline-block;background:var(--hijau-terang);color:var(--hijau);border:1px solid var(--hijau-border);font-size:10px;font-weight:600;padding:1px 8px;border-radius:20px;margin-top:4px">&#10003; Aktif</span>
+        </div>
+      </a>
+      <a href="layanan-konseling.html" class="ll-card" style="text-decoration:none">
+        <div class="ll-icon mi-b">&#128220;</div>
+        <div><h4>Surat Rekomendasi KUA</h4>
+          <p>Rekomendasi bantuan masjid, majelis taklim, TPQ/Madin, dan SKT Majelis Taklim.</p>
+          <span style="display:inline-block;background:var(--hijau-terang);color:var(--hijau);border:1px solid var(--hijau-border);font-size:10px;font-weight:600;padding:1px 8px;border-radius:20px;margin-top:4px">&#10003; Aktif</span>
+        </div>
+      </a>
+      <a href="https://kuapilangkenceng.github.io/album-masjid/" class="ll-card" style="text-decoration:none">
+        <div class="ll-icon mi-r">&#128332;</div>
+        <div><h4>Album Masjid & Musholla</h4>
+          <p>Direktori lengkap masjid dan musholla se-Kecamatan Pilangkenceng beserta peta dan profil.</p>
+          <span style="display:inline-block;background:var(--hijau-terang);color:var(--hijau);border:1px solid var(--hijau-border);font-size:10px;font-weight:600;padding:1px 8px;border-radius:20px;margin-top:4px">&#10003; Aktif</span>
+        </div>
+      </a>
+      <div class="ll-card">
+        <div class="ll-icon mi-g">&#129385;</div>
+        <div><h4>Sertifikasi Produk Halal</h4>
+          <p>Pendampingan dan rekomendasi sertifikasi halal untuk produk UMKM masyarakat.</p>
+          <span class="ll-badge-soon">Segera Hadir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROFIL & VISI MISI ═══ -->
+<section class="profil-section" id="profil">
+  <div class="container" style="max-width:960px;margin:0 auto">
+    <div class="profil-grid reveal">
+      <div>
+        <div class="section-hd" style="margin-bottom:1.25rem"><p class="section-title">Profil KUA Pilangkenceng</p></div>
+        <div class="visi-box">
+          <h4>VISI</h4>
+          <p>"Terwujudnya Masyarakat Kecamatan Pilangkenceng yang Taat Beragama, Rukun, Cerdas, dan Sejahtera Lahir Batin."</p>
+        </div>
+        <h4 style="color:var(--emas);font-size:12px;font-weight:700;letter-spacing:.4px;margin-bottom:.625rem">MISI</h4>
+        <ul class="misi-list">
+          <li><div class="misi-num">1</div><span>Meningkatkan kualitas pelayanan administrasi nikah dan pencatatan perkawinan</span></li>
+          <li><div class="misi-num">2</div><span>Mewujudkan keluarga sakinah melalui bimbingan dan konseling perkawinan</span></li>
+          <li><div class="misi-num">3</div><span>Meningkatkan pemberdayaan masjid, wakaf, dan lembaga keagamaan Islam</span></li>
+          <li><div class="misi-num">4</div><span>Mengembangkan produk halal dan penyuluhan agama yang inovatif</span></li>
+          <li><div class="misi-num">5</div><span>Mewujudkan tata kelola pemerintahan yang transparan dan akuntabel</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-hd" style="margin-bottom:1.25rem"><p class="section-title">Wilayah Pelayanan</p></div>
+        <p style="color:rgba(255,255,255,0.7);font-size:12.5px;margin-bottom:.875rem;line-height:1.65">KUA Kecamatan Pilangkenceng melayani <strong style="color:var(--emas)">18 desa</strong> di wilayah Kecamatan Pilangkenceng, Kabupaten Madiun, Jawa Timur.</p>
+        <div class="wilayah-grid">
+          <div class="desa-chip">Pilangkenceng</div>
+          <div class="desa-chip">Kenongorejo</div>
+          <div class="desa-chip">Krebet</div>
+          <div class="desa-chip">Purworejo</div>
+          <div class="desa-chip">Kedungbanteng</div>
+          <div class="desa-chip">Luworo</div>
+          <div class="desa-chip">Kedungrejo</div>
+          <div class="desa-chip">Kedungmaron</div>
+          <div class="desa-chip">Muneng</div>
+          <div class="desa-chip">Ngale</div>
+          <div class="desa-chip">Ngengor</div>
+          <div class="desa-chip">Wonoayu</div>
+          <div class="desa-chip">Gandul</div>
+          <div class="desa-chip">Duren</div>
+          <div class="desa-chip">Pulerejo</div>
+          <div class="desa-chip">Bulu</div>
+          <div class="desa-chip">Dawuhan</div>
+          <div class="desa-chip">Sumbergandu</div>
+        </div>
+        <div style="margin-top:1.25rem;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-lg);padding:1rem">
+          <h4 style="color:var(--emas);font-size:12px;font-weight:700;margin-bottom:.5rem">📊 Data Wilayah</h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div style="text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--emas)">18</div><div style="font-size:11px;color:rgba(255,255,255,0.6)">Desa</div></div>
+            <div style="text-align:center"><div style="font-size:1.4rem;font-weight:700;color:var(--emas)" id="totalNikah">–</div><div style="font-size:11px;color:rgba(255,255,255,0.6)">Nikah 2025</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ GALERI ═══ -->
+<section class="galeri-section">
+  <div class="container">
+    <div class="section-hd">
+      <p class="section-title">Galeri Kegiatan</p>
+      <a href="#" class="lihat-semua">Lihat Semua →</a>
+    </div>
+    <div class="galeri-grid reveal">
+      <div class="galeri-item"><span class="gicon">💍</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Akad Nikah</div></div>
+      <div class="galeri-item"><span class="gicon">📖</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Bimwin</div></div>
+      <div class="galeri-item"><span class="gicon">🎤</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Penyuluhan Agama</div></div>
+      <div class="galeri-item"><span class="gicon">🌿</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Ecotheology</div></div>
+      <div class="galeri-item"><span class="gicon">🏛️</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Pelayanan Terpadu</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><strong id="s1">0</strong><span>Pernikahan Tercatat (2025)</span></div>
+      <div class="stat-item"><strong id="s2">0</strong><span>Layanan Selesai</span></div>
+      <div class="stat-item"><strong id="s3">0%</strong><span>Tingkat Kepuasan</span></div>
+      <div class="stat-item"><strong id="s4">0</strong><span>Desa Wilayah Pelayanan</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WA CENTER ═══ -->
+<section class="wa-section" id="kontak">
+  <div class="container">
+    <div class="wa-inner">
+      <div class="wa-text">
+        <h3>💬 Hubungi Kami via WhatsApp</h3>
+        <p>Konsultasi dan informasi layanan KUA Pilangkenceng lebih cepat melalui WhatsApp Center kami.</p>
+        <p style="margin-top:4px;font-size:12px;color:var(--hijau-tua);font-weight:600">📱 085119505451</p>
+      </div>
+      <a href="https://wa.me/6285119505451?text=Assalamu'alaikum%2C%20saya%20ingin%20bertanya%20tentang%20layanan%20KUA%20Pilangkenceng." target="_blank" class="wa-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Chat via WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo">🕌</div>
+          <div>
+            <div class="footer-brand-name">KUA Kecamatan Pilangkenceng</div>
+            <div class="footer-brand-sub">Kantor Urusan Agama — Kemenag Kab. Madiun</div>
+          </div>
+        </div>
+        <p>Jl. Tirtotejo, Ds. Kenongorejo<br>Kec. Pilangkenceng, Kab. Madiun<br>Jawa Timur 63154</p>
+        <p style="margin-top:.5rem">📱 085119505451<br>✉️ kuapilangkenceng@gmail.com</p>
+        <div class="sosmed">
+          <div class="smd-btn">f</div>
+          <div class="smd-btn">ig</div>
+          <div class="smd-btn">yt</div>
+        </div>
+      </div>
+      <div>
+        <h4>TAUTAN CEPAT</h4>
+        <ul>
+          <li><a href="index.html">Beranda</a></li>
+          <li><a href="profil.html">Profil KUA</a></li>
+          <li><a href="profil.html#visi-misi">Visi &amp; Misi</a></li>
+          <li><a href="index.html#layanan">Layanan PTSP</a></li>
+          <li><a href="index.html#informasi">Informasi</a></li>
+          <li><a href="index.html#kontak">Kontak</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>JAM PELAYANAN</h4>
+        <div class="fjam-row"><span>Senin – Kamis</span><span>08.00–16.00</span></div>
+        <div class="fjam-row"><span>Jumat</span><span>08.00–16.30</span></div>
+        <div class="fjam-row"><span>Istirahat</span><span>12.00–13.00</span></div>
+        <div class="fjam-row"><span>Sabtu–Minggu</span><span>Tutup</span></div>
+        <div style="margin-top:.875rem;background:rgba(201,160,48,0.12);border:1px solid rgba(201,160,48,0.3);border-radius:8px;padding:10px">
+          <p style="color:var(--emas);font-size:11px;font-weight:600;opacity:1;margin:0 0 3px">💬 WA Center KUA</p>
+          <p style="font-size:13px;font-weight:700;color:#fff;opacity:1;margin:0">085119505451</p>
+        </div>
+      </div>
+      <div>
+        <h4>PTSP DIGITAL</h4>
+        <ul>
+          <li><a href="layanan-nikah.html">Layanan Nikah</a></li>
+          <li><a href="layanan-wakaf.html">Layanan Wakaf</a></li>
+          <li><a href="layanan-kiblat.html">Pengukuran Kiblat</a></li>
+          <li><a href="layanan-konseling.html">Konseling & Rekomendasi</a></li>
+          <li><a href="layanan-konseling.html#rekomendasi_skt_masjid">SKT Masjid/Musholla</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp/ecoteology.html" target="_blank">Ecotheology</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp" target="_blank">Cek Status Berkas</a></li>
+          <li><a href="https://kuapilangkenceng.github.io/ptsp/admin.html" target="_blank">Login Admin</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun. All rights reserved.</p>
+      <p>v2.0 — Fase 9 PTSP Digital</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── NAVBAR DROPDOWN ── */
+  function toggleDropdown() {
+    document.getElementById('navDropdown').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    const dd = document.getElementById('navDropdown');
+    if (dd && !dd.contains(e.target)) dd.classList.remove('open');
   });
-  if(!grid.children.length)grid.innerHTML='<p style="color:#888;font-size:13px;grid-column:1/-1">Belum ada layanan.</p>';
-}
-function renderGridFallback(){
-  var grid=document.getElementById("kategori-grid");grid.innerHTML="";
-  Object.entries(KAT_PAGES).forEach(function(entry){
-    var a=document.createElement("a");a.className="kategori-card";a.href=entry[1];
-    a.innerHTML='<span class="kat-icon">'+(KAT_ICONS[entry[0]]||"\uD83D\uDCC2")+'</span><div class="kat-label">'+entry[0]+'</div>';
-    grid.appendChild(a);
+
+  /* ── PTSP API URL — ganti dengan URL deploy Apps Script ── */
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+
+  /* ── CEK STATUS ── */
+  async function loadPengumuman() {
+    var box = document.getElementById('pengumumanBody');
+    if (!box) return;
+    try {
+      var res = await fetch(API_URL + '?action=getJadwalNikah&_=' + Date.now());
+      var data = await res.json();
+      var rows = (data.jadwal || []).slice(0, 8);
+      if (!rows.length) { box.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--teks-ringan);font-size:12px">Belum ada pengumuman.</div>'; return; }
+      box.innerHTML = rows.map(function(r) {
+        var tgl=r.tanggal_akad||r.tanggal||'-', pa=r.nama_calon_suami||r.nama_pa||'-', pi=r.nama_calon_istri||r.nama_pi||'-', desa=r.desa_akad||r.desa_pa||'-';
+        return '<div style="padding:8px 0;border-bottom:1px solid rgba(0,0,0,.07);display:grid;grid-template-columns:80px 1fr;gap:6px">'+
+          '<div style="font-size:11px;font-weight:700;color:var(--hijau)">'+tgl+'</div>'+
+          '<div><div style="font-size:12.5px;font-weight:600">'+pa+' &amp; '+pi+'</div>'+
+          '<div style="font-size:11px;color:var(--teks-abu)">&#128205; '+desa+'</div></div></div>';
+      }).join('');
+    } catch(e) { box.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--teks-ringan);font-size:12px">Gagal memuat data.</div>'; }
+  }
+
+  function cekStatus() {
+    const nomor = document.getElementById('nomorInput').value.trim();
+    const hasil = document.getElementById('cekResult');
+    if (!nomor) { hasil.textContent = 'Masukkan nomor registrasi terlebih dahulu.'; return; }
+    hasil.textContent = 'Mencari...';
+    fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(nomor))
+      .then(r => r.json())
+      .then(d => {
+        if ((d.ok || d.status === 'ok') && (d.record || d.data)) {
+          const rec = d.record || d.data;
+          hasil.innerHTML = `<span style="color:var(--hijau);font-weight:600">✓ Ditemukan</span> — ${rec.jenis_label || rec.jenis_layanan} | Status: <strong>${rec.status_layanan || rec.status || 'Diproses'}</strong>`;
+        } else {
+          hasil.textContent = 'Nomor tidak ditemukan. Periksa kembali nomor registrasi Anda.';
+        }
+      })
+      .catch(() => {
+        hasil.textContent = 'Tidak dapat terhubung ke server. Coba beberapa saat lagi.';
+      });
+  }
+
+  /* ── LOAD ARTIKEL DARI SHEETS ── */
+  function loadArtikel() {
+    fetch(API_URL + '?action=getartikel&status=Published&limit=3')
+      .then(r => r.json())
+      .then(d => {
+        if ((d.ok || d.status === 'ok') && (d.results || d.data) && (d.results || d.data).length > 0) {
+          const container = document.getElementById('artikelContainer');
+          const artikelData = d.results || d.data;
+          container.innerHTML = artikelData.map(a => `
+            <div class="acard">
+              <div class="acard-thumb">${getEmoji(a.kategori)}</div>
+              <div class="acard-body">
+                <p class="acard-cat">${a.kategori || 'Informasi'}</p>
+                <h3>${a.judul || ''}</h3>
+                <p>${(a.ringkasan || a.konten || '').substring(0, 100)}...</p>
+                <div class="acard-meta"><span>📅 ${formatTgl(a.tanggal)}</span></div>
+              </div>
+            </div>`).join('');
+        }
+      })
+      .catch(() => { /* tampilkan artikel default */ });
+  }
+
+  /* ── LOAD JADWAL PENGHULU (dari DataLayanan bulan ini) ── */
+  function loadJadwal() {
+    fetch(API_URL + '?action=getstats')
+      .then(r => r.json())
+      .then(d => {
+        if ((d.ok || d.status === 'ok') && (d.record || d.data)) {
+          if (d.data.totalNikah !== undefined) {
+            document.getElementById('totalNikah').textContent = d.data.totalNikah || '–';
+          }
+        }
+      })
+      .catch(() => {});
+    /* Jadwal placeholder — bisa diisi dari API getdata dengan filter bulan */
+    const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    const today = new Date();
+    const rows = [
+      { tgl: today.getDate() + ' ' + bulan[today.getMonth()], penghulu: 'Moh. Sadikul Anam', lokasi: 'Ds. Kenongorejo' },
+      { tgl: (today.getDate()+2) + ' ' + bulan[today.getMonth()], penghulu: 'Penghulu KUA', lokasi: 'Ds. Pilangkenceng' },
+      { tgl: (today.getDate()+5) + ' ' + bulan[today.getMonth()], penghulu: 'Penghulu KUA', lokasi: 'Ds. Sareng' },
+    ];
+    document.getElementById('jadwalBody').innerHTML = rows.map(r =>
+      `<tr><td>${r.tgl}</td><td>${r.penghulu}</td><td>${r.lokasi}</td></tr>`
+    ).join('');
+  }
+
+  /* ── STATS COUNTER ANIMASI ── */
+  function animCount(id, target, suffix, dur) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let v = 0, step = target / (dur / 16);
+    const t = setInterval(() => {
+      v = Math.min(v + step, target);
+      el.textContent = Math.round(v).toLocaleString('id-ID') + suffix;
+      if (v >= target) clearInterval(t);
+    }, 16);
+  }
+
+  /* ── SCROLL REVEAL ── */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* ── HELPERS ── */
+  function getEmoji(kat) {
+    const map = { Nikah:'💒', Wakaf:'🕌', Keluarga:'👨‍👩‍👧', Ecotheology:'🌿', Penyuluhan:'🎤', Kiblat:'🌙', Halal:'🥩', Konseling:'🤝', Rekomendasi:'📜' };
+    return map[kat] || '📋';
+  }
+  function formatTgl(str) {
+    if (!str) return '';
+    const d = new Date(str);
+    if (isNaN(d)) return str;
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  /* ── SLIDESHOW ── */
+  (function() {
+    const slides = document.querySelectorAll('#slideTrack .slide');
+    const dotsEl = document.getElementById('slideDots');
+    if (!slides.length || !dotsEl) return;
+    let cur = 0;
+    slides.forEach(function(_, i) {
+      const d = document.createElement('button');
+      d.className = 'sdot' + (i === 0 ? ' active' : '');
+      d.setAttribute('aria-label', 'Slide ' + (i+1));
+      d.onclick = function() { goTo(i); };
+      dotsEl.appendChild(d);
+    });
+    function goTo(n) {
+      slides[cur].classList.remove('active');
+      dotsEl.children[cur].classList.remove('active');
+      cur = (n + slides.length) % slides.length;
+      slides[cur].classList.add('active');
+      dotsEl.children[cur].classList.add('active');
+    }
+    setInterval(function() { goTo(cur + 1); }, 3000);
+  })();
+
+  /* ── INIT ── */
+  window.addEventListener('load', () => {
+    loadArtikel();
+    loadPengumuman();
+    setTimeout(() => {
+      animCount('s1', 187, '', 1400);
+      animCount('s2', 524, '', 1400);
+      animCount('s3', 98, '%', 1200);
+      animCount('s4', 18, '', 900);
+    }, 400);
   });
-}
-function toggleLoginPanel(){var box=document.getElementById("login-box");var open=box.style.display==="block";box.style.display=open?"none":"block";document.getElementById("btn-login-header").classList.toggle("active",!open);if(!open)document.getElementById("inp-username").focus();}
-async function doLogin(){var u=document.getElementById("inp-username").value.trim();var p=document.getElementById("inp-password").value;var err=document.getElementById("login-error");var btn=document.getElementById("btn-do-login");if(!u||!p){err.style.display="block";err.textContent="Isi username dan password.";return;}btn.disabled=true;btn.textContent="Memverifikasi...";try{var res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"login",username:u,password:p})});var d=await res.json();if(d.ok){session=d.user;sessionStorage.setItem("ptsp_session",JSON.stringify(session));err.style.display="none";document.getElementById("login-box").style.display="none";var btn2=document.getElementById("btn-login-header");btn2.textContent="\u2705 "+session.nama;btn2.classList.add("active");var bar=document.getElementById("session-bar");bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";showToast("Login berhasil!");}else{err.style.display="block";err.textContent=d.error||"Login gagal.";}}catch(e){if(u==="demo"&&p==="demo123"){session={username:"demo",nama:"Petugas Demo",role:"petugas"};sessionStorage.setItem("ptsp_session",JSON.stringify(session));err.style.display="none";document.getElementById("login-box").style.display="none";document.getElementById("btn-login-header").textContent="\u2705 Petugas Demo";document.getElementById("btn-login-header").classList.add("active");document.getElementById("session-bar").classList.add("show");document.getElementById("session-info").textContent="Petugas: Demo (petugas)";showToast("Login demo berhasil!");}else{err.style.display="block";err.textContent="Tidak dapat terhubung ke server.";}}btn.disabled=false;btn.textContent="Masuk";}
-function logout(){session=null;sessionStorage.removeItem("ptsp_session");document.getElementById("btn-login-header").textContent="\uD83D\uDD10 Petugas";document.getElementById("btn-login-header").classList.remove("active");document.getElementById("session-bar").classList.remove("show");showToast("Anda telah keluar.");}
-var _tt;function showToast(msg,isError){isError=isError||false;var t=document.getElementById("toast");t.textContent=msg;t.className="toast show"+(isError?" error":"");clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove("show");},3500);}
-init();</script>
+
+  /* ── HAMBURGER MENU ── */
+  (function() {
+    var btn = document.getElementById('hamburgerBtn');
+    var links = document.querySelector('.nav-links');
+    if (!btn || !links) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      links.classList.toggle('open');
+    });
+    document.addEventListener('click', function(e) {
+      if (!links.contains(e.target) && e.target !== btn) {
+        links.classList.remove('open');
+      }
+    });
+  })();
+
+  /* ── ACTIVE NAV ON SCROLL ── */
+  const sections = document.querySelectorAll('section[id], div[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) cur = s.id; });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+    });
+  });
+</script>
+
 </body>
 </html>
