@@ -2366,14 +2366,7 @@ async function submitPelaksanaan() {
     var tbody = document.getElementById('bt-body');
     var info  = document.getElementById('bt-info');
     tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>';
-    fetch(API_URL + '?action=getdata&_=' + Date.now(), {
-      headers: { 'X-Auth': btoa(currentUser.username + ':' + currentUser.role) }
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      // Gunakan endpoint getBukuTamu jika ada, fallback ke sheet langsung via getbukutamu
-      return fetch(API_URL + '?action=getbukutamu&_=' + Date.now());
-    })
+    fetch(API_URL + '?action=getbukutamu&_=' + Date.now())
     .then(function(r){ return r.json(); })
     .then(function(d){
       if (!d.ok) { tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#c00">Gagal: ' + (d.error||'') + '</td></tr>'; return; }
