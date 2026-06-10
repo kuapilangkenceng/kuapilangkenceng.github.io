@@ -857,6 +857,188 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
         </div>
       </div><!-- /page-users -->
 
+
+<div class="page" id="page-pelaksanaan">
+  <div style="max-width:700px">
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
+        <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
+        <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
+      </div>
+      <div style="padding:20px">
+        <!-- Recall dropdown -->
+        <div class="form-group" style="margin-bottom:16px">
+          <label class="form-label" style="font-weight:600;font-size:13px">Pilih Data Pendaftaran Nikah</label>
+          <select id="pel-recall-select" class="form-control" onchange="onPelaksanaanRecall(this.value)" style="width:100%;padding:10px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px">
+            <option value="">-- Memuat data... --</option>
+          </select>
+          <span id="pel-recall-info" style="font-size:11.5px;color:#888;margin-top:4px;display:block"></span>
+        </div>
+
+        <!-- Banner autofill -->
+        <div id="pel-autofill-banner" style="background:#e8f5ee;border:1.5px solid #2d8c5e;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1a6b45;font-weight:600;margin-bottom:14px;display:none">
+          ✅ Data berhasil diisi otomatis dari pendaftaran.
+        </div>
+
+        <!-- Form Pelaksanaan -->
+        <div id="pel-form-body" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Nama Pengantin Pria</label>
+              <input class="form-control" id="pel-nama-pa" type="text" placeholder="Nama catin pria"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Pengantin Wanita</label>
+              <input class="form-control" id="pel-nama-pi" type="text" placeholder="Nama catin wanita"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
+              <input class="form-control" id="pel-tgl" type="date" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Waktu Pelaksanaan</label>
+              <input class="form-control" id="pel-waktu" type="time"/>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="form-group">
+              <label class="form-label">Tempat Pelaksanaan</label>
+              <select class="form-control" id="pel-tempat">
+                <option>KUA Pilangkenceng</option>
+                <option>Masjid/Musholla</option>
+                <option>Rumah</option>
+                <option>Gedung/Aula</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Penghulu</label>
+              <input class="form-control" id="pel-penghulu" type="text" placeholder="Nama penghulu"/>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Petugas Penerima</label>
+            <select class="form-control" id="pel-petugas">
+              <option>Petugas PTSP</option>
+              <option>Penghulu</option>
+              <option>Penyuluh</option>
+              <option>Operator Layanan</option>
+              <option>Admin Kantor</option>
+              <option>Kepala KUA</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:12px">
+            <label class="form-label">Catatan Pelaksanaan</label>
+            <textarea class="form-control" id="pel-catatan" rows="3" placeholder="Catatan tambahan pelaksanaan akad..."></textarea>
+          </div>
+
+          <!-- Foto upload -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="form-group">
+              <label class="form-label">Foto bersama Petugas PTSP</label>
+              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
+                <input type="file" accept="image/*" onchange="handlePelFoto(event,'ptsp')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+                <div style="font-size:24px">📷</div>
+                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
+              </div>
+              <div id="pel-preview-ptsp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Foto bersama Penghulu</label>
+              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
+                <input type="file" accept="image/*" onchange="handlePelFoto(event,'penghulu')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
+                <div style="font-size:24px">📷</div>
+                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
+              </div>
+              <div id="pel-preview-penghulu" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+            </div>
+          </div>
+
+          <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
+            style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">
+            💒 Simpan Pelaksanaan Nikah
+          </button>
+        </div>
+
+        <!-- Placeholder sebelum recall -->
+        <div id="pel-placeholder" style="text-align:center;padding:32px;color:#aaa">
+          <div style="font-size:40px;margin-bottom:8px">📋</div>
+          <div style="font-size:14px">Pilih data pendaftaran di atas untuk memulai</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-pelaksanaan -->
+
+<div class="page" id="page-bukutamu">
+  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
+    <input id="bt-search" type="text" placeholder="Cari nama, nomor, layanan..." 
+      style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px"
+      oninput="filterBukuTamu()">
+    <button onclick="loadBukuTamu()" style="padding:8px 16px;background:#1b5e35;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer">🔄 Refresh</button>
+  </div>
+  <div style="overflow-x:auto">
+    <table style="width:100%;border-collapse:collapse;font-size:13px" id="bt-table">
+      <thead>
+        <tr style="background:#1b5e35;color:#fff">
+          <th style="padding:10px 12px;text-align:left">Tanggal</th>
+          <th style="padding:10px 12px;text-align:left">No Layanan</th>
+          <th style="padding:10px 12px;text-align:left">Jenis Layanan</th>
+          <th style="padding:10px 12px;text-align:left">Nama Pemohon</th>
+          <th style="padding:10px 12px;text-align:left">Kontak</th>
+          <th style="padding:10px 12px;text-align:left">Desa</th>
+          <th style="padding:10px 12px;text-align:left">Petugas</th>
+        </tr>
+      </thead>
+      <tbody id="bt-body">
+        <tr><td colspan="7" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="bt-info" style="margin-top:10px;font-size:12px;color:#666"></div>
+</div><!-- /page-bukutamu -->
+
+<div class="page" id="page-generate">
+  <div class="filter-bar" style="margin-bottom:16px">
+    <input type="text" id="gen-f-q" placeholder="Cari nama / ID..." oninput="filterGenerate()"/>
+    <select id="gen-f-kat" onchange="filterGenerate()">
+      <option value="">Semua Kategori</option>
+      <option value="Nikah">Nikah</option>
+      <option value="Wakaf">Wakaf</option>
+      <option value="Kiblat">Kiblat</option>
+      <option value="SKT">SKT</option>
+      <option value="Konseling">Konseling</option>
+    </select>
+    <select id="gen-f-dok" onchange="filterGenerate()">
+      <option value="">Semua Status Dokumen</option>
+      <option value="belum">Belum Digenerate</option>
+      <option value="sudah">Sudah Digenerate</option>
+    </select>
+    <button class="btn-reset" onclick="resetFilterGenerate()">Reset</button>
+  </div>
+  <div class="table-card">
+    <div class="table-header">
+      <h3>&#128196; Permohonan yang Dapat Digenerate Dokumen</h3>
+      <span class="table-count" id="gen-tbl-count">&#8212;</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>ID</th><th>Pemohon</th><th>Layanan</th><th>Kategori</th>
+            <th>Tanggal</th><th>Status</th><th>Dokumen</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="gen-tbl-body"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <span id="gen-pg-info"></span>
+      <div class="page-btns" id="gen-pg-btns"></div>
+    </div>
+  </div>
+</div>
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /app -->
@@ -1954,187 +2136,6 @@ async function doGenerateDokumen() {
 </script>
 
 <!-- === PAGE GENERATE DOKUMEN === -->
-<div class="page" id="page-pelaksanaan">
-  <div style="max-width:700px">
-    <div class="card" style="margin-bottom:16px">
-      <div class="card-header" style="background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;padding:16px 20px;border-radius:8px 8px 0 0">
-        <div style="font-size:16px;font-weight:700">💒 Pelaksanaan Nikah</div>
-        <div style="font-size:12px;opacity:.85;margin-top:2px">Finalisasi akad nikah dari data pendaftaran</div>
-      </div>
-      <div style="padding:20px">
-        <!-- Recall dropdown -->
-        <div class="form-group" style="margin-bottom:16px">
-          <label class="form-label" style="font-weight:600;font-size:13px">Pilih Data Pendaftaran Nikah</label>
-          <select id="pel-recall-select" class="form-control" onchange="onPelaksanaanRecall(this.value)" style="width:100%;padding:10px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px">
-            <option value="">-- Memuat data... --</option>
-          </select>
-          <span id="pel-recall-info" style="font-size:11.5px;color:#888;margin-top:4px;display:block"></span>
-        </div>
-
-        <!-- Banner autofill -->
-        <div id="pel-autofill-banner" style="background:#e8f5ee;border:1.5px solid #2d8c5e;border-radius:8px;padding:10px 14px;font-size:12.5px;color:#1a6b45;font-weight:600;margin-bottom:14px;display:none">
-          ✅ Data berhasil diisi otomatis dari pendaftaran.
-        </div>
-
-        <!-- Form Pelaksanaan -->
-        <div id="pel-form-body" style="display:none">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Nama Pengantin Pria</label>
-              <input class="form-control" id="pel-nama-pa" type="text" placeholder="Nama catin pria"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Pengantin Wanita</label>
-              <input class="form-control" id="pel-nama-pi" type="text" placeholder="Nama catin wanita"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Tanggal Pelaksanaan <span style="color:red">*</span></label>
-              <input class="form-control" id="pel-tgl" type="date" required/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Waktu Pelaksanaan</label>
-              <input class="form-control" id="pel-waktu" type="time"/>
-            </div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-            <div class="form-group">
-              <label class="form-label">Tempat Pelaksanaan</label>
-              <select class="form-control" id="pel-tempat">
-                <option>KUA Pilangkenceng</option>
-                <option>Masjid/Musholla</option>
-                <option>Rumah</option>
-                <option>Gedung/Aula</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Nama Penghulu</label>
-              <input class="form-control" id="pel-penghulu" type="text" placeholder="Nama penghulu"/>
-            </div>
-          </div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label">Petugas Penerima</label>
-            <select class="form-control" id="pel-petugas">
-              <option>Petugas PTSP</option>
-              <option>Penghulu</option>
-              <option>Penyuluh</option>
-              <option>Operator Layanan</option>
-              <option>Admin Kantor</option>
-              <option>Kepala KUA</option>
-            </select>
-          </div>
-          <div class="form-group" style="margin-bottom:12px">
-            <label class="form-label">Catatan Pelaksanaan</label>
-            <textarea class="form-control" id="pel-catatan" rows="3" placeholder="Catatan tambahan pelaksanaan akad..."></textarea>
-          </div>
-
-          <!-- Foto upload -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-            <div class="form-group">
-              <label class="form-label">Foto bersama Petugas PTSP</label>
-              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
-                <input type="file" accept="image/*" onchange="handlePelFoto(event,'ptsp')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
-                <div style="font-size:24px">📷</div>
-                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
-              </div>
-              <div id="pel-preview-ptsp" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Foto bersama Penghulu</label>
-              <div class="photo-upload-area" style="border:2px dashed #b8d4c2;border-radius:8px;padding:16px;text-align:center;cursor:pointer;position:relative">
-                <input type="file" accept="image/*" onchange="handlePelFoto(event,'penghulu')" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%"/>
-                <div style="font-size:24px">📷</div>
-                <div style="font-size:12px;color:#2d8c5e;font-weight:600">Upload Foto</div>
-              </div>
-              <div id="pel-preview-penghulu" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
-            </div>
-          </div>
-
-          <button onclick="submitPelaksanaan()" id="btn-submit-pelaksanaan"
-            style="width:100%;padding:14px;background:linear-gradient(135deg,#1a6b45,#2d8c5e);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">
-            💒 Simpan Pelaksanaan Nikah
-          </button>
-        </div>
-
-        <!-- Placeholder sebelum recall -->
-        <div id="pel-placeholder" style="text-align:center;padding:32px;color:#aaa">
-          <div style="font-size:40px;margin-bottom:8px">📋</div>
-          <div style="font-size:14px">Pilih data pendaftaran di atas untuk memulai</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!-- /page-pelaksanaan -->
-
-<div class="page" id="page-bukutamu">
-  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-    <input id="bt-search" type="text" placeholder="Cari nama, nomor, layanan..." 
-      style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px"
-      oninput="filterBukuTamu()">
-    <button onclick="loadBukuTamu()" style="padding:8px 16px;background:#1b5e35;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer">🔄 Refresh</button>
-  </div>
-  <div style="overflow-x:auto">
-    <table style="width:100%;border-collapse:collapse;font-size:13px" id="bt-table">
-      <thead>
-        <tr style="background:#1b5e35;color:#fff">
-          <th style="padding:10px 12px;text-align:left">Tanggal</th>
-          <th style="padding:10px 12px;text-align:left">No Layanan</th>
-          <th style="padding:10px 12px;text-align:left">Jenis Layanan</th>
-          <th style="padding:10px 12px;text-align:left">Nama Pemohon</th>
-          <th style="padding:10px 12px;text-align:left">Kontak</th>
-          <th style="padding:10px 12px;text-align:left">Desa</th>
-          <th style="padding:10px 12px;text-align:left">Petugas</th>
-        </tr>
-      </thead>
-      <tbody id="bt-body">
-        <tr><td colspan="7" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>
-      </tbody>
-    </table>
-  </div>
-  <div id="bt-info" style="margin-top:10px;font-size:12px;color:#666"></div>
-</div><!-- /page-bukutamu -->
-
-<div class="page" id="page-generate">
-  <div class="filter-bar" style="margin-bottom:16px">
-    <input type="text" id="gen-f-q" placeholder="Cari nama / ID..." oninput="filterGenerate()"/>
-    <select id="gen-f-kat" onchange="filterGenerate()">
-      <option value="">Semua Kategori</option>
-      <option value="Nikah">Nikah</option>
-      <option value="Wakaf">Wakaf</option>
-      <option value="Kiblat">Kiblat</option>
-      <option value="SKT">SKT</option>
-      <option value="Konseling">Konseling</option>
-    </select>
-    <select id="gen-f-dok" onchange="filterGenerate()">
-      <option value="">Semua Status Dokumen</option>
-      <option value="belum">Belum Digenerate</option>
-      <option value="sudah">Sudah Digenerate</option>
-    </select>
-    <button class="btn-reset" onclick="resetFilterGenerate()">Reset</button>
-  </div>
-  <div class="table-card">
-    <div class="table-header">
-      <h3>&#128196; Permohonan yang Dapat Digenerate Dokumen</h3>
-      <span class="table-count" id="gen-tbl-count">&#8212;</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="tbl">
-        <thead>
-          <tr>
-            <th>ID</th><th>Pemohon</th><th>Layanan</th><th>Kategori</th>
-            <th>Tanggal</th><th>Status</th><th>Dokumen</th><th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="gen-tbl-body"></tbody>
-      </table>
-    </div>
-    <div class="pagination">
-      <span id="gen-pg-info"></span>
-      <div class="page-btns" id="gen-pg-btns"></div>
-    </div>
-  </div>
-</div>
 
 <script>
 var GEN_BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_pendaftaran','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
