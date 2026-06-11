@@ -114,6 +114,20 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 <div class="autofill-banner" id="autofill-banner">Data berhasil diisi otomatis.</div>
 <div class="form-card"><div class="form-card-header"><h2 id="form-title">-</h2><p id="form-desc">-</p></div><div class="form-card-body" id="form-body"></div></div>
 </div>
+<div class="page fade-in" id="page-rekap">
+<div class="form-card"><div class="form-card-header"><h2>Konfirmasi Pengajuan</h2><p>Periksa data berikut, lalu unggah foto tahap akhir.</p></div>
+<div class="form-card-body">
+<div class="success-screen" style="margin-bottom:14px">
+<div class="success-icon">&#10003;</div>
+<div class="success-id" id="rekap-id">LYN-...</div>
+<p>Nomor layanan Anda. Simpan sebagai bukti pengajuan.</p>
+</div>
+<div class="form-group"><label class="form-label">Nama Pemohon</label><div class="form-control" id="rekap-nama" style="background:#f7f7f7"></div></div>
+<div class="form-group"><label class="form-label">Jenis Layanan</label><div class="form-control" id="rekap-jenis" style="background:#f7f7f7"></div></div>
+<div id="rekap-foto-body"></div>
+<div style="margin-top:20px"><button class="btn-submit" id="btn-submit-complete" onclick="submitComplete()">&#9989; Selesai &amp; Kirim</button></div>
+</div></div>
+</div>
 <div class="page fade-in" id="page-success"><div class="form-card"><div class="form-card-body"><div class="success-screen">
 <div class="success-icon">&#10003;</div>
 <h2 style="font-size:20px;font-weight:800;margin-bottom:6px">Layanan Berhasil Dikirim!</h2>

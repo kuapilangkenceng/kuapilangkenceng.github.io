@@ -7,6 +7,9 @@ let CONFIG = null;
 let currentKat = window.PTSP_KATEGORI_ID || null;
 let currentKatLabel = window.PTSP_KATEGORI_LABEL || null;
 let currentJenis = null;
+let currentTahap2Field = null;
+let currentLayananId = null;
+let currentRekapInfo = null;
 let session = null;
 let photoFiles = [];
 let autocompleteTimers = {};
@@ -112,7 +115,7 @@ function renderLayananList() {
 }
 
 function showForm(jenis) {
-  currentJenis = jenis; photoFiles = [];
+  currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null;
   const f = CONFIG.forms[jenis]; if (!f) return;
   document.getElementById('form-title').textContent = f.label;
   document.getElementById('form-desc').textContent = f.deskripsi || f.kategori;
@@ -121,8 +124,21 @@ function showForm(jenis) {
   const body = document.getElementById('form-body'); body.innerHTML = '';
   const ov = f.universalOverrides || {};
   const uFields = (CONFIG.universal || []).filter(function(u){ return !(ov[u.name] && ov[u.name].hidden); });
+
+  // Deteksi pola 2-tahap: jika 2 field TERAKHIR di f.fields bertipe 'photo', field kedua
+  // disisihkan untuk halaman rekap (Tahap 2), tidak dirender di form awal.
+  let mainFields = (f.fields || []).slice();
+  if (mainFields.length >= 2) {
+    const last = mainFields[mainFields.length-1];
+    const prev = mainFields[mainFields.length-2];
+    if (last.type === 'photo' && prev.type === 'photo') {
+      currentTahap2Field = last;
+      mainFields = mainFields.slice(0, -1);
+    }
+  }
+
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
-  if (f.fields && f.fields.length) { addST(body,'Data Layanan'); f.fields.forEach(function(fd){ renderField(body,fd); }); }
+  if (mainFields.length) { addST(body,'Data Layanan'); mainFields.forEach(function(fd){ renderField(body,fd); }); }
   if (f.autofill && session) setupAutofill(f.autofill);
   if (jenis === 'nikah_bimwin' && session) setTimeout(triggerAutofillBimwin, 100);
   if ((CONFIG.publishMode||{})[jenis]==='kegiatan' && session && CONFIG.consentField) {
@@ -292,18 +308,56 @@ async function submitForm() {
     else if(field.type!=='photo'){data[fname]=el.value.trim();}
   });
   const petugas=(document.getElementById('field_petugas_penerima')||document.getElementById('field_petugas_ptsp')||{value:''}).value.trim()||(session?session.nama:'');
-  const payload={action:'submit',jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,foto:photoFiles.map(function(p){return {mimeType:p.mimeType,base64:p.base64};})};
+  const isTwoStage = !!currentTahap2Field;
+  const payload={action:(isTwoStage?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,foto:photoFiles.map(function(p){return {mimeType:p.mimeType,base64:p.base64};})};
+  if (isTwoStage) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
+  try{
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+    const result=await res.json();
+    if(result.ok){
+      if (isTwoStage) {
+        currentLayananId = result.id;
+        currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
+        renderRekap();
+        goPage('page-rekap');
+      } else {
+        document.getElementById('success-id').textContent=result.id;goPage('page-success');
+      }
+    }
+    else showToast('Gagal: '+(result.error||'Unknown error'),true);
+  }catch(e){showToast('Tidak dapat terhubung ke server.',true);}
+  btn.disabled=false; btn.classList.remove('loading'); btn.textContent='\uD83D\uDCE4 Kirim Layanan';
+}
+
+function renderRekap() {
+  document.getElementById('rekap-id').textContent = currentRekapInfo.id;
+  document.getElementById('rekap-nama').textContent = currentRekapInfo.nama_pemohon;
+  document.getElementById('rekap-jenis').textContent = currentRekapInfo.jenis_label;
+  const body = document.getElementById('rekap-foto-body'); body.innerHTML='';
+  photoFiles = []; // reset, foto tahap 1 sudah terkirim
+  if (currentTahap2Field) renderField(body, currentTahap2Field);
+}
+
+async function submitComplete() {
+  if (!currentTahap2Field || !currentLayananId) return;
+  const fname = currentTahap2Field.name || currentTahap2Field.id;
+  const payload = {
+    action: 'submitComplete',
+    id: currentLayananId,
+    foto: photoFiles.filter(function(p){return p.name===fname;}).map(function(p){return {mimeType:p.mimeType,base64:p.base64};})
+  };
+  const btn=document.getElementById('btn-submit-complete'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
   try{
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     const result=await res.json();
     if(result.ok){document.getElementById('success-id').textContent=result.id;goPage('page-success');}
     else showToast('Gagal: '+(result.error||'Unknown error'),true);
   }catch(e){showToast('Tidak dapat terhubung ke server.',true);}
-  btn.disabled=false; btn.classList.remove('loading'); btn.textContent='\uD83D\uDCE4 Kirim Layanan';
+  btn.disabled=false; btn.classList.remove('loading'); btn.textContent='\u2705 Selesai & Kirim';
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
