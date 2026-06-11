@@ -459,6 +459,22 @@
   let kategoriAktif = 'semua';
   let querySearch   = '';
 
+  /* ── NORMALISASI KATEGORI (sinkronkan label AI dgn tombol filter) ── */
+  function normKategori(kat) {
+    const map = {
+      'Layanan Nikah':'Pernikahan',
+      'Nikah':'Pernikahan',
+      'Layanan Wakaf':'Wakaf',
+      'Layanan Kiblat':'Kiblat',
+      'Layanan Konseling':'Konseling',
+      'Konseling & Rekomendasi':'Konseling',
+      'Rekomendasi':'Konseling',
+      'Layanan Halal':'Halal',
+      'Keluarga Sakinah':'Keluarga'
+    };
+    return map[kat] || kat || 'Informasi';
+  }
+
   /* ── EMOJI KATEGORI ── */
   function getEmoji(kat) {
     const map = {
@@ -542,11 +558,12 @@
 
   function terapkanFilter() {
     artikelTampil = semuaArtikel.filter(a => {
-      const cocokKat = kategoriAktif === 'semua' || a.kategori === kategoriAktif;
+      const cocokKat = kategoriAktif === 'semua' || normKategori(a.kategori) === kategoriAktif;
       const cocokQ   = !querySearch ||
         (a.judul     || '').toLowerCase().includes(querySearch) ||
         (a.ringkasan || '').toLowerCase().includes(querySearch) ||
-        (a.kategori  || '').toLowerCase().includes(querySearch);
+        (a.kategori  || '').toLowerCase().includes(querySearch) ||
+        normKategori(a.kategori).toLowerCase().includes(querySearch);
       return cocokKat && cocokQ;
     });
     render();
@@ -571,15 +588,15 @@
 
     grid.innerHTML = slice.map((a, i) => {
       const featured = i === 0 && halamanAktif === 1 && kategoriAktif === 'semua' && !querySearch;
-      const thumb = a.thumbnail
-        ? `<img src="${a.thumbnail}" alt="${a.judul}" loading="lazy">`
-        : getEmoji(a.kategori);
+      const thumb = a.foto_url
+        ? `<img src="${a.foto_url}" alt="${a.judul}" loading="lazy">`
+        : getEmoji(normKategori(a.kategori));
       return `
         <div class="acard${featured ? ' featured' : ''}" onclick="bukaModal('${a.id}')">
           <div class="acard-thumb">${thumb}</div>
           <div class="acard-body">
             <div class="acard-meta-top">
-              <span class="acard-cat">${a.kategori || 'Informasi'}</span>
+              <span class="acard-cat">${normKategori(a.kategori)}</span>
               <span class="acard-date">${formatTgl(a.tanggal)}</span>
             </div>
             <h3>${a.judul}</h3>
@@ -623,7 +640,7 @@
   function renderSidebar() {
     // Hitung per kategori
     const map = {};
-    semuaArtikel.forEach(a => { map[a.kategori] = (map[a.kategori] || 0) + 1; });
+    semuaArtikel.forEach(a => { const k = normKategori(a.kategori); map[k] = (map[k] || 0) + 1; });
     ['Pernikahan','Wakaf','Keluarga','Ecotheology','Penyuluhan','Pengumuman'].forEach(k => {
       const el = document.getElementById('kc-' + k.toLowerCase());
       if (el) el.textContent = map[k] || 0;
@@ -635,7 +652,7 @@
     if (!terbaru.length) { el.innerHTML = '<p style="font-size:12px;color:var(--teks-ringan)">Belum ada artikel.</p>'; return; }
     el.innerHTML = terbaru.map(a => `
       <div class="pop-item" onclick="bukaModal('${a.id}')">
-        <div class="pop-thumb">${a.thumbnail ? `<img src="${a.thumbnail}" alt="">` : getEmoji(a.kategori)}</div>
+        <div class="pop-thumb">${a.foto_url ? `<img src="${a.foto_url}" alt="">` : getEmoji(normKategori(a.kategori))}</div>
         <div>
           <div class="pop-title">${a.judul}</div>
           <div class="pop-date">${formatTgl(a.tanggal)}</div>
@@ -648,12 +665,12 @@
     const a = semuaArtikel.find(x => x.id == id);
     if (!a) return;
 
-    document.getElementById('modalKat').textContent   = a.kategori || 'Informasi';
+    document.getElementById('modalKat').textContent   = normKategori(a.kategori);
     document.getElementById('modalJudul').textContent = a.judul;
     document.getElementById('modalMeta').textContent  = formatTgl(a.tanggal) + ' · KUA Pilangkenceng';
-    document.getElementById('modalThumb').innerHTML   = a.thumbnail
-      ? `<img src="${a.thumbnail}" alt="${a.judul}">`
-      : getEmoji(a.kategori);
+    document.getElementById('modalThumb').innerHTML   = a.foto_url
+      ? `<img src="${a.foto_url}" alt="${a.judul}">`
+      : getEmoji(normKategori(a.kategori));
 
     // Konten isi — format paragraf
     const isi = (a.isi || a.ringkasan || '');
