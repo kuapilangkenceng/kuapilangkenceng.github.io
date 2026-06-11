@@ -989,10 +989,11 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
           <th style="padding:10px 12px;text-align:left">Kontak</th>
           <th style="padding:10px 12px;text-align:left">Desa</th>
           <th style="padding:10px 12px;text-align:left">Petugas</th>
+          <th style="padding:10px 12px;text-align:left">Foto Bersama</th>
         </tr>
       </thead>
       <tbody id="bt-body">
-        <tr><td colspan="7" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>
+        <tr><td colspan="8" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>
       </tbody>
     </table>
   </div>
@@ -1475,6 +1476,7 @@ function openDetail(id) {
       <textarea class="catatan-inp" id="catatan-inp" rows="2"
         placeholder="Catatan admin (opsional)...">${catatanLama}</textarea>
       <button class="btn-simpan-status" onclick="simpanStatus('${rec.id}')">💾 Simpan Status</button>
+      ${session.role === 'admin' ? `<button class="btn-simpan-status" style="background:#c0392b;margin-top:6px" onclick="hapusLayanan('${rec.id}')">🗑️ Hapus Layanan</button>` : ''}
     </div>
   `;
 
@@ -1543,6 +1545,31 @@ async function simpanStatus(id) {
     showToast(`✅ (Demo) Status "${id}" → ${status}`);
   }
   btn.disabled = false; btn.textContent = '💾 Simpan Status';
+}
+
+async function hapusLayanan(id) {
+  if (!confirm('Hapus layanan "' + id + '" secara permanen? Tindakan ini tidak dapat dibatalkan.')) return;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'deleteLayanan', id })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      allData = allData.filter(r => r.id !== id);
+      filtered = filtered.filter(r => r.id !== id);
+      closeModalDirect();
+      renderTable();
+      renderRecent();
+      showToast(`✅ Layanan "${id}" dihapus.`);
+      await loadStats();
+    } else {
+      showToast(data.error || 'Gagal menghapus.', true);
+    }
+  } catch (e) {
+    showToast('Error: ' + e.message, true);
+  }
 }
 
 function closeModal(e) {
@@ -2387,20 +2414,20 @@ async function submitPelaksanaan() {
   function loadBukuTamu() {
     var tbody = document.getElementById('bt-body');
     var info  = document.getElementById('bt-info');
-    tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>';
     fetch(API_URL + '?action=getbukutamu&_=' + Date.now())
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if (!d.ok) { tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#c00">Gagal: ' + (d.error||'') + '</td></tr>'; return; }
+      if (!d.ok) { tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#c00">Gagal: ' + (d.error||'') + '</td></tr>'; return; }
       _btData = d.results || [];
       renderBukuTamu(_btData);
       if (info) info.textContent = 'Total ' + _btData.length + ' entri';
     })
-    .catch(function(e){ tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#c00">Error: ' + e.message + '</td></tr>'; });
+    .catch(function(e){ tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#c00">Error: ' + e.message + '</td></tr>'; });
   }
   function renderBukuTamu(rows) {
     var tbody = document.getElementById('bt-body');
-    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" style="padding:20px;text-align:center;color:#999">Belum ada data.</td></tr>'; return; }
+    if (!rows.length) { tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#999">Belum ada data.</td></tr>'; return; }
     tbody.innerHTML = rows.map(function(r, i) {
       var bg = i % 2 === 0 ? '#fff' : '#f9fafb';
       // Support key header lama & baru
@@ -2411,6 +2438,7 @@ async function submitPelaksanaan() {
       var kontak = r['Kontak']       || r.kontak       || '-';
       var desa   = r['Desa / Alamat']|| r.desa         || '-';
       var ptgs   = r['Petugas']      || r.petugas      || '-';
+      var fotoP  = r['Foto Petugas PTSP'] || r.foto_petugas_ptsp || r.foto_petugas || '';
       return '<tr style="background:' + bg + ';border-bottom:1px solid #eee">' +
         '<td style="padding:8px 12px;font-size:12px">' + tgl + '</td>' +
         '<td style="padding:8px 12px;font-family:monospace;font-size:11px">' + noLyn + '</td>' +
@@ -2419,6 +2447,7 @@ async function submitPelaksanaan() {
         '<td style="padding:8px 12px">' + kontak + '</td>' +
         '<td style="padding:8px 12px">' + desa + '</td>' +
         '<td style="padding:8px 12px">' + ptgs + '</td>' +
+        '<td style="padding:8px 12px">' + (fotoP ? '<a href="' + fotoP + '" target="_blank"><img src="' + fotoP + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd"></a>' : '-') + '</td>' +
       '</tr>';
     }).join('');
   }
