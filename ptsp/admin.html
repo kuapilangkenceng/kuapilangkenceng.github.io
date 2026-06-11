@@ -1299,14 +1299,13 @@ function renderTable() {
     tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="icon">📭</span>Tidak ada data ditemukan.</div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(r => `
-      <tr onclick="openDetail('${r.id}')">
+      <tr>
         <td class="id-col">${r.id}</td>
         <td class="nama-col">${r.nama_pemohon || '—'}</td>
         <td>${r.jenis_label || '—'}</td>
         <td class="nowrap">${r.petugas_ptsp || '—'}</td>
         <td class="nowrap">${formatTs(r.timestamp)}</td>
         <td>${badgeHtml(r.status_layanan)}</td>
-        <td onclick="event.stopPropagation()">${btnDokHtml(r)}</td>
       </tr>`).join('');
   }
 
