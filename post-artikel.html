@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Post Artikel Manual — KUA Pilangkenceng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hijau-tua: #1b5e35;
+    --hijau: #237a3e;
+    --hijau-muda: #2ea04f;
+    --hijau-terang: #eaf5ee;
+    --hijau-border: #c3dfc9;
+    --emas: #c9a030;
+    --emas-muda: #fdf3dc;
+    --putih: #ffffff;
+    --abu: #f4f6f4;
+    --teks: #1a2b1e;
+    --teks-abu: #536356;
+    --teks-ringan: #8fa392;
+    --merah: #c0392b;
+    --merah-muda: #fdecea;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Playfair Display', serif;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font); color: var(--teks); background: var(--abu);
+    font-size: 14px; line-height: 1.65; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+  }
+
+  /* ── LOGIN CARD ── */
+  .login-card {
+    background: var(--putih); border: 1px solid var(--hijau-border);
+    border-radius: var(--radius-lg); padding: 2rem 1.75rem; width: 100%; max-width: 380px;
+    box-shadow: 0 8px 28px rgba(27,94,53,.08);
+  }
+  .login-head { text-align: center; margin-bottom: 1.5rem; }
+  .login-head .logo { font-size: 32px; margin-bottom: .5rem; }
+  .login-head h1 {
+    font-family: var(--font-display); font-size: 19px; color: var(--hijau-tua); margin-bottom: 4px;
+  }
+  .login-head p { font-size: 12px; color: var(--teks-abu); }
+
+  /* ── MAIN APP ── */
+  .app-wrap { width: 100%; max-width: 760px; }
+  .topbar {
+    background: var(--putih); border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; flex-wrap: wrap; gap: .75rem;
+  }
+  .topbar h1 { font-family: var(--font-display); font-size: 18px; color: var(--hijau-tua); }
+  .topbar .user-info { font-size: 12px; color: var(--teks-abu); display: flex; align-items: center; gap: 10px; }
+  .topbar .user-info strong { color: var(--hijau-tua); }
+
+  .card {
+    background: var(--putih); border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+    padding: 1.5rem; margin-bottom: 1rem;
+  }
+  .card h2 { font-family: var(--font-display); font-size: 16px; color: var(--hijau-tua); margin-bottom: 1.1rem; }
+
+  /* ── FORM ── */
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block; font-size: 12.5px; font-weight: 600; color: var(--teks); margin-bottom: 5px;
+  }
+  .field label .opsional { font-weight: 400; color: var(--teks-ringan); }
+  .field input[type="text"],
+  .field input[type="date"],
+  .field input[type="password"],
+  .field select,
+  .field textarea {
+    width: 100%; padding: 10px 12px; font-size: 13px; font-family: var(--font);
+    border: 1px solid var(--hijau-border); border-radius: var(--radius); background: var(--putih);
+    color: var(--teks); transition: border-color .15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: var(--hijau-muda);
+  }
+  .field textarea { resize: vertical; min-height: 160px; line-height: 1.6; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+
+  .hint { font-size: 11px; color: var(--teks-ringan); margin-top: 4px; }
+  .char-count { font-size: 11px; color: var(--teks-ringan); text-align: right; margin-top: 4px; }
+
+  /* ── FOTO PREVIEW ── */
+  .foto-drop {
+    border: 1.5px dashed var(--hijau-border); border-radius: var(--radius);
+    padding: 1.25rem; text-align: center; cursor: pointer; transition: background .15s, border-color .15s;
+    background: var(--hijau-terang);
+  }
+  .foto-drop:hover { border-color: var(--hijau-muda); background: #e2f3e7; }
+  .foto-drop input { display: none; }
+  .foto-drop .icon { font-size: 26px; margin-bottom: 4px; }
+  .foto-drop p { font-size: 12px; color: var(--teks-abu); }
+  .foto-preview {
+    margin-top: .75rem; display: flex; align-items: center; gap: .75rem;
+    background: var(--hijau-terang); border-radius: var(--radius); padding: .6rem .75rem;
+  }
+  .foto-preview img {
+    width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--hijau-border);
+  }
+  .foto-preview .info { flex: 1; font-size: 12px; color: var(--teks-abu); overflow: hidden; }
+  .foto-preview .info strong { display: block; color: var(--teks); font-size: 12.5px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .foto-preview .remove {
+    background: none; border: none; color: var(--merah); font-size: 12px; font-weight: 600;
+    cursor: pointer; padding: 4px 8px; border-radius: 6px;
+  }
+  .foto-preview .remove:hover { background: var(--merah-muda); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 22px; border-radius: var(--radius); font-size: 13.5px; font-weight: 600;
+    font-family: var(--font); border: none; cursor: pointer; transition: background .15s, opacity .15s;
+    width: 100%;
+  }
+  .btn-primary { background: var(--hijau-tua); color: var(--putih); }
+  .btn-primary:hover:not(:disabled) { background: var(--hijau); }
+  .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-secondary { background: var(--hijau-terang); color: var(--hijau-tua); margin-top: .6rem; }
+  .btn-secondary:hover { background: var(--hijau-border); }
+  .btn-text {
+    background: none; border: none; color: var(--teks-abu); font-size: 12px;
+    cursor: pointer; text-decoration: underline; font-family: var(--font);
+  }
+
+  /* ── ALERT / MESSAGE ── */
+  .alert { padding: 10px 14px; border-radius: var(--radius); font-size: 12.5px; margin-bottom: 1rem; display: none; }
+  .alert.show { display: block; }
+  .alert-error { background: var(--merah-muda); color: var(--merah); border: 1px solid #f5c6c0; }
+  .alert-success {
+    background: var(--hijau-terang); color: var(--hijau-tua); border: 1px solid var(--hijau-border);
+  }
+  .alert-success a { color: var(--hijau-tua); font-weight: 700; text-decoration: underline; }
+
+  /* ── SUCCESS RESULT VIEW ── */
+  .result-box { text-align: center; padding: 1rem 0; }
+  .result-box .icon { font-size: 48px; margin-bottom: .75rem; }
+  .result-box h3 { font-family: var(--font-display); font-size: 17px; color: var(--hijau-tua); margin-bottom: 6px; }
+  .result-box p { font-size: 13px; color: var(--teks-abu); margin-bottom: 1rem; }
+  .result-box .id-badge {
+    display: inline-block; background: var(--hijau-terang); color: var(--hijau-tua);
+    font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; margin-bottom: 1rem;
+  }
+  .result-actions { display: flex; gap: .6rem; flex-wrap: wrap; justify-content: center; }
+  .result-actions a, .result-actions button {
+    flex: 1; min-width: 140px;
+  }
+  a.btn { text-decoration: none; }
+
+  /* ── SPINNER ── */
+  .spinner {
+    width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN VIEW ═══ -->
+<div class="login-card" id="loginView">
+  <div class="login-head">
+    <div class="logo">🕌</div>
+    <h1>Post Artikel Manual</h1>
+    <p>KUA Kecamatan Pilangkenceng — Login Internal</p>
+  </div>
+  <div class="alert alert-error" id="loginAlert"></div>
+  <form id="loginForm">
+    <div class="field">
+      <label for="loginUsername">Username</label>
+      <input type="text" id="loginUsername" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
+    </div>
+    <button type="submit" class="btn btn-primary" id="loginBtn">
+      <span id="loginBtnText">Masuk</span>
+    </button>
+  </form>
+</div>
+
+<!-- ═══ MAIN APP VIEW ═══ -->
+<div class="app-wrap hidden" id="appView">
+  <div class="topbar">
+    <h1>📝 Post Artikel Manual</h1>
+    <div class="user-info">
+      <span>Login sebagai <strong id="userNama">-</strong></span>
+      <button class="btn-text" id="logoutBtn">Keluar</button>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="card" id="formCard">
+    <h2>Tulis Artikel Baru</h2>
+    <div class="alert alert-error" id="formAlert"></div>
+
+    <form id="artikelForm">
+      <div class="field-row">
+        <div class="field">
+          <label for="kategori">Kategori</label>
+          <select id="kategori" required>
+            <option value="">— Pilih kategori —</option>
+            <option value="Pernikahan">💒 Pernikahan</option>
+            <option value="Bimwin">📖 Bimwin</option>
+            <option value="Penyuluhan">🎤 Penyuluhan Agama</option>
+            <option value="Ecotheology">🌿 Ecotheology</option>
+            <option value="Wakaf">🕌 Wakaf</option>
+            <option value="Kiblat">🌙 Kiblat</option>
+            <option value="Konseling">🤝 Konseling</option>
+            <option value="Keluarga">👨‍👩‍👧 Keluarga Sakinah</option>
+            <option value="Halal">🥩 Halal</option>
+            <option value="Rekomendasi">📜 Rekomendasi</option>
+            <option value="Pengumuman">📢 Pengumuman</option>
+            <option value="Informasi">📋 Informasi</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="tanggal">Tanggal</label>
+          <input type="date" id="tanggal" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="judul">Judul Artikel</label>
+        <input type="text" id="judul" placeholder="Contoh: Pelaksanaan Akad Nikah di Desa Bulu" required maxlength="120">
+      </div>
+
+      <div class="field">
+        <label for="isi">Isi Artikel</label>
+        <textarea id="isi" placeholder="Tulis isi artikel lengkap di sini... (gaya bahasa formal-instansi, ramah, 5W+1H)" required></textarea>
+        <div class="char-count"><span id="charCount">0</span> karakter</div>
+      </div>
+
+      <div class="field">
+        <label for="tags">Tags <span class="opsional">(opsional, pisahkan koma)</span></label>
+        <input type="text" id="tags" placeholder="contoh: nikah, bulu, akad, kua pilangkenceng">
+      </div>
+
+      <div class="field">
+        <label>Foto <span class="opsional">(opsional, maks 1 foto)</span></label>
+        <label class="foto-drop" id="fotoDrop">
+          <div class="icon">📷</div>
+          <p>Klik untuk pilih foto kegiatan</p>
+          <input type="file" id="fotoInput" accept="image/*">
+        </label>
+        <div class="foto-preview hidden" id="fotoPreview">
+          <img id="fotoPreviewImg" src="" alt="">
+          <div class="info">
+            <strong id="fotoPreviewName">-</strong>
+            <span id="fotoPreviewSize">-</span>
+          </div>
+          <button type="button" class="remove" id="fotoRemove">Hapus</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submitBtn">
+        <span id="submitBtnText">🚀 Publish Artikel</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- SUCCESS CARD (hidden by default) -->
+  <div class="card hidden" id="successCard">
+    <div class="result-box">
+      <div class="icon">✅</div>
+      <h3>Artikel Berhasil Dipublikasikan</h3>
+      <div class="id-badge" id="resultId">ART-XXXXXXXX-XXX</div>
+      <p>Artikel sudah tampil di website publik KUA Pilangkenceng.</p>
+      <div class="result-actions">
+        <a href="https://kuapilangkenceng.github.io/artikel.html" target="_blank" class="btn btn-primary">Lihat di Artikel.html →</a>
+        <button class="btn btn-secondary" id="postLagiBtn">+ Tulis Artikel Lain</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ── KONFIGURASI ── */
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+  const SESSION_KEY = 'kua_post_artikel_session';
+
+  /* ── HELPER ── */
+  function showAlert(elId, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+  function hideAlert(elId) {
+    document.getElementById(elId).classList.remove('show');
+  }
+  function setLoading(btn, textEl, loading, normalText, loadingText) {
+    btn.disabled = loading;
+    textEl.innerHTML = loading
+      ? '<span class="spinner"></span> ' + loadingText
+      : normalText;
+  }
+
+  /* ── SESSION ── */
+  function getSession() {
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); }
+    catch(x) { return null; }
+  }
+  function setSession(user) {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
+  }
+  function clearSession() {
+    sessionStorage.removeItem(SESSION_KEY);
+  }
+
+  /* ── INIT ── */
+  function init() {
+    const sess = getSession();
+    if (sess && sess.username) {
+      showApp(sess);
+    } else {
+      showLogin();
+    }
+    // Default tanggal = hari ini
+    document.getElementById('tanggal').value = new Date().toISOString().substring(0, 10);
+  }
+
+  function showLogin() {
+    document.getElementById('loginView').classList.remove('hidden');
+    document.getElementById('appView').classList.add('hidden');
+  }
+  function showApp(user) {
+    document.getElementById('loginView').classList.add('hidden');
+    document.getElementById('appView').classList.remove('hidden');
+    document.getElementById('userNama').textContent = user.nama || user.username;
+  }
+
+  /* ── LOGIN ── */
+  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    hideAlert('loginAlert');
+
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const btn = document.getElementById('loginBtn');
+    const btnText = document.getElementById('loginBtnText');
+
+    setLoading(btn, btnText, true, 'Masuk', 'Memeriksa...');
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'login', username: username, password: password })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        setSession(data.user);
+        showApp(data.user);
+      } else {
+        showAlert('loginAlert', data.error || 'Login gagal. Periksa username/password.');
+      }
+    } catch(err) {
+      showAlert('loginAlert', 'Gagal terhubung ke server. Coba lagi.');
+    } finally {
+      setLoading(btn, btnText, false, 'Masuk', '');
+    }
+  });
+
+  /* ── LOGOUT ── */
+  document.getElementById('logoutBtn').addEventListener('click', function() {
+    clearSession();
+    document.getElementById('loginForm').reset();
+    showLogin();
+  });
+
+  /* ── CHAR COUNT ── */
+  document.getElementById('isi').addEventListener('input', function() {
+    document.getElementById('charCount').textContent = this.value.length;
+  });
+
+  /* ── FOTO UPLOAD ── */
+  let fotoBase64 = null;
+  let fotoMime = null;
+
+  document.getElementById('fotoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 4 * 1024 * 1024) {
+      showAlert('formAlert', 'Ukuran foto maksimal 4MB.');
+      this.value = '';
+      return;
+    }
+    hideAlert('formAlert');
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const result = ev.target.result; // data:image/...;base64,XXXX
+      fotoMime = file.type;
+      fotoBase64 = result.split(',')[1];
+
+      document.getElementById('fotoPreviewImg').src = result;
+      document.getElementById('fotoPreviewName').textContent = file.name;
+      document.getElementById('fotoPreviewSize').textContent = (file.size / 1024).toFixed(0) + ' KB';
+      document.getElementById('fotoPreview').classList.remove('hidden');
+      document.getElementById('fotoDrop').classList.add('hidden');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('fotoRemove').addEventListener('click', function() {
+    fotoBase64 = null;
+    fotoMime = null;
+    document.getElementById('fotoInput').value = '';
+    document.getElementById('fotoPreview').classList.add('hidden');
+    document.getElementById('fotoDrop').classList.remove('hidden');
+  });
+
+  /* ── SUBMIT ARTIKEL ── */
+  document.getElementById('artikelForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    hideAlert('formAlert');
+
+    const sess = getSession();
+    if (!sess || !sess.username) {
+      showAlert('formAlert', 'Sesi login tidak valid. Silakan login ulang.');
+      clearSession();
+      showLogin();
+      return;
+    }
+
+    const judul    = document.getElementById('judul').value.trim();
+    const kategori = document.getElementById('kategori').value;
+    const tanggal  = document.getElementById('tanggal').value;
+    const isi      = document.getElementById('isi').value.trim();
+    const tags     = document.getElementById('tags').value.trim();
+
+    if (!judul || !kategori || !isi) {
+      showAlert('formAlert', 'Judul, kategori, dan isi artikel wajib diisi.');
+      return;
+    }
+
+    const payload = {
+      action: 'postArtikelManual',
+      judul: judul,
+      kategori: kategori,
+      tanggal: tanggal,
+      isi: isi,
+      tags: tags,
+      editor: sess.username
+    };
+
+    if (fotoBase64) {
+      payload.foto = [{ base64: fotoBase64, mimeType: fotoMime }];
+    }
+
+    const btn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('submitBtnText');
+    setLoading(btn, btnText, true, '🚀 Publish Artikel', 'Mempublikasikan...');
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        document.getElementById('resultId').textContent = data.id;
+        document.getElementById('formCard').classList.add('hidden');
+        document.getElementById('successCard').classList.remove('hidden');
+      } else {
+        showAlert('formAlert', data.error || 'Gagal mempublikasikan artikel.');
+      }
+    } catch(err) {
+      showAlert('formAlert', 'Gagal terhubung ke server. Coba lagi.');
+    } finally {
+      setLoading(btn, btnText, false, '🚀 Publish Artikel', '');
+    }
+  });
+
+  /* ── TULIS ARTIKEL LAIN ── */
+  document.getElementById('postLagiBtn').addEventListener('click', function() {
+    document.getElementById('artikelForm').reset();
+    document.getElementById('tanggal').value = new Date().toISOString().substring(0, 10);
+    document.getElementById('charCount').textContent = '0';
+    fotoBase64 = null;
+    fotoMime = null;
+    document.getElementById('fotoPreview').classList.add('hidden');
+    document.getElementById('fotoDrop').classList.remove('hidden');
+    document.getElementById('successCard').classList.add('hidden');
+    document.getElementById('formCard').classList.remove('hidden');
+  });
+
+  init();
+</script>
+
+</body>
+</html>
