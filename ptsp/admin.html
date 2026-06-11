@@ -1824,7 +1824,7 @@ function renderArtikel() {
     var badgeA = a.status === 'Published' ? 'selesai' : 'baru';
     var pubBtn = a.status === 'Draft'
       ? '<button class="btn-publish" onclick="event.stopPropagation();doPublish(\'' + a.id + '\')">&#128640; Publish</button>'
-      : '<button class="btn-publish published" disabled>&#10003; Published</button>';
+      : '<button class="btn-publish" style="background:var(--red)" onclick="event.stopPropagation();doUnpublish(\'' + a.id + '\')">&#8635; Unpublish</button>';
     return '<div class="artikel-card" onclick="openArtikelModal(\'' + a.id + '\')">' +
       '<div class="artikel-card-header"><div style="flex:1">' +
       '<div class="artikel-judul">' + a.judul + '</div>' +
@@ -1854,7 +1854,7 @@ function openArtikelModal(id) {
   var aiLabel = a.by_ai ? '<span style="color:var(--green);font-size:10px">&#9679; AI Generated &#8212; bebas diedit</span>' : '';
   var pubBtnModal = a.status === 'Draft'
     ? '<button class="btn-publish" style="padding:10px 20px" onclick="doPublish(\'' + a.id + '\')">&#128640; Publish Sekarang</button>'
-    : '<button class="btn-publish published" style="padding:10px 20px" disabled>&#10003; Sudah Published</button>';
+    : '<button class="btn-publish" style="padding:10px 20px;background:var(--red)" onclick="doUnpublish(\'' + a.id + '\')">&#8635; Unpublish (Sembunyikan)</button>';
   body.innerHTML =
     '<div style="margin-bottom:12px">' +
     '<label class="lbl">Judul Artikel</label>' +
@@ -1920,7 +1920,30 @@ async function doPublish(id) {
   badge.style.display = draftCount > 0 ? 'inline-flex' : 'none';
   showToast('🚀 Artikel berhasil dipublish!');
 }
-
+async function doUnpublish(id) {
+  if (!confirm('Sembunyikan artikel ini dari website publik?\n(Artikel akan kembali berstatus Draft, tidak dihapus.)')) return;
+  try {
+    const res  = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'unpublishArtikel', id })
+    });
+    const data = await res.json();
+    if (!data.ok) { showToast(data.error || 'Gagal unpublish.', true); return; }
+  } catch {
+    /* demo mode: lanjut */
+  }
+  const a = artikelData.find(x => x.id === id);
+  if (a) a.status = 'Draft';
+  closeModalDirect();
+  filterArtikel(artikelFilter);
+  // Update badge draft
+  const draftCount = artikelData.filter(a => a.status === 'Draft').length;
+  const badge = document.getElementById('badge-draft');
+  badge.textContent = draftCount;
+  badge.style.display = draftCount > 0 ? 'inline-flex' : 'none';
+  showToast('⛔ Artikel disembunyikan dari website (kembali ke Draft).');
+}
 </script>
 <!-- ═══ MODAL GENERATE DOKUMEN ═══ -->
 <div class="modal-gen-ov" id="modal-generate">
