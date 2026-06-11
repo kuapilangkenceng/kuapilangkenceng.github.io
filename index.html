@@ -806,7 +806,7 @@
   <div class="container">
     <div class="section-hd">
       <p class="section-title">Informasi & Artikel</p>
-      <a href="#" class="lihat-semua" id="lihatSemuaArtikel">Lihat Semua →</a>
+      <a href="artikel.html" class="lihat-semua" id="lihatSemuaArtikel">Lihat Semua →</a>
     </div>
     <div class="artikel-grid reveal" id="artikelContainer">
       <!-- Artikel default (sebelum data dari API dimuat) -->
@@ -1211,6 +1211,24 @@
   }
 
   /* ── LOAD ARTIKEL DARI SHEETS ── */
+  /* ── EMOJI KATEGORI (sinkron dengan artikel.html) ── */
+  function getEmoji(kat) {
+    const map = {
+      Pernikahan:'💒', Nikah:'💒', Wakaf:'🕌', Keluarga:'👨‍👩‍👧',
+      Ecotheology:'🌿', Penyuluhan:'🎤', Kiblat:'🌙', Halal:'🥩',
+      Konseling:'🤝', Rekomendasi:'📜', Pengumuman:'📢', Informasi:'📋'
+    };
+    return map[kat] || '📋';
+  }
+  /* ── FORMAT TANGGAL (sinkron dengan artikel.html) ── */
+  function formatTgl(str) {
+    if (!str) return '';
+    const d = new Date(str);
+    if (isNaN(d)) return str;
+    return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+  }
+ 
+  /* ── LOAD ARTIKEL DARI SHEETS ── */
   function loadArtikel() {
     fetch(API_URL + '?action=getartikel&status=Published&limit=3')
       .then(r => r.json())
@@ -1218,16 +1236,21 @@
         if ((d.ok || d.status === 'ok') && (d.results || d.data) && (d.results || d.data).length > 0) {
           const container = document.getElementById('artikelContainer');
           const artikelData = d.results || d.data;
-          container.innerHTML = artikelData.map(a => `
-            <div class="acard">
-              <div class="acard-thumb">${getEmoji(a.kategori)}</div>
+          container.innerHTML = artikelData.map(a => {
+            const thumb = a.foto_url
+              ? `<img src="${a.foto_url}" alt="${a.judul}" style="width:100%;height:100%;object-fit:cover">`
+              : getEmoji(a.kategori);
+            return `
+            <div class="acard" onclick="location.href='artikel.html?id=${encodeURIComponent(a.id)}'" style="cursor:pointer">
+              <div class="acard-thumb">${thumb}</div>
               <div class="acard-body">
                 <p class="acard-cat">${a.kategori || 'Informasi'}</p>
                 <h3>${a.judul || ''}</h3>
-                <p>${(a.ringkasan || a.konten || '').substring(0, 100)}...</p>
+                <p>${(a.isi || '').substring(0, 100)}...</p>
                 <div class="acard-meta"><span>📅 ${formatTgl(a.tanggal)}</span></div>
               </div>
-            </div>`).join('');
+            </div>`;
+          }).join('');
         }
       })
       .catch(() => { /* tampilkan artikel default */ });
