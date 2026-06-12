@@ -1773,8 +1773,11 @@ function bukaAksesMenu(username) {
   if (!u) return;
   const allowed = (u.menu_akses || '').split(',').map(s => s.trim()).filter(Boolean);
   const semua = allowed.length === 0;
-  document.getElementById('modal-title').textContent = 'Akses Menu — ' + username;
-  document.getElementById('modal-subtitle').textContent = u.nama || '';
+  const allowedLayanan = (u.layanan_akses || '').split(',').map(s => s.trim()).filter(Boolean);
+  const semuaLayanan = allowedLayanan.length === 0;
+  const isAdminUser = u.role === 'admin';
+  document.getElementById('modal-title').textContent = 'Edit User — ' + username;
+  document.getElementById('modal-subtitle').textContent = (u.nama || '') + ' (' + u.role + ')';
   document.getElementById('modal-body').innerHTML = `
     <div style="padding:4px 0">
       <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:6px">
@@ -1786,6 +1789,13 @@ function bukaAksesMenu(username) {
             <input type="checkbox" class="akses-menu-item" value="${m.id}" ${allowed.includes(m.id) ? 'checked' : ''}> ${m.label}
           </label>`).join('')}
       </div>
+      ${!isAdminUser ? `
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:6px;font-size:13px">
+          <input type="checkbox" id="akses-layanan-semua" ${semuaLayanan ? 'checked' : ''} onchange="toggleAksesLayananSemua(this.checked)"> Akses Semua Layanan (default)
+        </label>
+        <div id="akses-layanan-list" style="display:${semuaLayanan ? 'none' : 'flex'};flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;padding-right:4px"></div>
+      </div>` : ''}
       <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
         <label style="font-weight:700;font-size:12.5px;display:block;margin-bottom:6px">Ubah Password (opsional)</label>
         <input type="password" id="edit-user-password" placeholder="Kosongkan jika tidak diubah (min. 6 karakter)"
@@ -1793,7 +1803,12 @@ function bukaAksesMenu(username) {
       </div>
       <button class="btn-simpan-status" style="width:100%;margin-top:16px" onclick="simpanAksesMenu('${username}')">💾 Simpan Perubahan</button>
     </div>`;
+  if (!isAdminUser) renderLayananAksesList('akses-layanan-list', allowedLayanan);
   document.getElementById('modal-overlay').classList.add('show');
+}
+
+function toggleAksesLayananSemua(checked) {
+  document.getElementById('akses-layanan-list').style.display = checked ? 'none' : 'flex';
 }
 
 function toggleAksesSemua(checked) {
@@ -1806,6 +1821,14 @@ async function simpanAksesMenu(username) {
   if (!semua) {
     menuAkses = Array.from(document.querySelectorAll('.akses-menu-item:checked')).map(el => el.value).join(',');
   }
+
+  const akselLayananEl = document.getElementById('akses-layanan-semua');
+  let layananAkses = null; // null = tidak diubah (user admin, section tidak dirender)
+  if (akselLayananEl) {
+    const semuaLayanan = akselLayananEl.checked;
+    layananAkses = semuaLayanan ? '' : Array.from(document.querySelectorAll('.layanan-item-akses-layanan-list:checked')).map(el => el.value).join(',');
+  }
+
   const newPass = (document.getElementById('edit-user-password').value || '').trim();
   if (newPass && newPass.length < 6) {
     showToast('Password baru minimal 6 karakter.', true);
@@ -1822,6 +1845,18 @@ async function simpanAksesMenu(username) {
       showToast(data.error || 'Gagal menyimpan akses menu.', true);
       return;
     }
+    if (layananAkses !== null) {
+      const resL = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'updateLayananAkses', username, layanan_akses: layananAkses, pelaku: session.username })
+      });
+      const dataL = await resL.json();
+      if (!dataL.ok) {
+        showToast(dataL.error || 'Akses menu tersimpan, tapi gagal simpan akses layanan.', true);
+        return;
+      }
+    }
     if (newPass) {
       const res2 = await fetch(API_URL, {
         method: 'POST',
@@ -1830,12 +1865,15 @@ async function simpanAksesMenu(username) {
       });
       const data2 = await res2.json();
       if (!data2.ok) {
-        showToast(data2.error || 'Akses menu tersimpan, tapi gagal ubah password.', true);
+        showToast(data2.error || 'Akses tersimpan, tapi gagal ubah password.', true);
         return;
       }
     }
     const u = usersData.find(x => x.username === username);
-    if (u) u.menu_akses = menuAkses;
+    if (u) {
+      u.menu_akses = menuAkses;
+      if (layananAkses !== null) u.layanan_akses = layananAkses;
+    }
     closeModalDirect();
     showToast('✅ Perubahan untuk "' + username + '" disimpan.');
     if (session && session.username === username) {
