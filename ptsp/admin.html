@@ -1479,6 +1479,90 @@ function filterStatus(status) {
 /* ══════════════════════════════════════════════
    DETAIL MODAL
 ══════════════════════════════════════════════ */
+// Urutan field "Rekomendasi Nikah": Calon Suami, Calon Istri, Wali Nikah,
+// Tujuan Rekomendasi, Data Dokumen
+function buildDataRowsNikahRekomendasi(data) {
+  const alamatFields = (prefix, label) => [
+    [prefix, label],
+    [prefix + '_jalan', 'Jalan / Dusun'],
+    [prefix + '_rtrw', 'RT / RW'],
+    [prefix + '_desa_manual', 'Desa / Kelurahan'],
+    [prefix + '_kecamatan', 'Kecamatan'],
+    [prefix + '_kabupaten', 'Kabupaten / Kota'],
+    [prefix + '_provinsi', 'Provinsi']
+  ];
+
+  const sections = [
+    { title: 'CALON SUAMI', fields: [
+      ['nama_pa', 'Nama Lengkap Calon Pengantin Pria'],
+      ['bin_pa', 'Bin (Nama Ayah)'],
+      ['tempat_lahir_pa', 'Tempat Lahir'],
+      ['tgl_lahir_pa', 'Tanggal Lahir'],
+      ['nik_pa', 'NIK'],
+      ['pekerjaan_pa', 'Pekerjaan'],
+      ['status_pa', 'Status'],
+      ...alamatFields('desa_pa', 'Desa Asal Calon Pengantin Pria')
+    ]},
+    { title: 'CALON ISTRI', fields: [
+      ['nama_pi', 'Nama Lengkap Calon Pengantin Wanita'],
+      ['binti_pi', 'Binti (Nama Ayah)'],
+      ['tempat_lahir_pi', 'Tempat Lahir'],
+      ['tgl_lahir_pi', 'Tanggal Lahir'],
+      ['nik_pi', 'NIK'],
+      ['pekerjaan_pi', 'Pekerjaan'],
+      ['status_pi', 'Status'],
+      ...alamatFields('desa_pi', 'Desa Asal Calon Pengantin Wanita')
+    ]},
+    { title: 'WALI NIKAH', fields: [
+      ['jenis_wali', 'Jenis Wali'],
+      ['urutan_wali_nasab', 'Urutan Wali Nasab'],
+      ['sebab_wali_hakim', 'Sebab Wali Hakim'],
+      ['alasan_taukil', 'Alasan Taukil'],
+      ['nama_wali', 'Nama Wali Nikah'],
+      ['nik_wali', 'NIK Wali Nikah'],
+      ['alamat_wali', 'Alamat Wali Nikah']
+    ]},
+    { title: 'TUJUAN REKOMENDASI', fields: [
+      ['kua_tujuan', 'KUA Tujuan (tempat akad nikah)'],
+      ['tgl_akad', 'Rencana Tanggal Akad'],
+      ['nomor_surat_pengantar_desa', 'Nomor Surat Pengantar Desa'],
+      ['surat_keluar', 'Nomor Surat Keluar (referensi Admin)']
+    ]},
+    { title: 'DATA DOKUMEN', fields: [
+      ['petugas_penerima', 'Petugas Penerima'],
+      ['nama_pemohon', 'Nama Pemohon / Penanggung Jawab'],
+      ['kontak', 'No. HP / WhatsApp']
+    ]}
+  ];
+
+  const used = new Set();
+  let html = '';
+
+  sections.forEach(sec => {
+    let rows = '';
+    sec.fields.forEach(([key, label]) => {
+      used.add(key);
+      const val = data[key];
+      if (val === undefined || val === null || val === '') return;
+      rows += `<tr><td>${label}</td><td>${val}</td></tr>`;
+    });
+    if (rows) {
+      html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">${sec.title}</td></tr>${rows}`;
+    }
+  });
+
+  let sisaRows = '';
+  Object.entries(data).forEach(([k, v]) => {
+    if (k.startsWith('_') || used.has(k)) return;
+    if (v === undefined || v === null || v === '') return;
+    sisaRows += `<tr><td>${k.replace(/_/g,' ')}</td><td>${v}</td></tr>`;
+  });
+  if (sisaRows) {
+    html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">LAINNYA</td></tr>${sisaRows}`;
+  }
+
+  return html;
+}
 // Urutan field "Pendaftaran Nikah" sesuai 6 tahap SIMKAH4:
 // Jadwal, Lokasi Akad, Calon Suami, Calon Istri, Wali Nikah, Data Dokumen
 function buildDataRowsNikahPendaftaran(data) {
@@ -1573,6 +1657,8 @@ function openDetail(id) {
   // Data umum
   const dataRows = (rec.jenis_layanan === 'nikah_pendaftaran')
     ? buildDataRowsNikahPendaftaran(rec.data || {})
+    : (rec.jenis_layanan === 'nikah_rekomendasi')
+    ? buildDataRowsNikahRekomendasi(rec.data || {})
     : Object.entries(rec.data || {})
     .filter(([k]) => !k.startsWith('_'))
     .map(([k, v]) => `<tr><td>${k.replace(/_/g,' ')}</td><td>${v || '—'}</td></tr>`)
