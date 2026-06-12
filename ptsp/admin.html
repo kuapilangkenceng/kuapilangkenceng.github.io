@@ -1354,7 +1354,7 @@ function renderTable() {
     tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="icon">📭</span>Tidak ada data ditemukan.</div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(r => `
-      <tr>
+      <tr onclick="openDetail('${r.id}')">
         <td class="id-col">${r.id}</td>
         <td class="nama-col">${r.nama_pemohon || '—'}</td>
         <td>${r.jenis_label || '—'}</td>
@@ -1399,7 +1399,7 @@ function renderRecent() {
     return;
   }
   tbody.innerHTML = slice.map(r => `
-    <tr onclick="openDetail('${r.id}')">
+    <tr>
       <td class="id-col">${r.id}</td>
       <td class="nama-col">${r.nama_pemohon || '—'}</td>
       <td>${r.jenis_label || '—'}</td>
