@@ -1124,12 +1124,36 @@ function showErr(msg) {
   el.textContent = msg; el.style.display = 'block';
 }
 
+const MENU_LIST = [
+  { id: 'nav-dashboard',   label: 'Dashboard' },
+  { id: 'nav-layanan',     label: 'Data Layanan' },
+  { id: 'nav-artikel',     label: 'Artikel' },
+  { id: 'nav-bukutamu',    label: 'Buku Tamu' },
+  { id: 'nav-pelaksanaan', label: 'Pelaksanaan Nikah' },
+  { id: 'nav-generate',    label: 'Generate Dokumen' },
+  { id: 'nav-users',       label: 'Manajemen User' }
+];
+
+function applyMenuAkses(menuAkses) {
+  const allowed = (menuAkses || '').split(',').map(s => s.trim()).filter(Boolean);
+  MENU_LIST.forEach(m => {
+    const el = document.getElementById(m.id);
+    if (!el) return;
+    if (!allowed.length || allowed.includes(m.id)) {
+      el.style.display = '';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
 function startSession(user) {
   session = user;
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'flex';
   document.getElementById('s-nama').textContent = user.nama;
   document.getElementById('s-role').textContent = user.role.toUpperCase();
+  applyMenuAkses(user.menu_akses);
   document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   document.getElementById('stat-hari-ini-tgl').textContent = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
   // Tampilkan burger menu jika mobile
@@ -1685,9 +1709,71 @@ function renderUsers() {
                    border:1.5px solid ${u.aktif ? 'var(--red)' : 'var(--green)'}">
             ${u.aktif ? 'Nonaktifkan' : 'Aktifkan'}
           </button>
+          <button onclick="bukaAksesMenu('${u.username}')"
+            style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
+                   background:var(--green-light);color:var(--green);border:1.5px solid var(--green);margin-left:4px">
+            Akses Menu
+          </button>
         </td>
       </tr>`).join('') +
   '</tbody></table>';
+}
+
+function bukaAksesMenu(username) {
+  const u = usersData.find(x => x.username === username);
+  if (!u) return;
+  const allowed = (u.menu_akses || '').split(',').map(s => s.trim()).filter(Boolean);
+  const semua = allowed.length === 0;
+  document.getElementById('modal-title').textContent = 'Akses Menu — ' + username;
+  document.getElementById('modal-subtitle').textContent = u.nama || '';
+  document.getElementById('modal-body').innerHTML = `
+    <div style="padding:4px 0">
+      <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:6px">
+        <input type="checkbox" id="akses-semua" ${semua ? 'checked' : ''} onchange="toggleAksesSemua(this.checked)"> Akses Semua Menu (default)
+      </label>
+      <div id="akses-menu-list" style="display:${semua ? 'none' : 'flex'};flex-direction:column;gap:6px">
+        ${MENU_LIST.map(m => `
+          <label style="display:flex;align-items:center;gap:8px">
+            <input type="checkbox" class="akses-menu-item" value="${m.id}" ${allowed.includes(m.id) ? 'checked' : ''}> ${m.label}
+          </label>`).join('')}
+      </div>
+      <button class="btn-simpan-status" style="width:100%;margin-top:16px" onclick="simpanAksesMenu('${username}')">💾 Simpan Akses Menu</button>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function toggleAksesSemua(checked) {
+  document.getElementById('akses-menu-list').style.display = checked ? 'none' : 'flex';
+}
+
+async function simpanAksesMenu(username) {
+  const semua = document.getElementById('akses-semua').checked;
+  let menuAkses = '';
+  if (!semua) {
+    menuAkses = Array.from(document.querySelectorAll('.akses-menu-item:checked')).map(el => el.value).join(',');
+  }
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'updateMenuAkses', username, menu_akses: menuAkses })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      const u = usersData.find(x => x.username === username);
+      if (u) u.menu_akses = menuAkses;
+      closeModalDirect();
+      showToast('✅ Akses menu untuk "' + username + '" disimpan.');
+      if (session && session.username === username) {
+        session.menu_akses = menuAkses;
+        applyMenuAkses(menuAkses);
+      }
+    } else {
+      showToast(data.error || 'Gagal menyimpan akses menu.', true);
+    }
+  } catch (e) {
+    showToast('Error: ' + e.message, true);
+  }
 }
 
 function highlightRole() {
