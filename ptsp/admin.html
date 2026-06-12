@@ -832,13 +832,25 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
               <label class="lbl">Role <span style="color:var(--red)">*</span></label>
               <div style="display:flex;gap:8px;margin-top:4px">
                 <label style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:8px" id="role-opt-admin">
-                  <input type="radio" name="u-role" value="admin" onchange="highlightRole()"/>
+                  <input type="radio" name="u-role-tipe" value="admin" onchange="highlightRole()"/>
                   <div><div style="font-size:13px;font-weight:700">&#127963; Admin</div><div style="font-size:11px;color:var(--ink-muted)">Akses penuh dashboard</div></div>
                 </label>
                 <label style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;align-items:center;gap:8px" id="role-opt-petugas">
-                  <input type="radio" name="u-role" value="petugas" onchange="highlightRole()" checked/>
-                  <div><div style="font-size:13px;font-weight:700">&#129489; Petugas</div><div style="font-size:11px;color:var(--ink-muted)">Input form PTSP</div></div>
+                  <input type="radio" name="u-role-tipe" value="custom" onchange="highlightRole()" checked/>
+                  <div><div style="font-size:13px;font-weight:700">&#129489; Custom</div><div style="font-size:11px;color:var(--ink-muted)">Role &amp; akses layanan custom</div></div>
                 </label>
+              </div>
+              <div id="u-role-custom-wrap" style="margin-top:10px">
+                <label class="lbl">Nama Role (custom)</label>
+                <input class="inp" id="u-role-nama" type="text" placeholder="contoh: penerima, surveyor, operator" style="margin-bottom:0" value="petugas"/>
+                <p style="font-size:11px;color:var(--ink-muted);margin-top:4px">Huruf kecil, angka, underscore. Contoh: "penerima" untuk Petugas Penerima.</p>
+              </div>
+              <div id="u-layanan-akses-wrap" style="margin-top:14px">
+                <label class="lbl">Akses Data Layanan</label>
+                <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:6px;font-size:13px">
+                  <input type="checkbox" id="u-layanan-semua" checked onchange="toggleLayananSemuaUser(this.checked)"> Akses Semua Layanan (default)
+                </label>
+                <div id="u-layanan-list" style="display:none;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;padding-right:4px"></div>
               </div>
             </div>
             <button class="btn-simpan-status" style="width:100%;padding:12px;font-size:14px" onclick="tambahUser()" id="btn-tambah-user">
@@ -1887,11 +1899,14 @@ function renderLogAktivitas(logs) {
 }
 
 function highlightRole() {
-  const val = document.querySelector('[name="u-role"]:checked')?.value;
-  document.getElementById('role-opt-admin').style.borderColor   = val === 'admin'   ? 'var(--green)' : 'var(--border)';
-  document.getElementById('role-opt-petugas').style.borderColor = val === 'petugas' ? 'var(--green)' : 'var(--border)';
-  document.getElementById('role-opt-admin').style.background    = val === 'admin'   ? 'var(--green-light)' : '';
-  document.getElementById('role-opt-petugas').style.background  = val === 'petugas' ? 'var(--green-light)' : '';
+  const val = document.querySelector('[name="u-role-tipe"]:checked')?.value;
+  document.getElementById('role-opt-admin').style.borderColor   = val === 'admin'  ? 'var(--green)' : 'var(--border)';
+  document.getElementById('role-opt-petugas').style.borderColor = val === 'custom' ? 'var(--green)' : 'var(--border)';
+  document.getElementById('role-opt-admin').style.background    = val === 'admin'  ? 'var(--green-light)' : '';
+  document.getElementById('role-opt-petugas').style.background  = val === 'custom' ? 'var(--green-light)' : '';
+  const isAdmin = val === 'admin';
+  document.getElementById('u-role-custom-wrap').style.display = isAdmin ? 'none' : 'block';
+  document.getElementById('u-layanan-akses-wrap').style.display = isAdmin ? 'none' : 'block';
 }
 
 function togglePassVis(id, btn) {
@@ -1899,6 +1914,61 @@ function togglePassVis(id, btn) {
   const show = inp.type === 'password';
   inp.type = show ? 'text' : 'password';
   btn.textContent = show ? '🙈' : '👁';
+}
+
+const LAYANAN_LIST = [
+  { kategori: 'Nikah', items: [
+    { id: 'nikah_pendaftaran',       label: 'Pendaftaran Nikah' },
+    { id: 'nikah_bimwin',            label: 'Bimbingan Calon Pengantin' },
+    { id: 'nikah_ecoteology',        label: 'Ecotheology Nikah' },
+    { id: 'nikah_duplikat',          label: 'Duplikat Buku Nikah' },
+    { id: 'nikah_sk_belum',          label: 'SK Belum Pernah Menikah' },
+    { id: 'nikah_sk_pernah',         label: 'SK Pernah Menikah' },
+    { id: 'nikah_itsbat',            label: 'Itsbat Nikah' },
+    { id: 'nikah_rekomendasi',       label: 'Rekomendasi Nikah' },
+    { id: 'nikah_taukil',            label: 'Taukil Wali' },
+    { id: 'nikah_saksi_ahli',        label: 'Saksi Ahli' },
+    { id: 'nikah_konsultasi_wali',   label: 'Konsultasi Wali Nikah' },
+    { id: 'nikah_legalisir',         label: 'Permohonan Legalisir' }
+  ]},
+  { kategori: 'Wakaf', items: [
+    { id: 'wakaf_ikrar',             label: 'Ikrar Wakaf' },
+    { id: 'wakaf_ganti_nadzir',      label: 'Penggantian Nazhir' }
+  ]},
+  { kategori: 'Kiblat', items: [
+    { id: 'kiblat_pengukuran_ba',          label: 'Berita Acara Pengukuran Kiblat' },
+    { id: 'kiblat_pengukuran_sertifikat',  label: 'Sertifikat Arah Kiblat' }
+  ]},
+  { kategori: 'SKT', items: [
+    { id: 'skt_masjid',              label: 'SKT Masjid / Musholla' }
+  ]},
+  { kategori: 'Konseling & Rekomendasi', items: [
+    { id: 'konseling_pembinaan_majelis',   label: 'Pembinaan Majelis Taklim' },
+    { id: 'konseling_bimwin_remaja',       label: 'Bimbingan Remaja Nikah' },
+    { id: 'konseling_bimwin_sekolah',      label: 'Bimbingan Remaja Sekolah' },
+    { id: 'konseling_keluarga_sakinah',    label: 'Konseling Keluarga Sakinah' },
+    { id: 'rekomendasi_bantuan_masjid',    label: 'Rekomendasi Bantuan Masjid' },
+    { id: 'rekomendasi_majelis_taklim',    label: 'Rekomendasi Majelis Taklim' },
+    { id: 'rekomendasi_tpq_madin',         label: 'Rekomendasi TPQ / Madin' },
+    { id: 'rekomendasi_skt_majelis',       label: 'Rekomendasi SKT Majelis Taklim' },
+    { id: 'rekomendasi_skt_masjid',        label: 'Rekomendasi SKT Masjid' }
+  ]}
+];
+
+function renderLayananAksesList(containerId, selected) {
+  const sel = (selected || []);
+  document.getElementById(containerId).innerHTML = LAYANAN_LIST.map(g => `
+    <div style="margin-bottom:4px">
+      <div style="font-size:11px;font-weight:700;color:var(--ink-muted);margin:6px 0 2px">${g.kategori}</div>
+      ${g.items.map(it => `
+        <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;padding:2px 0">
+          <input type="checkbox" class="layanan-item-${containerId}" value="${it.id}" ${sel.includes(it.id) ? 'checked' : ''}> ${it.label}
+        </label>`).join('')}
+    </div>`).join('');
+}
+
+function toggleLayananSemuaUser(checked) {
+  document.getElementById('u-layanan-list').style.display = checked ? 'none' : 'flex';
 }
 
 async function tambahUser() {
@@ -1910,7 +1980,8 @@ async function tambahUser() {
   const nama     = document.getElementById('u-nama').value.trim();
   const password = document.getElementById('u-password').value;
   const confirm  = document.getElementById('u-confirm').value;
-  const role     = document.querySelector('[name="u-role"]:checked')?.value || 'petugas';
+  const tipe     = document.querySelector('[name="u-role-tipe"]:checked')?.value || 'custom';
+  const role     = tipe === 'admin' ? 'admin' : (document.getElementById('u-role-nama').value.trim().toLowerCase() || 'petugas');
 
   // Validasi
   if (!username || !nama || !password) {
@@ -1922,6 +1993,9 @@ async function tambahUser() {
   if (!/^[a-z0-9_]+$/.test(username)) {
     errEl.textContent = 'Username hanya boleh huruf kecil, angka, dan underscore.'; errEl.style.display = 'block'; return;
   }
+  if (tipe !== 'admin' && !/^[a-z0-9_]+$/.test(role)) {
+    errEl.textContent = 'Nama role hanya boleh huruf kecil, angka, dan underscore.'; errEl.style.display = 'block'; return;
+  }
   if (password.length < 6) {
     errEl.textContent = 'Password minimal 6 karakter.'; errEl.style.display = 'block'; return;
   }
@@ -1931,6 +2005,15 @@ async function tambahUser() {
   // Cek duplikat lokal
   if (usersData.some(u => u.username === username)) {
     errEl.textContent = 'Username sudah digunakan.'; errEl.style.display = 'block'; return;
+  }
+
+  // Akses layanan (hanya relevan jika bukan admin)
+  let layananAkses = '';
+  if (tipe !== 'admin') {
+    const semua = document.getElementById('u-layanan-semua').checked;
+    if (!semua) {
+      layananAkses = Array.from(document.querySelectorAll('.layanan-item-u-layanan-list:checked')).map(el => el.value).join(',');
+    }
   }
 
   const btn = document.getElementById('btn-tambah-user');
@@ -1944,27 +2027,38 @@ async function tambahUser() {
     });
     const data = await res.json();
     if (data.ok) {
-      showUserSuccess(username, nama, role);
+      if (tipe !== 'admin' && layananAkses) {
+        await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'updateLayananAkses', username, layanan_akses: layananAkses, pelaku: session.username })
+        });
+      }
+      showUserSuccess(username, nama, role, false, layananAkses);
     } else {
       errEl.textContent = data.error || 'Gagal menambah user.'; errEl.style.display = 'block';
     }
   } catch {
     // Demo mode
-    showUserSuccess(username, nama, role, true);
+    showUserSuccess(username, nama, role, true, layananAkses);
   }
   btn.disabled = false; btn.textContent = '➕ Tambah User';
 }
 
-function showUserSuccess(username, nama, role, isDemo) {
+function showUserSuccess(username, nama, role, isDemo, layananAkses) {
   const okEl = document.getElementById('form-user-ok');
   okEl.textContent = (isDemo ? '✅ (Demo) ' : '✅ ') + 'User berhasil ditambahkan: ' + nama + ' (' + role + ')';
   okEl.style.display = 'block';
   // Reset form
   ['u-username','u-nama','u-password','u-confirm'].forEach(id => document.getElementById(id).value = '');
-  document.querySelector('[name="u-role"][value="petugas"]').checked = true;
+  document.querySelector('[name="u-role-tipe"][value="custom"]').checked = true;
+  document.getElementById('u-role-nama').value = 'petugas';
+  document.getElementById('u-layanan-semua').checked = true;
+  toggleLayananSemuaUser(true);
+  document.querySelectorAll('.layanan-item-u-layanan-list').forEach(el => el.checked = false);
   highlightRole();
   // Tambah ke list lokal & render
-  usersData.push({ username, nama, role, aktif: true });
+  usersData.push({ username, nama, role, aktif: true, menu_akses: '', layanan_akses: layananAkses || '' });
   renderUsers();
   showToast('✅ User ' + username + ' berhasil ditambahkan!');
 }
@@ -1988,7 +2082,10 @@ async function toggleUserStatus(username, currentStatus) {
 }
 
 // Init highlight role on load
-document.addEventListener('DOMContentLoaded', () => highlightRole());
+document.addEventListener('DOMContentLoaded', () => {
+  highlightRole();
+  renderLayananAksesList('u-layanan-list', []);
+});
 
 
 /* ══════════════════════════════════════════════
