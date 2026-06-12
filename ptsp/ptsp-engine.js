@@ -173,7 +173,7 @@ function renderField(parent, field) {
     const opts = (f.options||[]).map(function(o){ return '<label class="check-opt" onclick="toggleCheck(this)"><input type="checkbox" name="'+fname+'" value="'+o+'"/> '+o+'</label>'; }).join('');
     inp = '<div class="check-group" id="field_'+fname+'">'+opts+'</div>';
   } else if (f.type==='photo') {
-    inp = '<div class="photo-upload-area" id="photo_area_'+fname+'" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="handleDrop(event,\''+fname+'\')"><input type="file" class="photo-input" id="field_'+fname+'" accept="image/*" '+(f.multiple?'multiple':'')+' onchange="handlePhotoInput(event,\''+fname+'\')"/><span class="photo-upload-icon">\uD83D\uDCF7</span><div class="photo-upload-label">Klik atau seret foto ke sini</div><div class="photo-upload-sub">JPG, PNG \u00B7 Maks 5MB per foto</div></div><div class="photo-previews" id="previews_'+fname+'"></div>';
+    inp = '<div class="photo-upload-area" id="photo_area_'+fname+'" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="handleDrop(event,\''+fname+'\')"><input type="file" class="photo-input" id="field_'+fname+'" accept="image/*" capture="environment" '+(f.multiple?'multiple':'')+' onchange="handlePhotoInput(event,\''+fname+'\')"/><span class="photo-upload-icon">\uD83D\uDCF7</span><div class="photo-upload-label">Klik atau seret foto ke sini</div><div class="photo-upload-sub">JPG, PNG \u00B7 Maks 5MB per foto</div></div><div class="photo-previews" id="previews_'+fname+'"></div>';
   } else if (f.type==='surat_kua') {
     const now = new Date();
     const bulan = String(now.getMonth()+1).padStart(2,'0');
@@ -342,6 +342,10 @@ function renderRekap() {
 async function submitComplete() {
   if (!currentTahap2Field || !currentLayananId) return;
   const fname = currentTahap2Field.name || currentTahap2Field.id;
+  if (currentTahap2Field.required !== false && !photoFiles.some(function(p){return p.name===fname;})) {
+    showToast('Foto wajib diunggah sebelum mengirim.', true);
+    return;
+  }
   const payload = {
     action: 'submitComplete',
     id: currentLayananId,
