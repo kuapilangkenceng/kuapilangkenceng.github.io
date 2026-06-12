@@ -179,6 +179,11 @@
     .modal-close:hover{background:var(--hijau-terang)}
     .modal-thumb{width:100%;height:220px;background:var(--hijau-terang);display:flex;align-items:center;justify-content:center;font-size:60px;overflow:hidden}
     .modal-thumb img{width:100%;height:100%;object-fit:cover}
+    .modal-galeri{display:none;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;padding:14px 20px 0}
+    .modal-galeri.show{display:grid}
+    .modal-galeri-item{display:flex;flex-direction:column;gap:4px}
+    .modal-galeri-item img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;cursor:pointer}
+    .modal-galeri-label{font-size:10px;color:var(--teks-ringan);text-align:center;line-height:1.2}
     .modal-content{padding:1.5rem}
     .modal-content p{font-size:13.5px;line-height:1.8;color:var(--teks);margin-bottom:1rem}
     .modal-content p:last-child{margin-bottom:0}
@@ -424,6 +429,7 @@
       <button class="modal-close" onclick="tutupModal()">✕</button>
     </div>
     <div class="modal-thumb" id="modalThumb">📋</div>
+    <div class="modal-galeri" id="modalGaleri"></div>
     <div class="modal-content" id="modalIsi"></div>
     <div class="modal-footer">
       <span class="modal-share">Bagikan artikel ini:</span>
@@ -671,6 +677,21 @@
     document.getElementById('modalThumb').innerHTML   = a.foto_url
       ? `<img src="${a.foto_url}" alt="${a.judul}">`
       : getEmoji(normKategori(a.kategori));
+
+    // Galeri foto (semua foto berlabel, jika ada lebih dari 1)
+    const galeriEl = document.getElementById('modalGaleri');
+    const galeri = (a.fotoGaleri || []).filter(f => f.url && f.url !== a.foto_url);
+    if (galeri.length) {
+      galeriEl.innerHTML = galeri.map(f => `
+        <div class="modal-galeri-item">
+          <img src="${f.url}" alt="${f.label}" onclick="window.open('${f.url}','_blank')">
+          <div class="modal-galeri-label">${f.label}</div>
+        </div>`).join('');
+      galeriEl.classList.add('show');
+    } else {
+      galeriEl.innerHTML = '';
+      galeriEl.classList.remove('show');
+    }
 
     // Konten isi — format paragraf
     const isi = (a.isi || a.ringkasan || '');
