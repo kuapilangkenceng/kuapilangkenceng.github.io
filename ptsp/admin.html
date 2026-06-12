@@ -627,6 +627,9 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
       <div class="nav-item" onclick="showPage('page-users')" id="nav-users">
         <span class="icon">👥</span> Manajemen User
       </div>
+      <div class="nav-item" onclick="showPage('page-log')" id="nav-log">
+        <span class="icon">📜</span> Log Aktivitas
+      </div>
       <div class="nav-section" style="margin-top:8px">Status</div>
       <div class="nav-item" onclick="filterStatus('Baru')" id="nav-baru">
         <span class="icon">🔵</span> Baru
@@ -856,6 +859,31 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 
         </div>
       </div><!-- /page-users -->
+
+      <div class="page" id="page-log">
+        <div class="card" style="margin-top:16px">
+          <div class="table-header">
+            <h3>📜 Log Aktivitas</h3>
+            <span class="table-count" id="log-count">—</span>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Waktu</th>
+                  <th>User</th>
+                  <th>Aksi</th>
+                  <th>Detail</th>
+                  <th>Target</th>
+                </tr>
+              </thead>
+              <tbody id="log-list-wrap">
+                <tr><td colspan="5" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div><!-- /page-log -->
 
 
 <div class="page" id="page-pelaksanaan">
@@ -1145,6 +1173,9 @@ function applyMenuAkses(menuAkses) {
       el.style.display = 'none';
     }
   });
+  // Log Aktivitas selalu admin-only, terlepas dari menu_akses
+  const navLog = document.getElementById('nav-log');
+  if (navLog) navLog.style.display = (session && session.role === 'admin') ? '' : 'none';
 }
 
 function startSession(user) {
@@ -1541,7 +1572,7 @@ async function simpanStatus(id) {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'updateStatus', id, status, catatan_admin: catatan })
+      body: JSON.stringify({ action: 'updateStatus', id, status, catatan_admin: catatan, pelaku: session.username })
     });
     const data = await res.json();
     if (data.ok) {
@@ -1576,7 +1607,7 @@ async function hapusLayanan(id) {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'deleteLayanan', id })
+      body: JSON.stringify({ action: 'deleteLayanan', id, pelaku: session.username })
     });
     const data = await res.json();
     if (data.ok) {
@@ -1619,13 +1650,14 @@ function closeLightbox() {
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  const titles = { 'page-dashboard': 'Dashboard', 'page-layanan': 'Data Layanan', 'page-users': 'Manajemen User', 'page-artikel': 'Artikel', 'page-generate': 'Generate Dokumen', 'page-pelaksanaan': 'Pelaksanaan Nikah', 'page-bukutamu': 'Buku Tamu' };
+  const titles = { 'page-dashboard': 'Dashboard', 'page-layanan': 'Data Layanan', 'page-users': 'Manajemen User', 'page-artikel': 'Artikel', 'page-generate': 'Generate Dokumen', 'page-pelaksanaan': 'Pelaksanaan Nikah', 'page-bukutamu': 'Buku Tamu', 'page-log': 'Log Aktivitas' };
   document.getElementById('page-title').textContent = titles[id] || '';
   // Nav active
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navMap = { 'page-dashboard': 'nav-dashboard', 'page-layanan': 'nav-layanan', 'page-users': 'nav-users', 'page-artikel': 'nav-artikel', 'page-generate': 'nav-generate', 'page-pelaksanaan': 'nav-pelaksanaan', 'page-bukutamu': 'nav-bukutamu' };
+  const navMap = { 'page-dashboard': 'nav-dashboard', 'page-layanan': 'nav-layanan', 'page-users': 'nav-users', 'page-artikel': 'nav-artikel', 'page-generate': 'nav-generate', 'page-pelaksanaan': 'nav-pelaksanaan', 'page-bukutamu': 'nav-bukutamu', 'page-log': 'nav-log' };
   if (navMap[id]) document.getElementById(navMap[id]).classList.add('active');
   if (id === 'page-users') loadUsers();
+  if (id === 'page-log') loadLogAktivitas();
   if (id === 'page-artikel') loadArtikel();
   if (id === 'page-generate') loadGenerate();
   if (id === 'page-bukutamu') loadBukuTamu();
@@ -1771,7 +1803,7 @@ async function simpanAksesMenu(username) {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'updateMenuAkses', username, menu_akses: menuAkses })
+      body: JSON.stringify({ action: 'updateMenuAkses', username, menu_akses: menuAkses, pelaku: session.username })
     });
     const data = await res.json();
     if (!data.ok) {
@@ -1782,7 +1814,7 @@ async function simpanAksesMenu(username) {
       const res2 = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'changePassword', username, password: newPass })
+        body: JSON.stringify({ action: 'changePassword', username, password: newPass, pelaku: session.username })
       });
       const data2 = await res2.json();
       if (!data2.ok) {
@@ -1809,7 +1841,7 @@ async function hapusUser(username) {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'deleteUser', username })
+      body: JSON.stringify({ action: 'deleteUser', username, pelaku: session.username })
     });
     const data = await res.json();
     if (data.ok) {
@@ -1822,6 +1854,36 @@ async function hapusUser(username) {
   } catch (e) {
     showToast('Error: ' + e.message, true);
   }
+}
+
+async function loadLogAktivitas() {
+  const wrap = document.getElementById('log-list-wrap');
+  wrap.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#999">Memuat data...</td></tr>';
+  try {
+    const res = await fetch(API_URL + '?action=getlogaktivitas&_=' + Date.now());
+    const data = await res.json();
+    if (!data.ok) { wrap.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#c00">Gagal: ' + (data.error||'') + '</td></tr>'; return; }
+    renderLogAktivitas(data.logs || []);
+  } catch (e) {
+    wrap.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#c00">Error: ' + e.message + '</td></tr>';
+  }
+}
+
+function renderLogAktivitas(logs) {
+  const wrap = document.getElementById('log-list-wrap');
+  document.getElementById('log-count').textContent = logs.length + ' record';
+  if (!logs.length) {
+    wrap.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#999">Belum ada log.</td></tr>';
+    return;
+  }
+  wrap.innerHTML = logs.map(l => `
+    <tr>
+      <td class="nowrap">${l.timestamp || '-'}</td>
+      <td style="font-weight:700;color:var(--green)">${l.username || '-'}</td>
+      <td>${l.aksi || '-'}</td>
+      <td>${l.detail || '-'}</td>
+      <td>${l.target_id || '-'}</td>
+    </tr>`).join('');
 }
 
 function highlightRole() {
@@ -1878,7 +1940,7 @@ async function tambahUser() {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'addUser', username, nama, password, role })
+      body: JSON.stringify({ action: 'addUser', username, nama, password, role, pelaku: session.username })
     });
     const data = await res.json();
     if (data.ok) {
@@ -1915,7 +1977,7 @@ async function toggleUserStatus(username, currentStatus) {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'toggleUser', username, aktif: newStatus })
+      body: JSON.stringify({ action: 'toggleUser', username, aktif: newStatus, pelaku: session.username })
     });
     const data = await res.json();
     if (!data.ok) { showToast(data.error || 'Gagal.', true); return; }
@@ -2247,7 +2309,7 @@ async function doSelesaikanLayanan() {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'updateStatus', id: _gId, status: 'Selesai', catatan_admin: 'Dokumen telah digenerate.' })
+      body: JSON.stringify({ action: 'updateStatus', id: _gId, status: 'Selesai', catatan_admin: 'Dokumen telah digenerate.', pelaku: session.username })
     });
     const data = await res.json();
     if (data.ok) {
