@@ -309,7 +309,7 @@ async function submitForm() {
   });
   const petugas=(document.getElementById('field_petugas_penerima')||document.getElementById('field_petugas_ptsp')||{value:''}).value.trim()||(session?session.nama:'');
   const isTwoStage = !!currentTahap2Field;
-  const payload={action:(isTwoStage?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,foto:photoFiles.map(function(p){return {mimeType:p.mimeType,base64:p.base64};})};
+  const payload={action:(isTwoStage?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
   if (isTwoStage) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
   try{
@@ -349,7 +349,7 @@ async function submitComplete() {
   const payload = {
     action: 'submitComplete',
     id: currentLayananId,
-    foto: photoFiles.filter(function(p){return p.name===fname;}).map(function(p){return {mimeType:p.mimeType,base64:p.base64};})
+    foto: photoFiles.filter(function(p){return p.name===fname;}).map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})
   };
   const btn=document.getElementById('btn-submit-complete'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
   try{
