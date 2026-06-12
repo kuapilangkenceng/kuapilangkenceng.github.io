@@ -1479,6 +1479,88 @@ function filterStatus(status) {
 /* ══════════════════════════════════════════════
    DETAIL MODAL
 ══════════════════════════════════════════════ */
+// Urutan field "Pendaftaran Nikah" sesuai 6 tahap SIMKAH4:
+// Jadwal, Lokasi Akad, Calon Suami, Calon Istri, Wali Nikah, Data Dokumen
+function buildDataRowsNikahPendaftaran(data) {
+  const sections = [
+    { title: 'JADWAL', fields: [
+      ['tgl_akad', 'Tanggal Rencana Akad Nikah'],
+      ['waktu_akad', 'Waktu Akad Nikah']
+    ]},
+    { title: 'LOKASI AKAD', fields: [
+      ['tempat_akad', 'Tempat Akad Nikah'],
+      ['desa_akad', 'Desa Tempat Akad Nikah'],
+      ['desa_akad_jalan', 'Jalan / Dusun'],
+      ['desa_akad_rtrw', 'RT / RW'],
+      ['desa_akad_desa_manual', 'Desa / Kelurahan'],
+      ['desa_akad_kecamatan', 'Kecamatan'],
+      ['desa_akad_kabupaten', 'Kabupaten / Kota'],
+      ['desa_akad_provinsi', 'Provinsi']
+    ]},
+    { title: 'CALON SUAMI', fields: [
+      ['nama_pa', 'Nama Lengkap Calon Pengantin Pria'],
+      ['bin_pa', 'Bin (Nama Ayah)'],
+      ['tempat_lahir_pa', 'Tempat Lahir'],
+      ['tgl_lahir_pa', 'Tanggal Lahir'],
+      ['nik_pa', 'NIK'],
+      ['pekerjaan_pa', 'Pekerjaan'],
+      ['status_pa', 'Status']
+    ]},
+    { title: 'CALON ISTRI', fields: [
+      ['nama_pi', 'Nama Lengkap Calon Pengantin Wanita'],
+      ['binti_pi', 'Binti (Nama Ayah)'],
+      ['tempat_lahir_pi', 'Tempat Lahir'],
+      ['tgl_lahir_pi', 'Tanggal Lahir'],
+      ['nik_pi', 'NIK'],
+      ['pekerjaan_pi', 'Pekerjaan'],
+      ['status_pi', 'Status']
+    ]},
+    { title: 'WALI NIKAH', fields: [
+      ['jenis_wali', 'Jenis Wali'],
+      ['urutan_wali_nasab', 'Urutan Wali Nasab'],
+      ['sebab_wali_hakim', 'Sebab Wali Hakim'],
+      ['alasan_taukil', 'Alasan Taukil'],
+      ['nama_wali', 'Nama Wali Nikah'],
+      ['nik_wali', 'NIK Wali Nikah'],
+      ['alamat_wali', 'Alamat Wali Nikah']
+    ]},
+    { title: 'DATA DOKUMEN', fields: [
+      ['petugas_penerima', 'Petugas Penerima'],
+      ['nama_pemohon', 'Nama Pemohon / Penanggung Jawab'],
+      ['kontak', 'No. HP / WhatsApp'],
+      ['surat_keluar', 'Nomor Surat Keluar (Bimwin)']
+    ]}
+  ];
+
+  const used = new Set();
+  let html = '';
+
+  sections.forEach(sec => {
+    let rows = '';
+    sec.fields.forEach(([key, label]) => {
+      used.add(key);
+      const val = data[key];
+      if (val === undefined || val === null || val === '') return;
+      rows += `<tr><td>${label}</td><td>${val}</td></tr>`;
+    });
+    if (rows) {
+      html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">${sec.title}</td></tr>${rows}`;
+    }
+  });
+
+  // Field tersisa (tidak masuk mapping di atas)
+  let sisaRows = '';
+  Object.entries(data).forEach(([k, v]) => {
+    if (k.startsWith('_') || used.has(k)) return;
+    if (v === undefined || v === null || v === '') return;
+    sisaRows += `<tr><td>${k.replace(/_/g,' ')}</td><td>${v}</td></tr>`;
+  });
+  if (sisaRows) {
+    html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">LAINNYA</td></tr>${sisaRows}`;
+  }
+
+  return html;
+}
 function openDetail(id) {
   const rec = allData.find(r => r.id === id);
   if (!rec) return;
@@ -1489,7 +1571,9 @@ function openDetail(id) {
   const body = document.getElementById('modal-body');
 
   // Data umum
-  const dataRows = Object.entries(rec.data || {})
+  const dataRows = (rec.jenis_layanan === 'nikah_pendaftaran')
+    ? buildDataRowsNikahPendaftaran(rec.data || {})
+    : Object.entries(rec.data || {})
     .filter(([k]) => !k.startsWith('_'))
     .map(([k, v]) => `<tr><td>${k.replace(/_/g,' ')}</td><td>${v || '—'}</td></tr>`)
     .join('');
