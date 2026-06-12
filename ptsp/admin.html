@@ -1712,8 +1712,13 @@ function renderUsers() {
           <button onclick="bukaAksesMenu('${u.username}')"
             style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
                    background:var(--green-light);color:var(--green);border:1.5px solid var(--green);margin-left:4px">
-            Akses Menu
+            Edit User
           </button>
+          ${u.username !== 'admin' ? `<button onclick="hapusUser('${u.username}')"
+            style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
+                   background:var(--red-light);color:var(--red);border:1.5px solid var(--red);margin-left:4px">
+            Hapus
+          </button>` : ''}
         </td>
       </tr>`).join('') +
   '</tbody></table>';
@@ -1737,7 +1742,12 @@ function bukaAksesMenu(username) {
             <input type="checkbox" class="akses-menu-item" value="${m.id}" ${allowed.includes(m.id) ? 'checked' : ''}> ${m.label}
           </label>`).join('')}
       </div>
-      <button class="btn-simpan-status" style="width:100%;margin-top:16px" onclick="simpanAksesMenu('${username}')">💾 Simpan Akses Menu</button>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+        <label style="font-weight:700;font-size:12.5px;display:block;margin-bottom:6px">Ubah Password (opsional)</label>
+        <input type="password" id="edit-user-password" placeholder="Kosongkan jika tidak diubah (min. 6 karakter)"
+               style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px">
+      </div>
+      <button class="btn-simpan-status" style="width:100%;margin-top:16px" onclick="simpanAksesMenu('${username}')">💾 Simpan Perubahan</button>
     </div>`;
   document.getElementById('modal-overlay').classList.add('show');
 }
@@ -1752,6 +1762,11 @@ async function simpanAksesMenu(username) {
   if (!semua) {
     menuAkses = Array.from(document.querySelectorAll('.akses-menu-item:checked')).map(el => el.value).join(',');
   }
+  const newPass = (document.getElementById('edit-user-password').value || '').trim();
+  if (newPass && newPass.length < 6) {
+    showToast('Password baru minimal 6 karakter.', true);
+    return;
+  }
   try {
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -1759,17 +1774,50 @@ async function simpanAksesMenu(username) {
       body: JSON.stringify({ action: 'updateMenuAkses', username, menu_akses: menuAkses })
     });
     const data = await res.json();
-    if (data.ok) {
-      const u = usersData.find(x => x.username === username);
-      if (u) u.menu_akses = menuAkses;
-      closeModalDirect();
-      showToast('✅ Akses menu untuk "' + username + '" disimpan.');
-      if (session && session.username === username) {
-        session.menu_akses = menuAkses;
-        applyMenuAkses(menuAkses);
-      }
-    } else {
+    if (!data.ok) {
       showToast(data.error || 'Gagal menyimpan akses menu.', true);
+      return;
+    }
+    if (newPass) {
+      const res2 = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'changePassword', username, password: newPass })
+      });
+      const data2 = await res2.json();
+      if (!data2.ok) {
+        showToast(data2.error || 'Akses menu tersimpan, tapi gagal ubah password.', true);
+        return;
+      }
+    }
+    const u = usersData.find(x => x.username === username);
+    if (u) u.menu_akses = menuAkses;
+    closeModalDirect();
+    showToast('✅ Perubahan untuk "' + username + '" disimpan.');
+    if (session && session.username === username) {
+      session.menu_akses = menuAkses;
+      applyMenuAkses(menuAkses);
+    }
+  } catch (e) {
+    showToast('Error: ' + e.message, true);
+  }
+}
+
+async function hapusUser(username) {
+  if (!confirm('Hapus user "' + username + '" secara permanen? Tindakan ini tidak dapat dibatalkan.')) return;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'deleteUser', username })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      usersData = usersData.filter(u => u.username !== username);
+      renderUsers();
+      showToast('✅ User "' + username + '" dihapus.');
+    } else {
+      showToast(data.error || 'Gagal menghapus user.', true);
     }
   } catch (e) {
     showToast('Error: ' + e.message, true);
