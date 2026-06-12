@@ -1241,12 +1241,20 @@ async function loadStats() {
   renderStats();
 }
 
+function filterByLayananAkses(data) {
+  if (!session || session.role === 'admin') return data;
+  const allowed = (session.layanan_akses || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (!allowed.length) return data; // kosong = akses semua
+  return data.filter(r => allowed.includes(r.jenis_layanan));
+}
+
 async function loadData() {
   showSkeleton();
   try {
     const res = await fetch(`${API_URL}?action=getdata&_=${Date.now()}`);
     const json = await res.json();
     allData = json.results || [];
+    allData = filterByLayananAkses(allData);
   } catch {
     // Demo data
     allData = [
