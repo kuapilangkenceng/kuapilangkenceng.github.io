@@ -127,7 +127,13 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 <script src="ptsp-engine.js"></script>
 <script>
 document.getElementById('kat-label-el').textContent = window.PTSP_KATEGORI_LABEL;
-engineInit();
+engineInit().then(function(){
+  if (!CONFIG || !CONFIG.forms) return;
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('jenis')) return; // sudah ditangani engineInit
+  const keys = Object.keys(CONFIG.forms).filter(function(k){ return CONFIG.forms[k].kategori === currentKatLabel; });
+  if (keys.length === 1) showForm(keys[0]);
+});
 </script>
 </body>
 </html>
