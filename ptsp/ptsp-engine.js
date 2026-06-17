@@ -272,7 +272,7 @@ function triggerAutofillBimwin() {
 function showAutofillBimwinDropdown(results,anchor) {
   let dd=document.getElementById('bimwin-af-dd');
   if(!dd){ dd=document.createElement('div'); dd.id='bimwin-af-dd'; dd.style.cssText='position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--green);border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12)'; anchor.parentElement.style.position='relative'; anchor.parentElement.appendChild(dd); }
-  dd.innerHTML=''; results.forEach(function(r){ const item=document.createElement('div'); item.style.cssText='padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #eee'; item.textContent=r.label; item.onmouseenter=function(){item.style.background='var(--green-light)';}; item.onmouseleave=function(){item.style.background='';}; item.onclick=function(){ applyAutofill(r.data,{nama_pa:'nama_pa',nama_pi:'nama_pi',kontak:'kontak',nama_pemohon:'nama_pemohon'},'nama_pa'); dd.remove(); showToast('Data catin terisi otomatis dari pendaftaran'); }; dd.appendChild(item); });
+  dd.innerHTML=''; results.forEach(function(r){ const item=document.createElement('div'); item.style.cssText='padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #eee'; item.textContent=r.label; item.onmouseenter=function(){item.style.background='var(--green-light)';}; item.onmouseleave=function(){item.style.background='';}; item.onclick=function(){ applyAutofill(r.data,{nama_pa:'nama_pa',nama_pi:'nama_pi',kontak:'kontak'},'nama_pa'); dd.remove(); showToast('Data catin terisi otomatis dari pendaftaran'); }; dd.appendChild(item); });
   dd.style.display=results.length?'block':'none';
 }
 
@@ -362,7 +362,7 @@ async function submitForm() {
         renderRekap();
         goPage('page-rekap');
       } else {
-        document.getElementById('success-id').textContent=result.id;goPage('page-success');
+        tampilkanSuksesSelesai(result.id);
       }
     }
     else showToast('Gagal: '+(result.error||'Unknown error'),true);
@@ -395,10 +395,33 @@ async function submitComplete() {
   try{
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     const result=await res.json();
-    if(result.ok){_clearPendingTahap2();document.getElementById('success-id').textContent=result.id;goPage('page-success');}
+    if(result.ok){_clearPendingTahap2();tampilkanSuksesSelesai(result.id);}
     else showToast('Gagal: '+(result.error||'Unknown error'),true);
   }catch(e){showToast('Tidak dapat terhubung ke server.',true);}
   btn.disabled=false; btn.classList.remove('loading'); btn.textContent='\u2705 Selesai & Kirim';
+}
+
+/* PATCH: pesan khusus setelah Tahap 2 (foto Penghulu) selesai, untuk 4 layanan
+ * surat yang foto Penghulu-nya berfungsi sebagai Verifikasi Data. Jenis lain
+ * tetap tampilan sukses biasa (cuma ID). */
+var JENIS_VERIFIKASI_SELESAI = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rekomendasi'];
+function tampilkanSuksesSelesai(id) {
+  document.getElementById('success-id').textContent = id;
+  var msgEl = document.getElementById('success-verifikasi-msg');
+  var f = CONFIG.forms[currentJenis];
+  if (JENIS_VERIFIKASI_SELESAI.includes(currentJenis) && f) {
+    if (!msgEl) {
+      msgEl = document.createElement('div');
+      msgEl.id = 'success-verifikasi-msg';
+      msgEl.style.cssText = 'margin-top:14px;padding:12px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;color:var(--green,#1a6b45);font-size:13px;line-height:1.5;text-align:left';
+      document.getElementById('success-id').insertAdjacentElement('afterend', msgEl);
+    }
+    msgEl.innerHTML = '\u2705 <strong>Verifikasi Data Selesai.</strong> Mohon tunggu, petugas akan menyerahkan surat <strong>' + f.label + '</strong> setelah selesai diproses.';
+    msgEl.style.display = 'block';
+  } else if (msgEl) {
+    msgEl.style.display = 'none';
+  }
+  goPage('page-success');
 }
 
 function resetAll() { currentJenis=null; photoFiles=[]; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
