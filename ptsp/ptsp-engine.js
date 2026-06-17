@@ -20,6 +20,7 @@ async function engineInit() {
   const params = new URLSearchParams(window.location.search);
   const jenis = params.get('jenis');
   if (jenis && CONFIG.forms && CONFIG.forms[jenis]) { showForm(jenis); } else { renderLayananList(); }
+  _checkPendingTahap2();
 }
 
 async function loadConfig() {
@@ -282,6 +283,40 @@ function renderBannerEcoteologyLuar(containerEl) {
   containerEl.appendChild(banner);
 }
 
+/* PATCH: resume otomatis kalau Tahap 2 belum selesai (halaman tertutup di tengah proses) */
+function _savePendingTahap2() {
+  try {
+    localStorage.setItem('ptsp_pending_tahap2', JSON.stringify({ jenis: currentJenis, id: currentLayananId, rekapInfo: currentRekapInfo, ts: Date.now() }));
+  } catch(e) {}
+}
+function _clearPendingTahap2() {
+  try { localStorage.removeItem('ptsp_pending_tahap2'); } catch(e) {}
+}
+function _checkPendingTahap2() {
+  try {
+    const raw = localStorage.getItem('ptsp_pending_tahap2');
+    if (!raw) return;
+    const pending = JSON.parse(raw);
+    if (!pending || !pending.jenis || !pending.id) { _clearPendingTahap2(); return; }
+    if (Date.now() - (pending.ts||0) > 7*24*60*60*1000) { _clearPendingTahap2(); return; }
+    const f = CONFIG.forms && CONFIG.forms[pending.jenis];
+    if (!f) { _clearPendingTahap2(); return; }
+    const flds = f.fields || []; let tahap2Field = null;
+    if (flds.length >= 2) {
+      const last = flds[flds.length-1], prev = flds[flds.length-2];
+      if (last.type === 'photo' && prev.type === 'photo') tahap2Field = last;
+    }
+    if (!tahap2Field) { _clearPendingTahap2(); return; }
+    const lbl = (pending.rekapInfo && pending.rekapInfo.jenis_label) || f.label;
+    const lanjut = confirm('Ada pengiriman "'+lbl+'" (ID: '+pending.id+') yang belum selesai \u2014 foto terakhir belum diunggah.\n\nLanjutkan sekarang?');
+    if (!lanjut) return;
+    currentJenis = pending.jenis; currentLayananId = pending.id; currentTahap2Field = tahap2Field;
+    currentRekapInfo = pending.rekapInfo || { id: pending.id, nama_pemohon: '-', jenis_label: f.label };
+    renderRekap();
+    goPage('page-rekap');
+  } catch(e) {}
+}
+
 async function submitForm() {
   const f=CONFIG.forms[currentJenis]; if(!f) return;
   let valid=true; const ov=f.universalOverrides||{};
@@ -319,6 +354,7 @@ async function submitForm() {
       if (isTwoStage) {
         currentLayananId = result.id;
         currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
+        _savePendingTahap2();
         renderRekap();
         goPage('page-rekap');
       } else {
@@ -355,7 +391,7 @@ async function submitComplete() {
   try{
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     const result=await res.json();
-    if(result.ok){document.getElementById('success-id').textContent=result.id;goPage('page-success');}
+    if(result.ok){_clearPendingTahap2();document.getElementById('success-id').textContent=result.id;goPage('page-success');}
     else showToast('Gagal: '+(result.error||'Unknown error'),true);
   }catch(e){showToast('Tidak dapat terhubung ke server.',true);}
   btn.disabled=false; btn.classList.remove('loading'); btn.textContent='\u2705 Selesai & Kirim';
