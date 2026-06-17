@@ -414,7 +414,15 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 .btn-status.proses   { background: var(--orange-light);   color: var(--orange);  border-color: var(--orange); }
 .btn-status.selesai  { background: var(--green-light);    color: var(--green);   border-color: var(--green); }
 .btn-status.ditolak  { background: var(--red-light);      color: var(--red);     border-color: var(--red); }
-.btn-status.selected { filter: saturate(1.5); box-shadow: 0 0 0 3px rgba(0,0,0,.1); }
+.btn-status.selected {
+  color: #fff;
+  transform: scale(1.07);
+  box-shadow: 0 3px 10px rgba(0,0,0,.22);
+}
+.btn-status.baru.selected    { background: var(--blue);    border-color: var(--blue); }
+.btn-status.proses.selected  { background: var(--orange);  border-color: var(--orange); }
+.btn-status.selesai.selected { background: var(--green);   border-color: var(--green); }
+.btn-status.ditolak.selected { background: var(--red);     border-color: var(--red); }
 .btn-status:hover    { filter: brightness(.95); }
 .catatan-inp {
   width: 100%; padding: 9px 12px;
