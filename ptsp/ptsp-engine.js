@@ -20,7 +20,11 @@ async function engineInit() {
   const params = new URLSearchParams(window.location.search);
   const jenis = params.get('jenis');
   if (jenis && CONFIG.forms && CONFIG.forms[jenis]) { showForm(jenis); } else { renderLayananList(); }
-  _checkPendingTahap2();
+  // PATCH: auto-popup resume dimatikan sementara — terlalu mudah mengganggu sesi
+  // yang sedang aktif (lihat insiden Rekomendasi Nikah). Data tetap tersimpan
+  // di localStorage (_savePendingTahap2/_clearPendingTahap2), tinggal disambungkan
+  // ke pemicu yang lebih aman (mis. tombol manual) kalau sudah siap.
+  // _checkPendingTahap2();
 }
 
 async function loadConfig() {
