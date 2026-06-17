@@ -1190,6 +1190,14 @@ function applyMenuAkses(menuAkses) {
   if (navLog) navLog.style.display = (session && session.role === 'admin') ? '' : 'none';
 }
 
+// PATCH: cek apakah session aktif punya akses ke menu tertentu (mis. 'nav-generate')
+function hasMenuAccess(menuId) {
+  if (!session) return false;
+  if (session.role === 'admin') return true;
+  const allowed = (session.menu_akses || '').split(',').map(s => s.trim()).filter(Boolean);
+  return !allowed.length || allowed.includes(menuId);
+}
+
 function startSession(user) {
   session = user;
   document.getElementById('login-screen').style.display = 'none';
@@ -1766,7 +1774,7 @@ function _isiGenArea(rec) {
   var _BISA_GEN = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_pendaftaran','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
   var _ga = document.getElementById('gen-dok-area');
   if (!_ga) return;
-  if (_BISA_GEN.includes(rec.jenis_layanan)) {
+  if (_BISA_GEN.includes(rec.jenis_layanan) && hasMenuAccess('nav-generate')) {
     _ga.innerHTML = '<div style="margin-bottom:12px">' +
       '<button class="btn-dok ' + (rec.dok_url ? 'sudah' : '') + '" ' +
       'style="width:100%;padding:9px;font-size:13px;border-radius:8px" ' +
