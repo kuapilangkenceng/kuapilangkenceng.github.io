@@ -1771,7 +1771,7 @@ function openDetail(id) {
 }
 
 function _isiGenArea(rec) {
-  var _BISA_GEN = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_pendaftaran','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
+  var _BISA_GEN = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
   var _ga = document.getElementById('gen-dok-area');
   if (!_ga) return;
   if (_BISA_GEN.includes(rec.jenis_layanan) && hasMenuAccess('nav-generate')) {
@@ -2177,6 +2177,8 @@ function togglePassVis(id, btn) {
 const LAYANAN_LIST = [
   { kategori: 'Nikah', items: [
     { id: 'nikah_pendaftaran',       label: 'Pendaftaran Nikah' },
+    { id: 'nikah_rafak',             label: 'Rafak (Pemeriksaan Nikah)' },
+    { id: 'nikah_verifikasi_pendaftaran', label: 'Verifikasi Pendaftaran' },
     { id: 'nikah_bimwin',            label: 'Bimbingan Calon Pengantin' },
     { id: 'nikah_ecoteology',        label: 'Ecotheology Nikah' },
     { id: 'nikah_duplikat',          label: 'Duplikat Buku Nikah' },
@@ -2577,7 +2579,7 @@ async function doUnpublish(id) {
 var _gId = '', _gJenis = '', _gNama = '', _gLabel = '';
 
 function btnDokHtml(r) {
-  var BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_pendaftaran','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
+  var BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
   if (!BISA.includes(r.jenis_layanan)) return '';
   var ada  = !!r.dok_url;
   var nama = (r.nama_pemohon || '').replace(/'/g, "\\'");
@@ -2593,7 +2595,7 @@ var _KODE_SURAT = {
   'nikah_sk_belum':    'PW.01',
   'nikah_sk_pernah':   'PW.01',
   'nikah_itsbat':      'PW.01',
-  'nikah_pendaftaran': 'PW.01',
+  'nikah_rafak':       'PW.01',
   'wakaf_ikrar':       'WK.01',
   'wakaf_ganti_nadzir':'WK.02',
   'kiblat_pengukuran_ba':         'KU.01',
@@ -2741,7 +2743,7 @@ async function doGenerateDokumen() {
 <!-- === PAGE GENERATE DOKUMEN === -->
 
 <script>
-var GEN_BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_pendaftaran','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
+var GEN_BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
 var genFiltered = [], genPage = 1, GEN_PER_PAGE = 15;
 
 function loadGenerate() {

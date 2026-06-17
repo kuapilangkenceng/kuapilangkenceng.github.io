@@ -140,7 +140,7 @@ function showForm(jenis) {
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
   if (mainFields.length) { addST(body,'Data Layanan'); mainFields.forEach(function(fd){ renderField(body,fd); }); }
   if (f.autofill && session) setupAutofill(f.autofill);
-  if (jenis === 'nikah_bimwin' && session) setTimeout(triggerAutofillBimwin, 100);
+  if (['nikah_bimwin','nikah_rafak','nikah_verifikasi_pendaftaran'].includes(jenis) && session) setTimeout(triggerAutofillBimwin, 100);
   if ((CONFIG.publishMode||{})[jenis]==='kegiatan' && session && CONFIG.consentField) {
     addST(body,'Izin Publikasi'); const d=document.createElement('div'); d.className='consent-box'; renderField(d,CONFIG.consentField); body.appendChild(d);
   }
