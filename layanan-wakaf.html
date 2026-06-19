@@ -589,21 +589,24 @@
         <div class="lcard-body">
           <span class="lbadge-emas">PERUBAHAN NADZIR</span>
           <h3>Penggantian Nadzir Wakaf</h3>
-          <p>Layanan penggantian pengurus nadzir wakaf apabila terjadi pergantian karena meninggal, tidak aktif, atau mengundurkan diri sesuai ketentuan perwakafan yang berlaku.</p>
+          <p>KUA Pilangkenceng membantu menerbitkan <strong>Surat Rekomendasi Penggantian Nadzir</strong> yang menjadi salah satu syarat wajib pengajuan penggantian nadzir ke Badan Wakaf Indonesia (BWI). Penggantian nadzir final diproses oleh BWI.</p>
+          <div style="background:var(--emas-muda);border:1px solid #e5c84a;border-radius:8px;padding:10px 13px;margin:10px 0;font-size:12.5px;color:#6b4f0a;display:flex;gap:8px;align-items:flex-start">
+            <span style="flex-shrink:0;margin-top:1px">ℹ️</span>
+            <span><strong>Alur:</strong> Pemohon mengurus Surat Rekomendasi di KUA → melanjutkan proses penggantian nadzir ke kantor BWI setempat dengan dokumen lengkap sesuai persyaratan BWI.</span>
+          </div>
           <ul class="cklist">
-            <li>Referensi nomor AIW lama yang tercatat</li>
-            <li>Alasan penggantian nadzir yang jelas</li>
-            <li>Data nadzir baru lengkap dengan identitas</li>
-            <li>Data saksi untuk pengesahan penggantian</li>
-            <li>Generate SK Penggantian Nadzir otomatis</li>
-            <li>Tercatat resmi di sistem KUA Pilangkenceng</li>
+            <li>Surat permohonan kepada KUA untuk rekomendasi ke BWI</li>
+            <li>Alasan penggantian nadzir (meninggal / berhalangan / mengundurkan diri / dll.)</li>
+            <li>Dokumen pendukung alasan penggantian (surat keterangan terkait)</li>
+            <li>Foto copy KTP calon nadzir baru &amp; daftar riwayat hidupnya</li>
+            <li>Foto copy Akta Ikrar Wakaf (AIW) / Akta Pengganti AIW</li>
+            <li>Foto copy Surat Pengesahan Nadzir yang lama</li>
           </ul>
-          <a href="https://kuapilangkenceng.github.io/ptsp/wakaf.html?jenis=wakaf_ganti_nadzir" target="_blank" class="btn-lcard">Daftar Penggantian Nadzir →</a>
+          <a href="https://kuapilangkenceng.github.io/ptsp/wakaf.html?jenis=wakaf_ganti_nadzir" target="_blank" class="btn-lcard">Ajukan Surat Rekomendasi →</a>
           <div class="dok-section">
-            <p class="dok-title">📄 Dokumen yang Digenerate:</p>
+            <p class="dok-title">📄 Dokumen yang Diterbitkan KUA:</p>
             <div class="dok-grid">
-              <span class="dok-chip"><span class="dok-ic">✓</span> SK Penggantian Nadzir</span>
-              <span class="dok-chip"><span class="dok-ic">✓</span> Berita Acara</span>
+              <span class="dok-chip"><span class="dok-ic">✓</span> Surat Rekomendasi Penggantian Nadzir</span>
             </div>
           </div>
         </div>
@@ -716,26 +719,51 @@
       </div>
 
       <!-- Penggantian Nadzir -->
-      <div class="syarat-card">
+      <div class="syarat-card" style="grid-column:1/-1">
         <div class="syarat-head" onclick="toggleSyarat(this)">
           <span class="syarat-head-icon">🔄</span>
           <div class="syarat-head-text">
-            <h4>Penggantian Nadzir</h4>
-            <span>Persyaratan perubahan pengurus nadzir</span>
+            <h4>Penggantian Nadzir — Persyaratan Lengkap ke BWI</h4>
+            <span>KUA menerbitkan Surat Rekomendasi (syarat I.1) • Dokumen lain diserahkan langsung ke BWI</span>
           </div>
           <span class="syarat-toggle">▼</span>
         </div>
         <div class="syarat-body">
+          <div style="background:var(--emas-muda);border:1px solid #e5c84a;border-radius:7px;padding:9px 12px;margin-bottom:12px;font-size:12px;color:#6b4f0a">
+            ℹ️ <strong>Catatan:</strong> Surat Rekomendasi dari KUA (poin I.1) diurus terlebih dahulu di sini. Dokumen poin I.2 s.d. II.5 disiapkan oleh pemohon dan dibawa langsung ke kantor BWI.
+          </div>
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin-bottom:6px">I. Persyaratan Umum (semua alasan penggantian)</p>
           <ol>
-            <li><strong>Nomor AIW lama</strong> yang tercatat di KUA</li>
-            <li><strong>Alasan penggantian</strong> nadzir (meninggal/tidak aktif/mengundurkan diri)</li>
-            <li><strong>Surat keterangan</strong> pendukung alasan penggantian</li>
-            <li><strong>KTP Nadzir Baru</strong> beserta data lengkap</li>
-            <li><strong>KTP Saksi</strong> yang hadir dalam proses penggantian</li>
-            <li><strong>Berita acara</strong> musyawarah penggantian (jika ada)</li>
+            <li><strong>Surat Rekomendasi dari KUA</strong> setempat untuk meneruskan permohonan penggantian nadzir kepada BWI <em style="color:var(--hijau-muda)">(diurus di sini)</em></li>
+            <li>Surat pengantar permohonan penggantian nadzir dari KUA tempat harta benda wakaf berada yang ditujukan kepada BWI</li>
+            <li>Keputusan rapat tentang penggantian nadzir dengan menyebutkan struktur nadzir paling kurang 3 orang (ketua, sekretaris, bendahara); surat keterangan seluruh nadzir dan ahli waris nadzir yang sudah meninggal</li>
+            <li><strong>Alasan penggantian nadzir</strong> (di-check list sesuai alasan), beserta dokumen pendukung:
+              <ol type="a" style="margin-top:5px;padding-left:1rem">
+                <li>Meninggal dunia → surat keterangan meninggal dari instansi berwenang</li>
+                <li>Berhalangan tetap → surat keterangan dari pihak bersangkutan bermaterai cukup</li>
+                <li>Mengundurkan diri → surat pengunduran diri dari pihak bersangkutan bermaterai cukup</li>
+                <li>Organisasi/badan hukum bubar/berubah → surat keterangan dari pengurus/instansi berwenang</li>
+                <li>Melanggar ketentuan pengelolaan dan pengembangan harta wakaf → surat pernyataan keberatan dari wakif/ahli warisnya bermaterai cukup</li>
+                <li>Dijatuhi hukuman pidana → salinan putusan pengadilan berkekuatan hukum tetap</li>
+              </ol>
+            </li>
+            <li>Foto copy KTP calon nadzir baru</li>
+            <li>Daftar riwayat hidup calon nadzir baru</li>
+            <li>Foto copy Akta Ikrar Wakaf (AIW) atau Akta Pengganti AIW (APAIW)</li>
+            <li>Foto copy Surat Pengesahan Nadzir yang lama</li>
+            <li>Foto copy sertifikat wakaf (jika sudah bersertifikat)</li>
+            <li>Program kerja dalam pengelolaan dan pengembangan wakaf</li>
           </ol>
-          <div class="syarat-note">
-            💡 Penggantian nadzir harus merujuk pada nomor AIW lama agar tercatat dalam satu berkas wakaf yang sama.
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin:12px 0 6px">II. Tambahan untuk Nadzir Organisasi / Badan Hukum</p>
+          <ol>
+            <li>Salinan akta notaris tentang pendirian organisasi/badan hukum dan anggaran dasar yang telah disahkan oleh instansi berwenang</li>
+            <li>Daftar susunan pengurus</li>
+            <li>Foto copy Anggaran Rumah Tangga</li>
+            <li>Daftar kekayaan yang berasal dari harta wakaf yang terpisah dari kekayaan lain (merupakan kekayaan organisasi/badan hukum)</li>
+            <li>Surat pernyataan bersedia untuk diaudit bermaterai cukup</li>
+          </ol>
+          <div class="syarat-note" style="margin-top:12px">
+            💡 Urus Surat Rekomendasi KUA terlebih dahulu melalui tombol <em>"Ajukan Surat Rekomendasi"</em> di atas, kemudian lengkapi seluruh dokumen sebelum mendatangi kantor BWI.
           </div>
         </div>
       </div>
