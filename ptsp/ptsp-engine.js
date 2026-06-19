@@ -10,6 +10,8 @@ let currentJenis = null;
 let currentTahap2Field = null;
 let currentLayananId = null;
 let currentRekapInfo = null;
+let currentPhotoSteps = [];   // array step foto tambahan (photoSteps dari config)
+let currentPhotoStepIdx = 0;  // index step foto yang sedang aktif
 let session = null;
 let photoFiles = [];
 let autocompleteTimers = {};
@@ -120,7 +122,7 @@ function renderLayananList() {
 }
 
 function showForm(jenis) {
-  currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null;
+  currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
   const f = CONFIG.forms[jenis]; if (!f) return;
   document.getElementById('form-title').textContent = f.label;
   document.getElementById('form-desc').textContent = f.deskripsi || f.kategori;
@@ -140,6 +142,11 @@ function showForm(jenis) {
       currentTahap2Field = last;
       mainFields = mainFields.slice(0, -1);
     }
+  }
+
+  // Deteksi photoSteps (multi-step foto untuk nikah_alur_lengkap dan sejenisnya)
+  if (f.photoSteps && f.photoSteps.length > 0) {
+    currentPhotoSteps = f.photoSteps;
   }
 
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
@@ -355,7 +362,14 @@ async function submitForm() {
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     const result=await res.json();
     if(result.ok){
-      if (isTwoStage) {
+      if (currentPhotoSteps.length > 0) {
+        // Alur multi-step foto (nikah_alur_lengkap dll)
+        currentLayananId = result.id;
+        currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
+        currentPhotoStepIdx = 0;
+        renderPhotoStep();
+        goPage('page-rekap');
+      } else if (isTwoStage) {
         currentLayananId = result.id;
         currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
         _savePendingTahap2();
@@ -377,6 +391,74 @@ function renderRekap() {
   const body = document.getElementById('rekap-foto-body'); body.innerHTML='';
   photoFiles = []; // reset, foto tahap 1 sudah terkirim
   if (currentTahap2Field) renderField(body, currentTahap2Field);
+}
+
+// ── Multi-step foto (photoSteps) ─────────────────────────────
+function renderPhotoStep() {
+  const step = currentPhotoSteps[currentPhotoStepIdx];
+  const total = currentPhotoSteps.length;
+  const stepNum = currentPhotoStepIdx + 1;
+
+  // Header rekap
+  document.getElementById('rekap-id').textContent = currentRekapInfo.id;
+  document.getElementById('rekap-nama').textContent = currentRekapInfo.nama_pemohon;
+  document.getElementById('rekap-jenis').textContent = currentRekapInfo.jenis_label;
+
+  // Indikator progress step
+  const body = document.getElementById('rekap-foto-body');
+  body.innerHTML = '';
+  photoFiles = [];
+
+  const progress = document.createElement('div');
+  progress.style.cssText = 'margin-bottom:16px;padding:10px 14px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;font-size:13px;color:var(--green,#1a6b45);font-weight:600;text-align:center';
+  progress.innerHTML = 'Langkah ' + stepNum + ' dari ' + total + ' &mdash; ' + step.label;
+  body.appendChild(progress);
+
+  renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
+
+  // Ganti tombol submit
+  const btnWrap = document.getElementById('rekap-btn-wrap');
+  if (btnWrap) {
+    const isLast = currentPhotoStepIdx >= total - 1;
+    btnWrap.innerHTML = '<button class="btn-submit" id="btn-submit-complete" onclick="submitPhotoStep()">' +
+      (isLast ? '✅ Selesai &amp; Kirim' : '📤 Kirim &amp; Lanjut') + '</button>';
+  }
+}
+
+async function submitPhotoStep() {
+  const step = currentPhotoSteps[currentPhotoStepIdx];
+  const fname = step.id;
+  if (step.required !== false && !photoFiles.some(function(p){ return p.name === fname; })) {
+    showToast('Foto wajib diunggah sebelum melanjutkan.', true);
+    return;
+  }
+  const isLast = currentPhotoStepIdx >= currentPhotoSteps.length - 1;
+  const payload = {
+    action: isLast ? 'submitComplete' : 'submitPhotoStep',
+    id: currentLayananId,
+    stepIdx: currentPhotoStepIdx,
+    foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; })
+  };
+  const btn = document.getElementById('btn-submit-complete');
+  btn.disabled = true; btn.classList.add('loading'); btn.textContent = 'Mengirim...';
+  try {
+    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+    const result = await res.json();
+    if (result.ok) {
+      if (isLast) {
+        tampilkanSuksesSelesai(result.id);
+      } else {
+        currentPhotoStepIdx++;
+        renderPhotoStep();
+        goPage('page-rekap');
+      }
+    } else {
+      showToast('Gagal: ' + (result.error || 'Unknown error'), true);
+    }
+  } catch(e) {
+    showToast('Tidak dapat terhubung ke server.', true);
+  }
+  btn.disabled = false; btn.classList.remove('loading');
 }
 
 async function submitComplete() {
