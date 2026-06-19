@@ -2375,11 +2375,9 @@ async function loadArtikel() {
     const data = await res.json();
     artikelData = data.results || [];
   } catch {
-    // Demo data
-    artikelData = [
-      { id:'ART-20260605-001', tanggal:'2026-06-05', judul:'KUA Pilangkenceng Gelar Bimbingan Pra-Nikah bagi Calon Pengantin', kategori:'Nikah', isi:'KUA Kecamatan Pilangkenceng kembali menyelenggarakan kegiatan Bimbingan Perkawinan (Bimwin) bagi calon pengantin yang akan melangsungkan pernikahan. Kegiatan ini merupakan bagian dari upaya KUA untuk mempersiapkan pasangan calon pengantin agar siap menghadapi kehidupan rumah tangga yang harmonis dan sakinah mawaddah warahmah.\n\nDalam sesi bimbingan yang berlangsung hangat dan interaktif ini, narasumber menyampaikan berbagai materi penting seputar kehidupan berumah tangga, mulai dari komunikasi dalam keluarga, pengelolaan keuangan rumah tangga, hingga pentingnya menjaga keharmonisan keluarga berdasarkan nilai-nilai Islam.\n\nKUA Kecamatan Pilangkenceng mengajak seluruh pasangan calon pengantin untuk aktif mengikuti program Bimwin ini demi terwujudnya keluarga yang bahagia dan sejahtera.', tags:'bimwin,pernikahan,kua pilangkenceng', foto_url:'', status:'Draft', sumber_id:'LYN-20260605-001', by_ai:true, editor:'' },
-      { id:'ART-20260604-001', tanggal:'2026-06-04', judul:'Pelaksanaan Akad Nikah di Balai Nikah KUA Pilangkenceng', kategori:'Nikah', isi:'Alhamdulillah, KUA Kecamatan Pilangkenceng kembali memfasilitasi pelaksanaan akad nikah bagi pasangan mempelai yang telah mendaftarkan kehendak nikahnya. Prosesi akad nikah berlangsung khidmat dan penuh keberkahan di Balai Nikah KUA Pilangkenceng.\n\nPelaksanaan akad nikah dipimpin langsung oleh penghulu KUA Pilangkenceng dengan dihadiri oleh wali nikah dan dua orang saksi yang sah. Mahar diserahkan dengan penuh keikhlasan sebagai tanda kesungguhan mempelai pria dalam mengarungi bahtera rumah tangga bersama.\n\nSemoga pasangan yang baru saja menikah ini senantiasa diberikan keberkahan dalam menjalani kehidupan rumah tangganya dan menjadi keluarga yang sakinah, mawaddah, warahmah. Selamat menempuh hidup baru!', tags:'akad nikah,pernikahan,kua pilangkenceng', foto_url:'', status:'Published', sumber_id:'LYN-20260604-001', by_ai:true, editor:'Admin' }
-    ];
+    artikelData = [];
+    wrap.innerHTML = '<div style="padding:20px;color:var(--red)">⚠️ Gagal memuat artikel dari server. Periksa koneksi atau coba refresh.</div>';
+    return;
   }
   // Update badge draft di sidebar
   const draftCount = artikelData.filter(a => a.status === 'Draft').length;
