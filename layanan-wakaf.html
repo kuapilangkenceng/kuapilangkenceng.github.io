@@ -692,28 +692,84 @@
     </div>
     <div class="syarat-grid reveal">
       <!-- Ikrar Wakaf -->
-      <div class="syarat-card">
+      <div class="syarat-card" style="grid-column:1/-1">
         <div class="syarat-head open" onclick="toggleSyarat(this)">
           <span class="syarat-head-icon">🕌</span>
           <div class="syarat-head-text">
-            <h4>Ikrar Wakaf (e-AIW)</h4>
-            <span>Persyaratan untuk Wakif & Nadzir</span>
+            <h4>Ikrar Wakaf (e-AIW) — Persyaratan Lengkap</h4>
+            <span>Dokumen Wakif · Tanah · Nadzir · Foto Lokasi · Saksi</span>
           </div>
           <span class="syarat-toggle">▼</span>
         </div>
         <div class="syarat-body open">
+
+          <!-- A. Wakif -->
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin-bottom:6px">A. Dokumen Wakif</p>
           <ol>
-            <li><strong>Fotokopi KTP Wakif</strong> yang masih berlaku</li>
-            <li><strong>Fotokopi Kartu Keluarga</strong> Wakif</li>
-            <li><strong>Sertifikat Tanah / Letter C</strong> atau bukti kepemilikan tanah</li>
-            <li><strong>Nomor Induk Bidang (NIB)</strong> dari BPN jika tersedia</li>
-            <li><strong>Foto tanah</strong> yang akan diwakafkan</li>
-            <li><strong>KTP Nadzir</strong> (minimal 3 orang untuk nadzir perorangan)</li>
-            <li><strong>Akta organisasi/badan hukum</strong> (untuk nadzir organisasi)</li>
-            <li><strong>KTP Saksi 1 & 2</strong> yang hadir saat ikrar</li>
+            <li><strong>KTP Wakif</strong> — scan dari asli atau fotokopi legalisir, jelas, tidak buram, foto terlihat</li>
+            <li><strong>Surat Pernyataan Tidak Sengketa</strong> — ditandatangani wakif, dokumen asli, ada tanggal, jelas</li>
+            <li><strong>Surat Pernyataan Wakaf Bersama (WT.B)</strong> — khusus wakif berjama'ah (lebih dari 1 orang), ditandatangani semua pihak</li>
+            <li><strong>Dokumen legalitas</strong> — khusus wakif Organisasi: SKT dari Kemendagri; wakif Badan Hukum: AHU dari Kemkumham</li>
           </ol>
-          <div class="syarat-note">
-            💡 Sistem otomatis menentukan template dokumen berdasarkan jenis nadzir (perorangan atau organisasi).
+
+          <!-- B. Tanah -->
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin:12px 0 6px">B. Dokumen Tanah</p>
+          <ol>
+            <li><strong>Bukti kepemilikan tanah</strong> (Sertifikat/SHM/HGB/dll.) — scan asli, semua halaman, jelas, tidak buram</li>
+            <li><strong>Dokumen alashak pendamping</strong> — wajib jika bukti tanah berupa SPPT/AJB/Akta Hibah; tambahkan LetterC / sporadik / Suket Desa</li>
+            <li><strong>Dokumen peralihan kepemilikan</strong> — wajib jika nama di sertifikat ≠ nama wakif (AJB, Akta Hibah, Surat Warisan, Suket Desa, dll.)</li>
+            <li><strong>Surat Ijin Mewakafkan dari PEMDA</strong> — khusus HGB atas nama Badan Hukum</li>
+          </ol>
+
+          <!-- C. Nadzir -->
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin:12px 0 6px">C. Dokumen Nadzir</p>
+          <div style="margin-bottom:8px">
+            <p style="font-size:11.5px;font-weight:600;color:var(--teks-abu);margin-bottom:4px">① Nadzir Perseorangan (minimal 3 orang)</p>
+            <ol>
+              <li>KTP 3 nadzir — scan asli, jelas, tidak buram</li>
+              <li>Surat Kesediaan Menjadi Nadzir — ditandatangani 3 orang</li>
+              <li>Surat Kesediaan Diaudit</li>
+            </ol>
+          </div>
+          <div style="margin-bottom:8px">
+            <p style="font-size:11.5px;font-weight:600;color:var(--teks-abu);margin-bottom:4px">② Nadzir Organisasi <em style="font-weight:400">(SKT Kemendagri — maks. berlaku 5 tahun)</em></p>
+            <ol>
+              <li>KTP perwakilan organisasi</li>
+              <li>Surat Keterangan Terdaftar (SKT) Kemendagri — <strong>masih berlaku</strong>, nama organisasi ditulis persis sesuai SKT</li>
+              <li>Anggaran Dasar + ART + Susunan Pengurus (1 file PDF, semua halaman)</li>
+              <li>Surat Pernyataan Bersedia Diaudit — TTD perwakilan, ada tanggal</li>
+              <li>Dokumen Harta Terpisah Kekayaan dari Wakaf</li>
+            </ol>
+          </div>
+          <div>
+            <p style="font-size:11.5px;font-weight:600;color:var(--teks-abu);margin-bottom:4px">③ Nadzir Badan Hukum <em style="font-weight:400">(AHU Kemkumham · termasuk NU & Muhammadiyah)</em></p>
+            <ol>
+              <li>KTP perwakilan badan hukum</li>
+              <li>Dokumen AHU dari Kemkumham — format terbaru (nomor diawali "AHU…TAHUN…"), nama BH ditulis persis sesuai AHU</li>
+              <li>Anggaran Dasar + ART + Susunan Pengurus (1 file PDF, semua halaman)</li>
+              <li>Surat Pernyataan Bersedia Diaudit — TTD perwakilan, ada tanggal</li>
+              <li>Dokumen Harta Terpisah Kekayaan dari Wakaf</li>
+            </ol>
+          </div>
+
+          <!-- D. Foto Lokasi -->
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin:12px 0 6px">D. Foto Lokasi Tanah (Verifikasi Lapangan)</p>
+          <ol>
+            <li><strong>4 foto</strong> dari 4 arah berbeda (Utara, Selatan, Timur, Barat) — menghadap ke tengah lokasi, format <strong>landscape</strong></li>
+            <li>Setiap foto <strong>wajib mengandung metadata geotag</strong> — gunakan kamera bawaan HP, GPS aktif, tidak dalam mode pesawat</li>
+            <li>Ukuran masing-masing foto <strong>maksimal 5 MB</strong></li>
+          </ol>
+
+          <!-- E. Saksi -->
+          <p style="font-size:12px;font-weight:700;color:var(--hijau-tua);margin:12px 0 6px">E. Data Saksi</p>
+          <ol>
+            <li>Minimal <strong>2 saksi</strong> (boleh laki-laki atau perempuan), bersedia hadir saat ikrar</li>
+            <li>KTP saksi — scan asli, jelas, tidak buram</li>
+            <li>Data saksi diisi sesuai KTP tanpa kesalahan ketik</li>
+          </ol>
+
+          <div class="syarat-note" style="margin-top:12px">
+            ⚠️ <strong>Penting:</strong> Semua dokumen yang diunggah harus dari dokumen asli/legalisir — jelas, tidak buram, tidak terpotong, semua halaman tersedia. Nama pada seluruh dokumen harus persis sama, tidak boleh disingkat atau ditambah kata lain.
           </div>
         </div>
       </div>
