@@ -2415,6 +2415,7 @@ function renderArtikel() {
     var pubBtn = a.status === 'Draft'
       ? '<button class="btn-publish" onclick="event.stopPropagation();doPublish(\'' + a.id + '\')">&#128640; Publish</button>'
       : '<button class="btn-publish" style="background:var(--red)" onclick="event.stopPropagation();doUnpublish(\'' + a.id + '\')">&#8635; Unpublish</button>';
+    var hapusBtn = '<button class="btn-publish" style="background:#7f1d1d;margin-left:4px" onclick="event.stopPropagation();doHapusArtikel(\'' + a.id + '\')">&#128465; Hapus</button>';
     return '<div class="artikel-card" onclick="openArtikelModal(\'' + a.id + '\')">' +
       '<div class="artikel-card-header"><div style="flex:1">' +
       '<div class="artikel-judul">' + a.judul + '</div>' +
@@ -2427,7 +2428,7 @@ function renderArtikel() {
       '<div class="artikel-footer">' +
       '<div class="artikel-tags">&#127991; ' + (a.tags || '&#8212;') + '</div>' +
       '<span class="badge ' + badgeA + '">' + a.status + '</span>' +
-      pubBtn + '</div></div>';
+      pubBtn + hapusBtn + '</div></div>';
   }).join('');
 }
 
@@ -2462,6 +2463,7 @@ function openArtikelModal(id) {
     '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
     '<button class="btn-simpan-status" onclick="simpanEditArtikel(\'' + a.id + '\')">&#128190; Simpan Perubahan</button>' +
     pubBtnModal +
+    '<button class="btn-publish" style="padding:10px 20px;background:#7f1d1d" onclick="doHapusArtikel(\'' + a.id + '\')">&#128465; Hapus Artikel</button>' +
     '</div>';
   document.getElementById('modal-overlay').classList.add('show');
 }
@@ -2533,6 +2535,26 @@ async function doUnpublish(id) {
   badge.textContent = draftCount;
   badge.style.display = draftCount > 0 ? 'inline-flex' : 'none';
   showToast('⛔ Artikel disembunyikan dari website (kembali ke Draft).');
+}
+
+async function doHapusArtikel(id) {
+  if (!confirm('Hapus artikel ini secara permanen?\nTindakan ini tidak bisa dibatalkan.')) return;
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'deleteArtikel', id })
+    });
+    const d = await res.json();
+    if (!d.ok) { showToast('Gagal hapus: ' + (d.error || 'Error'), true); return; }
+  } catch(e) { showToast('Tidak dapat terhubung ke server.', true); return; }
+  // Hapus dari data lokal & tutup modal kalau terbuka
+  artikelData = artikelData.filter(a => a.id !== id);
+  document.getElementById('modal-overlay').classList.remove('show');
+  renderArtikelList();
+  const draftCount = artikelData.filter(a => a.status === 'Draft').length;
+  const badge = document.getElementById('badge-artikel');
+  if (badge) { badge.textContent = draftCount; badge.style.display = draftCount > 0 ? 'inline-flex' : 'none'; }
+  showToast('🗑️ Artikel berhasil dihapus.');
 }
 </script>
 <!-- ═══ MODAL GENERATE DOKUMEN ═══ -->
