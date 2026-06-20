@@ -328,6 +328,22 @@ function _checkPendingTahap2() {
   } catch(e) {}
 }
 
+// PATCH: beberapa field (mis. nama_nadzir1, nik_nadzir1, dst di Wakaf)
+// dipakai 2x dengan id SAMA untuk skenario showIf berbeda (Perorangan vs
+// Organisasi/BH). document.getElementById() hanya mengambil elemen
+// PERTAMA di DOM, walau yang sedang ditampilkan adalah elemen kedua.
+// Helper ini mencari semua elemen dengan id tsb, lalu pilih yang ada di
+// dalam group yang sedang TAMPIL (group_<fname> tidak display:none).
+function getVisibleFieldEl(fname) {
+  const els = document.querySelectorAll('#field_' + fname + ', [id="field_' + fname + '"]');
+  if (els.length <= 1) return els[0] || null;
+  for (let i = 0; i < els.length; i++) {
+    const grp = els[i].closest('.form-group');
+    if (grp && grp.style.display !== 'none') return els[i];
+  }
+  return els[0];
+}
+
 async function submitForm() {
   const f=CONFIG.forms[currentJenis]; if(!f) return;
   let valid=true; const ov=f.universalOverrides||{};
@@ -336,7 +352,7 @@ async function submitForm() {
     const fname=field.name||field.id; if(!fname||field.type==='section'||( ov[fname]&&ov[fname].hidden)) return;
     const groupEl=document.getElementById('group_'+fname); if(groupEl&&groupEl.style.display==='none') return;
     if(!field.required) return;
-    const el=document.getElementById('field_'+fname); const errEl=document.getElementById('err_'+fname); if(!el) return;
+    const el=getVisibleFieldEl(fname); const errEl=document.getElementById('err_'+fname); if(!el) return;
     let val='';
     if(field.type==='radio'){const c=document.querySelector('[name="'+fname+'"]:checked');val=c?c.value:'';}
     else if(field.type==='photo'){val=photoFiles.filter(function(p){return p.name===fname;}).length>0?'ok':'';}
@@ -348,7 +364,7 @@ async function submitForm() {
   const data={};
   allFields.forEach(function(field){
     const fname=field.name||field.id; if(!fname||field.type==='section'||(ov[fname]&&ov[fname].hidden)) return;
-    const el=document.getElementById('field_'+fname); if(!el) return;
+    const el=getVisibleFieldEl(fname); if(!el) return;
     if(field.type==='radio'){const c=document.querySelector('[name="'+fname+'"]:checked');data[fname]=c?c.value:'';}
     else if(field.type==='checkbox'){data[fname]=Array.from(document.querySelectorAll('[name="'+fname+'"]:checked')).map(function(c){return c.value;});}
     else if(field.type!=='photo'){data[fname]=el.value.trim();}
