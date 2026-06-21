@@ -1132,6 +1132,26 @@ let curPage    = 1;
 const PER_PAGE = 20;
 let activeStatusFilter = null;
 
+/* ── PATCH KEAMANAN: auto-sisip token sesi ke semua request API_URL ── */
+const _fetchAsliAdmin = window.fetch.bind(window);
+window.fetch = function(url, opts) {
+  const isApiCall = typeof url === 'string' && url.indexOf(API_URL) === 0;
+  if (isApiCall && session && session.token) {
+    if (opts && opts.method === 'POST' && typeof opts.body === 'string') {
+      try {
+        const body = JSON.parse(opts.body);
+        if (!body.token) {
+          body.token = session.token;
+          opts = Object.assign({}, opts, { body: JSON.stringify(body) });
+        }
+      } catch (e) { /* body bukan JSON, biarkan */ }
+    } else if (url.indexOf('token=') === -1) {
+      url += (url.indexOf('?') === -1 ? '?' : '&') + 'token=' + encodeURIComponent(session.token);
+    }
+  }
+  return _fetchAsliAdmin(url, opts);
+};
+
 /* ══════════════════════════════════════════════
    LOGIN
 ══════════════════════════════════════════════ */
@@ -1152,17 +1172,12 @@ async function doLogin() {
     });
     const data = await res.json();
     if (data.ok) {
-      startSession(data.user);
+      startSession(Object.assign({}, data.user, { token: data.token }));
     } else {
       showErr(data.error || 'Login gagal.');
     }
   } catch {
-    // Demo mode lokal
-    if (username === 'admin' && password === 'admin123') {
-      startSession({ username: 'admin', nama: 'Administrator KUA', role: 'admin' });
-    } else {
-      showErr('Tidak dapat terhubung ke server. Coba user: admin / admin123 (demo).');
-    }
+    showErr('Tidak dapat terhubung ke server. Coba lagi beberapa saat.');
   }
   btn.disabled = false; btn.textContent = 'Masuk ke Dashboard';
 }
@@ -1221,6 +1236,9 @@ function startSession(user) {
 }
 
 function logout() {
+  if (session && session.token) {
+    try { fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'logout', token: session.token }) }); } catch (e) {}
+  }
   session = null;
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';

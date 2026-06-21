@@ -16,6 +16,26 @@ let session = null;
 let photoFiles = [];
 let autocompleteTimers = {};
 
+/* ── PATCH KEAMANAN: auto-sisip token sesi ke semua request API_URL ── */
+const _fetchAsliEngine = window.fetch.bind(window);
+window.fetch = function(url, opts) {
+  const isApiCall = typeof url === 'string' && url.indexOf(API_URL) === 0;
+  if (isApiCall && session && session.token) {
+    if (opts && opts.method === 'POST' && typeof opts.body === 'string') {
+      try {
+        const body = JSON.parse(opts.body);
+        if (!body.token) {
+          body.token = session.token;
+          opts = Object.assign({}, opts, { body: JSON.stringify(body) });
+        }
+      } catch (e) { /* body bukan JSON, biarkan */ }
+    } else if (url.indexOf('token=') === -1) {
+      url += (url.indexOf('?') === -1 ? '?' : '&') + 'token=' + encodeURIComponent(session.token);
+    }
+  }
+  return _fetchAsliEngine(url, opts);
+};
+
 async function engineInit() {
   try { const s = sessionStorage.getItem('ptsp_session'); if (s) { session = JSON.parse(s); applySessionUI(); } } catch(e) {}
   await loadConfig();
@@ -66,24 +86,22 @@ async function doLogin() {
     const res = await fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action:'login',username:u,password:p}) });
     const d = await res.json();
     if (d.ok) {
-      session = d.user; sessionStorage.setItem('ptsp_session', JSON.stringify(session));
+      session = Object.assign({}, d.user, { token: d.token });
+      sessionStorage.setItem('ptsp_session', JSON.stringify(session));
       err.style.display = 'none'; document.getElementById('login-box').style.display = 'none';
       applySessionUI(); showToast('Login berhasil. Selamat datang, ' + session.nama + '!');
       if (document.getElementById('page-layanan') && document.getElementById('page-layanan').classList.contains('active')) renderLayananList();
     } else { err.style.display='block'; err.textContent = d.error || 'Login gagal.'; }
   } catch(e) {
-    if (u==='demo' && p==='demo123') {
-      session = {username:'demo',nama:'Petugas Demo',role:'petugas'};
-      sessionStorage.setItem('ptsp_session', JSON.stringify(session));
-      err.style.display='none'; document.getElementById('login-box').style.display='none';
-      applySessionUI(); showToast('Login demo berhasil!');
-      if (document.getElementById('page-layanan') && document.getElementById('page-layanan').classList.contains('active')) renderLayananList();
-    } else { err.style.display='block'; err.textContent='Tidak dapat terhubung ke server.'; }
+    err.style.display='block'; err.textContent='Tidak dapat terhubung ke server. Coba lagi beberapa saat.';
   }
   btn.disabled = false; btn.textContent = 'Masuk';
 }
 
 function logout() {
+  if (session && session.token) {
+    try { fetch(API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({action:'logout',token:session.token}) }); } catch(e) {}
+  }
   session = null; sessionStorage.removeItem('ptsp_session');
   const btn = document.getElementById('btn-login-header');
   if (btn) { btn.textContent = '\uD83D\uDD10 Petugas'; btn.classList.remove('active'); }
