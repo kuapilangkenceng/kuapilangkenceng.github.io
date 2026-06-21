@@ -631,7 +631,7 @@ footer {
 <!-- ── HERO ── -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-badge">🤝 Fase 9 — PTSP Digital</div>
+    <div class="hero-badge">🤝  — PTSP Digital</div>
     <h1>Layanan Konseling &amp;<br/>Surat Rekomendasi</h1>
     <p>Layanan bimbingan keluarga, pembinaan organisasi keagamaan, dan penerbitan surat rekomendasi resmi dari KUA Kecamatan Pilangkenceng.</p>
     <div class="hero-stats">
@@ -642,13 +642,6 @@ footer {
   </div>
 </section>
 
-<!-- ── LOADING OVERLAY ── -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-card">
-    <div class="spinner"></div>
-    <p id="loadingText">Memproses permohonan…</p>
-  </div>
-</div>
 
 <!-- ── GRID PENJELASAN 9 LAYANAN ── -->
 <section style="padding:40px 0 0">
@@ -692,7 +685,7 @@ footer {
           <div><div class="syarat-label">MATERI BIMBINGAN</div><ul class="syarat-list"><li>Fikih munakahat & hak kewajiban</li><li>Kesehatan reproduksi remaja</li><li>Manajemen konflik keluarga</li><li>Perencanaan ekonomi rumah tangga</li></ul></div>
           <div class="lcard-footer">
             <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-online">Form Digital</span></div>
-            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_bimtek_remaja_nikah" target="_blank" class="btn-daftar-k">Daftar Bimbingan →</a>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_bimwin_remaja" target="_blank" class="btn-daftar-k">Daftar Bimbingan →</a>
           </div>
         </div>
       </div>
@@ -706,7 +699,7 @@ footer {
           <div><div class="syarat-label">SASARAN PROGRAM</div><ul class="syarat-list"><li>Siswa SD/MI, SMP/MTs, SMA/MA</li><li>Materi akhlak & karakter islami</li><li>Koordinasi dengan guru agama</li><li>Kunjungan KUA ke sekolah</li></ul></div>
           <div class="lcard-footer">
             <div class="badge-row"><span class="badge badge-free">Gratis</span><span class="badge badge-online">Form Digital</span></div>
-            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_bimtek_remaja_sekolah" target="_blank" class="btn-daftar-k">Ajukan Program →</a>
+            <a href="https://kuapilangkenceng.github.io/ptsp/konseling.html?jenis=konseling_bimwin_sekolah" target="_blank" class="btn-daftar-k">Ajukan Program →</a>
           </div>
         </div>
       </div>
@@ -799,35 +792,6 @@ footer {
 </section>
 <!-- ── END GRID PENJELASAN ── -->
 
-<!-- ── MAIN ── -->
-<main class="main">
-
-  <!-- Pilihan layanan -->
-  <div id="layananSection">
-    <div class="section-label">Pilih Layanan</div>
-    <div class="layanan-grid" id="layananGrid">
-      <!-- dirender via JS -->
-    </div>
-  </div>
-
-  <!-- Form panel -->
-  <div id="formPanel" class="hidden">
-    <div class="form-panel" id="formContainer">
-      <!-- dirender via JS -->
-    </div>
-    <div class="error-banner" id="errorBanner"></div>
-  </div>
-
-  <!-- Result panel -->
-  <div class="result-panel" id="resultPanel">
-    <div class="result-icon">✅</div>
-    <h3>Permohonan Terkirim!</h3>
-    <div class="result-id" id="resultId">LYN-XXXXXX-001</div>
-    <p>Permohonan Anda telah kami terima. Petugas KUA Pilangkenceng akan menghubungi Anda via WhatsApp untuk konfirmasi jadwal dan dokumen yang diperlukan.</p>
-    <a href="#" class="btn-back-form" onclick="resetForm();return false;">← Ajukan Layanan Lain</a>
-  </div>
-
-</main>
 
 <footer style="background:#1b5e35;color:#fff;padding:2.5rem 1.5rem 1.5rem;font-family:var(--font-body)">
   <div style="max-width:1200px;margin:0 auto">
@@ -866,428 +830,12 @@ footer {
     </div>
     <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
       <p style="font-size:11px;opacity:.45;margin:0">© 2025 KUA Kecamatan Pilangkenceng — Kementerian Agama Kabupaten Madiun. All rights reserved.</p>
-      <p style="font-size:11px;opacity:.45;margin:0">v2.0 — Fase 9 PTSP Digital</p>
+      <p style="font-size:11px;opacity:.45;margin:0">v2.0 —  PTSP Digital</p>
     </div>
   </div>
 </footer>
 
 <script>
-// =============================================================================
-//  layanan-konseling.html — Engine JavaScript
-//  Pola: sama dengan layanan-kiblat.html (fetch config → render form → submit)
-// =============================================================================
-
-const APPS_URL  = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec'; // ganti dengan URL deployment Apps Script
-const KATEGORI  = 'konseling';
-const WAT_TOKEN = ''; // opsional, jika di-handle backend tidak perlu
-
-// ── State ──────────────────────────────────────────────────────────────────
-let CONFIG    = [];   // array layanan dari getFase9Layanan()
-let ACTIVE_ID = null; // jenis_layanan aktif
-let fotoFiles = [];   // file foto yang dipilih
-
-// ── Init ───────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  loadConfig();
-});
-
-// ── Load config dari Apps Script (action=getConfig) ─────────────────────────
-async function loadConfig() {
-  try {
-    const url  = APPS_URL + '?action=getConfig&_=' + Date.now();
-    const resp = await fetch(url);
-    const json = await resp.json();
-
-    // Struktur response: json.forms = flat {id: formObj}, json.kategori = {id: label}
-    // Filter form dengan kategori "Konseling & Rekomendasi"
-    const katLabel = json.kategori && json.kategori[KATEGORI];
-    if (!katLabel) throw new Error('Kategori konseling tidak ditemukan di config');
-
-    CONFIG = Object.values(json.forms || {})
-      .filter(function(f){ return f.kategori === katLabel; });
-
-    if (!CONFIG.length) throw new Error('Tidak ada layanan konseling di config');
-    renderLayananGrid();
-  } catch (err) {
-    document.getElementById('layananGrid').innerHTML =
-      '<p style="color:var(--danger);grid-column:1/-1;padding:20px;text-align:center">' +
-      '&#9888;&#65039; Gagal memuat konfigurasi layanan.<br><small>' + err.message + '</small></p>';
-  }
-}
-
-// ── Render kartu layanan ───────────────────────────────────────────────────
-function renderLayananGrid() {
-  const grid = document.getElementById('layananGrid');
-  grid.innerHTML = '';
-  CONFIG.forEach(lyr => {
-    const hasDoc = lyr.generateDoc === true;
-    const card   = document.createElement('div');
-    card.className = 'layanan-card';
-    card.setAttribute('data-id', lyr.id);
-    card.innerHTML = `
-      <div class="card-icon">${lyr.icon || '📋'}</div>
-      <div class="card-label">${lyr.label}</div>
-      <div class="card-desc">${(lyr.deskripsi || '').substring(0, 80)}${lyr.deskripsi && lyr.deskripsi.length > 80 ? '…' : ''}</div>
-      <div class="card-badge ${hasDoc ? 'doc' : 'form'}">${hasDoc ? '📄 Ada surat resmi' : '📝 Form permohonan'}</div>
-    `;
-    card.addEventListener('click', () => selectLayanan(lyr.id));
-    grid.appendChild(card);
-  });
-}
-
-// ── Pilih layanan → render form ────────────────────────────────────────────
-function selectLayanan(id) {
-  // Highlight card
-  document.querySelectorAll('.layanan-card').forEach(c => {
-    c.classList.toggle('active', c.getAttribute('data-id') === id);
-  });
-
-  ACTIVE_ID = id;
-  const lyr = CONFIG.find(l => l.id === id);
-  if (!lyr) return;
-
-  fotoFiles = [];
-  renderForm(lyr);
-
-  // Scroll ke form
-  setTimeout(() => {
-    document.getElementById('formPanel').classList.remove('hidden');
-    document.getElementById('resultPanel').classList.remove('show');
-    document.getElementById('errorBanner').classList.remove('show');
-    document.getElementById('formContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
-}
-
-// ── Render form ────────────────────────────────────────────────────────────
-function renderForm(lyr) {
-  const wrap = document.getElementById('formContainer');
-
-  let html = `
-    <div class="form-header">
-      <div class="form-header-icon">${lyr.icon || '📋'}</div>
-      <div>
-        <h2>${lyr.label}</h2>
-        <p>${lyr.deskripsi || ''}</p>
-      </div>
-    </div>
-    <div class="form-body">
-  `;
-
-  if (lyr.generateDoc) {
-    html += `<div class="info-box"><span>📄</span>
-      <div>Layanan ini akan menghasilkan <strong>surat resmi</strong> dari KUA Pilangkenceng.
-      Petugas akan menghubungi Anda untuk verifikasi dokumen sebelum surat diterbitkan.</div>
-    </div>`;
-  }
-
-  html += '<form id="mainForm" novalidate>';
-
-  // ── Render universal: nama_pemohon & kontak sudah ada di fields tiap layanan ──
-  const fields = lyr.fields || [];
-  let i = 0;
-  while (i < fields.length) {
-    const f = fields[i];
-
-    // Section header
-    if (f.type === 'section') {
-      html += `<div class="field-section">${f.label}</div>`;
-      i++; continue;
-    }
-
-    // Foto
-    if (f.type === 'photo') {
-      html += renderFotoField(f);
-      i++; continue;
-    }
-
-    // Pasangkan field berdampingan: text+text, date+time, number+number
-    const next = fields[i + 1];
-    const canPair = next && next.type !== 'section' && next.type !== 'photo' &&
-                    next.type !== 'textarea' && next.type !== 'checkbox' &&
-                    f.type !== 'textarea' && f.type !== 'checkbox' &&
-                    !f.showIf && !next.showIf;
-
-    if (canPair) {
-      html += `<div class="field-row col2">${renderField(f)}${renderField(next)}</div>`;
-      i += 2;
-    } else {
-      html += `<div class="field-row">${renderField(f)}</div>`;
-      i++;
-    }
-  }
-
-  // Consent
-  html += `
-    <div class="consent-box">
-      <input type="checkbox" id="consent" required/>
-      <label for="consent">
-        Saya menyatakan bahwa data yang diisikan adalah <strong>benar dan akurat</strong>.
-        Saya menyetujui penggunaan data ini untuk keperluan administrasi layanan KUA Kecamatan Pilangkenceng
-        sesuai ketentuan yang berlaku.
-      </label>
-    </div>
-    <button type="button" class="btn-submit" onclick="submitForm()">
-      ➤ Kirim Permohonan
-    </button>
-  `;
-
-  html += '</form></div>';
-  wrap.innerHTML = html;
-
-  // Pasang event checkbox
-  attachCheckboxEvents();
-  attachShowIfEvents();
-}
-
-// ── Render satu field ──────────────────────────────────────────────────────
-function renderField(f) {
-  const req  = f.required ? '<span class="req">*</span>' : '<span class="opt">(opsional)</span>';
-  const sid  = f.showIf ? `data-showif-field="${f.showIf.field}" data-showif-value="${f.showIf.value || ''}" data-showif-contains="${f.showIf.contains || ''}"` : '';
-  const cls  = f.showIf ? 'field-group hidden' : 'field-group';
-
-  let input = '';
-
-  if (f.type === 'select') {
-    input = `<select id="${f.id}" name="${f.id}" ${f.required ? 'required' : ''} onchange="handleShowIf()">
-      <option value="">— Pilih —</option>
-      ${(f.options || []).map(o => `<option value="${o}">${o}</option>`).join('')}
-    </select>`;
-  } else if (f.type === 'textarea') {
-    input = `<textarea id="${f.id}" name="${f.id}" ${f.required ? 'required' : ''} rows="3"
-      placeholder="${f.placeholder || ''}">${''}</textarea>`;
-  } else if (f.type === 'checkbox') {
-    // Checkbox multi-pilih → dirender terpisah
-    input = `<div class="check-group" id="chk_${f.id}" data-field="${f.id}">
-      ${(f.options || []).map(o =>
-        `<label class="check-item" data-val="${o}">
-          <input type="checkbox" value="${o}"/>${o}
-        </label>`
-      ).join('')}
-    </div>
-    <input type="hidden" id="${f.id}" name="${f.id}" value=""/>`;
-  } else {
-    const ph  = f.placeholder ? `placeholder="${f.placeholder}"` : '';
-    const ml  = f.maxlength   ? `maxlength="${f.maxlength}"`     : '';
-    input = `<input type="${f.type}" id="${f.id}" name="${f.id}"
-      ${f.required ? 'required' : ''} ${ph} ${ml}/>`;
-  }
-
-  return `<div class="${cls}" id="grp_${f.id}" ${sid}>
-    <label for="${f.id}">${f.label} ${req}</label>
-    ${input}
-  </div>`;
-}
-
-// ── Foto field ─────────────────────────────────────────────────────────────
-function renderFotoField(f) {
-  return `<div class="field-group mt16">
-    <label>${f.label} <span class="opt">(opsional)</span></label>
-    <div class="foto-zone" onclick="document.getElementById('fotoInput').click()">
-      📷 Klik untuk pilih foto (maks. 3 foto, masing-masing &lt; 5 MB)
-      <input type="file" id="fotoInput" accept="image/*" multiple onchange="handleFoto(this)"/>
-    </div>
-    <div class="foto-preview" id="fotoPreview"></div>
-  </div>`;
-}
-
-// ── Handle foto ────────────────────────────────────────────────────────────
-function handleFoto(input) {
-  const files  = Array.from(input.files).slice(0, 3);
-  fotoFiles    = files;
-  const preview = document.getElementById('fotoPreview');
-  if (!preview) return;
-  preview.innerHTML = '';
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = document.createElement('img');
-      img.className = 'foto-thumb';
-      img.src = e.target.result;
-      preview.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// ── Checkbox multi-pilih ───────────────────────────────────────────────────
-function attachCheckboxEvents() {
-  document.querySelectorAll('.check-group').forEach(grp => {
-    const fieldId = grp.getAttribute('data-field');
-    grp.querySelectorAll('.check-item').forEach(item => {
-      item.addEventListener('click', () => {
-        item.classList.toggle('checked');
-        item.querySelector('input').checked = item.classList.contains('checked');
-        const vals = Array.from(grp.querySelectorAll('.check-item.checked'))
-                         .map(i => i.getAttribute('data-val')).join(',');
-        const hidden = document.getElementById(fieldId);
-        if (hidden) hidden.value = vals;
-        handleShowIf();
-      });
-    });
-  });
-}
-
-// ── showIf logic ───────────────────────────────────────────────────────────
-function attachShowIfEvents() {
-  document.querySelectorAll('[data-showif-field]').forEach(el => {
-    const trigger = document.getElementById(el.getAttribute('data-showif-field'));
-    if (trigger) trigger.addEventListener('change', handleShowIf);
-  });
-  handleShowIf();
-}
-
-function handleShowIf() {
-  document.querySelectorAll('[data-showif-field]').forEach(el => {
-    const fieldId   = el.getAttribute('data-showif-field');
-    const needVal   = el.getAttribute('data-showif-value');
-    const needCont  = el.getAttribute('data-showif-contains');
-    const trigger   = document.getElementById(fieldId);
-    if (!trigger) return;
-    const cur = trigger.value || '';
-    const show = (needVal && cur === needVal) ||
-                 (needCont && cur.split(',').some(v => v.trim() === needCont));
-    el.classList.toggle('hidden', !show);
-    // Clear hidden required fields
-    if (!show) {
-      const inp = el.querySelector('input,select,textarea');
-      if (inp) inp.removeAttribute('required');
-    }
-  });
-}
-
-// ── Kumpulkan data form ────────────────────────────────────────────────────
-function collectFormData() {
-  const data = {};
-  document.querySelectorAll('#mainForm input, #mainForm select, #mainForm textarea').forEach(el => {
-    if (!el.name || el.name === '' || el.id === 'consent' || el.type === 'file') return;
-    if (el.type === 'checkbox' && !el.id) return; // item dalam check-group
-    data[el.name] = el.value;
-  });
-  return data;
-}
-
-// ── Foto → base64 ──────────────────────────────────────────────────────────
-function fotoToBase64(file) {
-  return new Promise((res, rej) => {
-    const r = new FileReader();
-    r.onload = e => res({ base64: e.target.result.split(',')[1], mimeType: file.type });
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
-}
-
-// ── Validasi ───────────────────────────────────────────────────────────────
-function validateForm() {
-  let ok = true;
-  const form = document.getElementById('mainForm');
-
-  // Consent
-  const consent = document.getElementById('consent');
-  if (!consent || !consent.checked) {
-    showError('Mohon centang persetujuan data terlebih dahulu.');
-    return false;
-  }
-
-  // Required fields yang tidak hidden
-  form.querySelectorAll('[required]').forEach(el => {
-    const grp = el.closest('.field-group');
-    const hidden = grp && grp.classList.contains('hidden');
-    if (!hidden && !el.value.trim()) {
-      el.classList.add('error');
-      ok = false;
-    } else {
-      el.classList.remove('error');
-    }
-  });
-
-  if (!ok) showError('Mohon lengkapi semua field yang wajib diisi (bertanda *).');
-  return ok;
-}
-
-// ── Submit ─────────────────────────────────────────────────────────────────
-async function submitForm() {
-  hideError();
-  if (!validateForm()) return;
-
-  const lyr  = CONFIG.find(l => l.id === ACTIVE_ID);
-  if (!lyr)  return;
-  const data = collectFormData();
-
-  // Konversi foto
-  let fotoArr = [];
-  try {
-    fotoArr = await Promise.all(fotoFiles.map(f => fotoToBase64(f)));
-  } catch (e) {
-    showError('Gagal memproses foto: ' + e.message);
-    return;
-  }
-
-  showLoading('Mengirim permohonan…');
-
-  const payload = {
-    action:        'submit',
-    kategori:      KATEGORI,
-    jenis_layanan: ACTIVE_ID,
-    jenis_label:   lyr.label,
-    nama_pemohon:  data.nama_pemohon || '',
-    kontak:        data.kontak       || '',
-    petugas_ptsp:  '',
-    foto:          fotoArr,
-    data:          data
-  };
-
-  try {
-    const resp = await fetch(APPS_URL, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(payload)
-    });
-    const json = await resp.json();
-    hideLoading();
-
-    if (json.ok) {
-      showResult(json.id || '—');
-    } else {
-      showError('Gagal mengirim: ' + (json.error || 'Unknown error'));
-    }
-  } catch (err) {
-    hideLoading();
-    showError('Terjadi kesalahan jaringan. Pastikan koneksi internet stabil dan coba lagi.');
-  }
-}
-
-// ── UI helpers ─────────────────────────────────────────────────────────────
-function showLoading(text) {
-  document.getElementById('loadingText').textContent = text || 'Memproses…';
-  document.getElementById('loadingOverlay').classList.add('show');
-}
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.remove('show');
-}
-function showError(msg) {
-  const el = document.getElementById('errorBanner');
-  el.textContent = '⚠️ ' + msg;
-  el.classList.add('show');
-  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-function hideError() {
-  document.getElementById('errorBanner').classList.remove('show');
-}
-function showResult(id) {
-  document.getElementById('resultId').textContent = id;
-  document.getElementById('formPanel').classList.add('hidden');
-  document.getElementById('resultPanel').classList.add('show');
-  document.getElementById('resultPanel').scrollIntoView({ behavior: 'smooth' });
-}
-function resetForm() {
-  ACTIVE_ID = null; fotoFiles = [];
-  document.querySelectorAll('.layanan-card').forEach(c => c.classList.remove('active'));
-  document.getElementById('formPanel').classList.add('hidden');
-  document.getElementById('resultPanel').classList.remove('show');
-  hideError();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function filterKonseling(kat, el) {
   document.querySelectorAll('.ftab-k').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
