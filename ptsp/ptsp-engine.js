@@ -36,6 +36,29 @@ window.fetch = function(url, opts) {
   return _fetchAsliEngine(url, opts);
 };
 
+/* ── PATCH ANTI-SPAM: reCAPTCHA v3 (dimuat dinamis, dilewati otomatis kalau SITE KEY belum diisi) ── */
+// ⚠️ WAJIB DIISI: ganti dengan Site Key dari https://www.google.com/recaptcha/admin/create (pilih reCAPTCHA v3)
+const RECAPTCHA_SITE_KEY = '6LfzESwtAAAAAFrIA4vXokZz15-1CW5_CGIWwr6E';
+let _recaptchaReady = false;
+(function loadRecaptcha() {
+  if (!RECAPTCHA_SITE_KEY || RECAPTCHA_SITE_KEY.indexOf('GANTI_') === 0) return;
+  const s = document.createElement('script');
+  s.src = 'https://www.google.com/recaptcha/api.js?render=' + RECAPTCHA_SITE_KEY;
+  s.onload = function () { _recaptchaReady = true; };
+  document.head.appendChild(s);
+})();
+
+async function getRecaptchaToken(action) {
+  if (!_recaptchaReady || typeof grecaptcha === 'undefined') return '';
+  try {
+    return await new Promise(function (resolve) {
+      grecaptcha.ready(function () {
+        grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action || 'submit' }).then(resolve).catch(function () { resolve(''); });
+      });
+    });
+  } catch (e) { return ''; }
+}
+
 async function engineInit() {
   try { const s = sessionStorage.getItem('ptsp_session'); if (s) { session = JSON.parse(s); applySessionUI(); } } catch(e) {}
   await loadConfig();
@@ -390,7 +413,8 @@ async function submitForm() {
   const petugas=(document.getElementById('field_petugas_penerima')||document.getElementById('field_petugas_ptsp')||{value:''}).value.trim()||(session?session.nama:'');
   const isTwoStage = !!currentTahap2Field;
   const isMultiStep = currentPhotoSteps.length > 0;
-  const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
+  const recaptchaToken = await getRecaptchaToken('submit_layanan');
+  const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,recaptchaToken:recaptchaToken,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
   if (isTwoStage) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
   try{
