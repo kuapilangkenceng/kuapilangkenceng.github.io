@@ -1410,9 +1410,9 @@ function renderTable() {
     tbody.innerHTML = slice.map(r => `
       <tr onclick="openDetail('${r.id}')">
         <td class="id-col">${r.id}</td>
-        <td class="nama-col">${r.nama_pemohon || '—'}</td>
-        <td>${r.jenis_label || '—'}</td>
-        <td class="nowrap">${r.petugas_ptsp || '—'}</td>
+        <td class="nama-col">${escHtml(r.nama_pemohon || '—')}</td>
+        <td>${escHtml(r.jenis_label || '—')}</td>
+        <td class="nowrap">${escHtml(r.petugas_ptsp || '—')}</td>
         <td class="nowrap">${formatTs(r.timestamp)}</td>
         <td>${badgeHtml(r.status_layanan)}</td>
       </tr>`).join('');
@@ -1455,8 +1455,8 @@ function renderRecent() {
   tbody.innerHTML = slice.map(r => `
     <tr>
       <td class="id-col">${r.id}</td>
-      <td class="nama-col">${r.nama_pemohon || '—'}</td>
-      <td>${r.jenis_label || '—'}</td>
+      <td class="nama-col">${escHtml(r.nama_pemohon || '—')}</td>
+      <td>${escHtml(r.jenis_label || '—')}</td>
       <td class="nowrap">${formatTs(r.timestamp)}</td>
       <td>${badgeHtml(r.status_layanan)}</td>
     </tr>`).join('');
@@ -1563,7 +1563,7 @@ function buildDataRowsNikahRekomendasi(data) {
     let rows = '';
     fields.forEach(([val, label]) => {
       if (val === undefined || val === null || val === '') return;
-      rows += `<tr><td>${label}</td><td>${val}</td></tr>`;
+      rows += `<tr><td>${label}</td><td>${escHtml(val)}</td></tr>`;
     });
     return rows;
   };
@@ -1623,7 +1623,7 @@ function buildDataRowsNikahRekomendasi(data) {
   Object.entries(data).forEach(([k, v]) => {
     if (k.startsWith('_') || usedKeys.has(k)) return;
     if (v === undefined || v === null || v === '') return;
-    sisaRows += `<tr><td>${k.replace(/_/g,' ')}</td><td>${v}</td></tr>`;
+    sisaRows += `<tr><td>${escHtml(k.replace(/_/g,' '))}</td><td>${escHtml(v)}</td></tr>`;
   });
   if (sisaRows) {
     html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">LAINNYA</td></tr>${sisaRows}`;
@@ -1693,7 +1693,7 @@ function buildDataRowsNikahPendaftaran(data) {
       used.add(key);
       const val = data[key];
       if (val === undefined || val === null || val === '') return;
-      rows += `<tr><td>${label}</td><td>${val}</td></tr>`;
+      rows += `<tr><td>${label}</td><td>${escHtml(val)}</td></tr>`;
     });
     if (rows) {
       html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">${sec.title}</td></tr>${rows}`;
@@ -1705,7 +1705,7 @@ function buildDataRowsNikahPendaftaran(data) {
   Object.entries(data).forEach(([k, v]) => {
     if (k.startsWith('_') || used.has(k)) return;
     if (v === undefined || v === null || v === '') return;
-    sisaRows += `<tr><td>${k.replace(/_/g,' ')}</td><td>${v}</td></tr>`;
+    sisaRows += `<tr><td>${escHtml(k.replace(/_/g,' '))}</td><td>${escHtml(v)}</td></tr>`;
   });
   if (sisaRows) {
     html += `<tr><td colspan="2" style="font-weight:700;background:#f5f5f5">LAINNYA</td></tr>${sisaRows}`;
@@ -1729,7 +1729,7 @@ function openDetail(id) {
     ? buildDataRowsNikahRekomendasi(rec.data || {})
     : Object.entries(rec.data || {})
     .filter(([k]) => !k.startsWith('_'))
-    .map(([k, v]) => `<tr><td>${k.replace(/_/g,' ')}</td><td>${v || '—'}</td></tr>`)
+    .map(([k, v]) => `<tr><td>${escHtml(k.replace(/_/g,' '))}</td><td>${escHtml(v) || '—'}</td></tr>`)
     .join('');
 
   // Foto
@@ -1747,15 +1747,15 @@ function openDetail(id) {
     <div class="detail-grid">
       <div class="detail-item">
         <div class="detail-lbl">Nama Pemohon</div>
-        <div class="detail-val">${rec.nama_pemohon || '—'}</div>
+        <div class="detail-val">${escHtml(rec.nama_pemohon || '—')}</div>
       </div>
       <div class="detail-item">
         <div class="detail-lbl">Kontak</div>
-        <div class="detail-val">${rec.kontak || '—'}</div>
+        <div class="detail-val">${escHtml(rec.kontak || '—')}</div>
       </div>
       <div class="detail-item">
         <div class="detail-lbl">Petugas PTSP</div>
-        <div class="detail-val">${rec.petugas_ptsp || '—'}</div>
+        <div class="detail-val">${escHtml(rec.petugas_ptsp || '—')}</div>
       </div>
       <div class="detail-item">
         <div class="detail-lbl">Waktu Submit</div>
@@ -1767,7 +1767,7 @@ function openDetail(id) {
       </div>
       <div class="detail-item">
         <div class="detail-lbl">Kategori</div>
-        <div class="detail-val">${rec.kategori}</div>
+        <div class="detail-val">${escHtml(rec.kategori)}</div>
       </div>
     </div>
 
@@ -1786,7 +1786,7 @@ function openDetail(id) {
         `).join('')}
       </div>
       <textarea class="catatan-inp" id="catatan-inp" rows="2"
-        placeholder="Catatan admin (opsional)...">${catatanLama}</textarea>
+        placeholder="Catatan admin (opsional)...">${escHtml(catatanLama)}</textarea>
       <button class="btn-simpan-status" onclick="simpanStatus('${rec.id}')">💾 Simpan Status</button>
       ${session.role === 'admin' ? `<button class="btn-simpan-status" style="background:#c0392b;margin-top:6px" onclick="hapusLayanan('${rec.id}')">🗑️ Hapus Layanan</button>` : ''}
     </div>
@@ -1805,8 +1805,8 @@ function _isiGenArea(rec) {
       '<button class="btn-dok ' + (rec.dok_url ? 'sudah' : '') + '" ' +
       'style="width:100%;padding:9px;font-size:13px;border-radius:8px" ' +
       'onclick="bukaModalGenerate(\'' + rec.id + '\',\'' + rec.jenis_layanan + '\',' +
-      '\'' + (rec.nama_pemohon||'').replace(/'/g,"\\'") + '\',' +
-      '\'' + (rec.jenis_label||'').replace(/'/g,"\\'") + '\',' +
+      '\'' + escJsAttr(rec.nama_pemohon||'') + '\',' +
+      '\'' + escJsAttr(rec.jenis_label||'') + '\',' +
       '\'' + (rec.dok_url||'') + '\')">' +
       (rec.dok_url ? '📄 Lihat / Re-generate Dokumen' : '📄 Generate Dokumen') +
       '</button></div>';
@@ -1987,24 +1987,24 @@ function renderUsers() {
   wrap.innerHTML = '<table class="tbl"><thead><tr><th>Username</th><th>Nama</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>' +
     usersData.map(u => `
       <tr>
-        <td style="font-weight:700;color:var(--green)">${u.username}</td>
-        <td>${u.nama}</td>
-        <td><span class="badge ${u.role === 'admin' ? 'selesai' : 'baru'}">${u.role}</span></td>
+        <td style="font-weight:700;color:var(--green)">${escHtml(u.username)}</td>
+        <td>${escHtml(u.nama)}</td>
+        <td><span class="badge ${u.role === 'admin' ? 'selesai' : 'baru'}">${escHtml(u.role)}</span></td>
         <td><span class="badge ${u.aktif ? 'selesai' : 'ditolak'}">${u.aktif ? 'Aktif' : 'Nonaktif'}</span></td>
         <td>
-          <button onclick="toggleUserStatus('${u.username}',${u.aktif})"
+          <button onclick="toggleUserStatus('${escJsAttr(u.username)}',${u.aktif})"
             style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
                    background:${u.aktif ? 'var(--red-light)' : 'var(--green-light)'};
                    color:${u.aktif ? 'var(--red)' : 'var(--green)'};
                    border:1.5px solid ${u.aktif ? 'var(--red)' : 'var(--green)'}">
             ${u.aktif ? 'Nonaktifkan' : 'Aktifkan'}
           </button>
-          <button onclick="bukaAksesMenu('${u.username}')"
+          <button onclick="bukaAksesMenu('${escJsAttr(u.username)}')"
             style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
                    background:var(--green-light);color:var(--green);border:1.5px solid var(--green);margin-left:4px">
             Edit User
           </button>
-          ${u.username !== 'admin' ? `<button onclick="hapusUser('${u.username}')"
+          ${u.username !== 'admin' ? `<button onclick="hapusUser('${escJsAttr(u.username)}')"
             style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
                    background:var(--red-light);color:var(--red);border:1.5px solid var(--red);margin-left:4px">
             Hapus
@@ -2047,7 +2047,7 @@ function bukaAksesMenu(username) {
         <input type="password" id="edit-user-password" placeholder="Kosongkan jika tidak diubah (min. 6 karakter)"
                style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px">
       </div>
-      <button class="btn-simpan-status" style="width:100%;margin-top:16px" onclick="simpanAksesMenu('${username}')">💾 Simpan Perubahan</button>
+      <button class="btn-simpan-status" style="width:100%;margin-top:16px" onclick="simpanAksesMenu('${escJsAttr(username)}')">💾 Simpan Perubahan</button>
     </div>`;
   if (!isAdminUser) renderLayananAksesList('akses-layanan-list', allowedLayanan);
   document.getElementById('modal-overlay').classList.add('show');
@@ -2175,10 +2175,10 @@ function renderLogAktivitas(logs) {
   wrap.innerHTML = logs.map(l => `
     <tr>
       <td class="nowrap">${l.timestamp || '-'}</td>
-      <td style="font-weight:700;color:var(--green)">${l.username || '-'}</td>
-      <td>${l.aksi || '-'}</td>
-      <td>${l.detail || '-'}</td>
-      <td>${l.target_id || '-'}</td>
+      <td style="font-weight:700;color:var(--green)">${escHtml(l.username || '-')}</td>
+      <td>${escHtml(l.aksi || '-')}</td>
+      <td>${escHtml(l.detail || '-')}</td>
+      <td>${escHtml(l.target_id || '-')}</td>
     </tr>`).join('');
 }
 
@@ -2425,8 +2425,8 @@ function renderArtikel() {
     return;
   }
   wrap.innerHTML = artikelFiltered.map(function(a) {
-    var fotoA = a.foto_url ? '<img class="artikel-foto" src="' + a.foto_url + '" onerror="this.style.display=\'none\'"/>' : '';
-    var editorA = a.editor ? '<span>&#9999; ' + a.editor + '</span>' : '';
+    var fotoA = a.foto_url ? '<img class="artikel-foto" src="' + escHtml(a.foto_url) + '" onerror="this.style.display=\'none\'"/>' : '';
+    var editorA = a.editor ? '<span>&#9999; ' + escHtml(a.editor) + '</span>' : '';
     var badgeA = a.status === 'Published' ? 'selesai' : 'baru';
     var pubBtn = a.status === 'Draft'
       ? '<button class="btn-publish" onclick="event.stopPropagation();doPublish(\'' + a.id + '\')">&#128640; Publish</button>'
@@ -2434,16 +2434,16 @@ function renderArtikel() {
     var hapusBtn = '<button class="btn-publish" style="background:#7f1d1d;margin-left:4px" onclick="event.stopPropagation();doHapusArtikel(\'' + a.id + '\')">&#128465; Hapus</button>';
     return '<div class="artikel-card" onclick="openArtikelModal(\'' + a.id + '\')">' +
       '<div class="artikel-card-header"><div style="flex:1">' +
-      '<div class="artikel-judul">' + a.judul + '</div>' +
+      '<div class="artikel-judul">' + escHtml(a.judul) + '</div>' +
       '<div class="artikel-meta">' +
-      '<span>&#128197; ' + a.tanggal + '</span>' +
-      '<span>&#127991; ' + a.kategori + '</span>' +
+      '<span>&#128197; ' + escHtml(a.tanggal) + '</span>' +
+      '<span>&#127991; ' + escHtml(a.kategori) + '</span>' +
       '<span>' + (a.by_ai ? '&#129302; AI Generated' : '&#9997; Manual') + '</span>' +
       editorA + '</div></div>' + fotoA + '</div>' +
-      '<div class="artikel-preview">' + (a.isi || '').replace(/\n/g, ' ') + '</div>' +
+      '<div class="artikel-preview">' + escHtml((a.isi || '').replace(/\n/g, ' ')) + '</div>' +
       '<div class="artikel-footer">' +
-      '<div class="artikel-tags">&#127991; ' + (a.tags || '&#8212;') + '</div>' +
-      '<span class="badge ' + badgeA + '">' + a.status + '</span>' +
+      '<div class="artikel-tags">&#127991; ' + escHtml(a.tags || '&#8212;') + '</div>' +
+      '<span class="badge ' + badgeA + '">' + escHtml(a.status) + '</span>' +
       pubBtn + hapusBtn + '</div></div>';
   }).join('');
 }
@@ -2457,7 +2457,7 @@ function openArtikelModal(id) {
   document.getElementById('modal-subtitle').textContent = a.kategori + ' · ' + a.tanggal + (a.by_ai ? ' · 🤖 AI' : '');
 
   const body = document.getElementById('modal-body');
-  var fotoModal = a.foto_url ? '<img src="' + a.foto_url + '" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:16px;" onerror="this.style.display=\'none\'"/>' : '';
+  var fotoModal = a.foto_url ? '<img src="' + escHtml(a.foto_url) + '" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:16px;" onerror="this.style.display=\'none\'"/>' : '';
   var aiLabel = a.by_ai ? '<span style="color:var(--green);font-size:10px">&#9679; AI Generated &#8212; bebas diedit</span>' : '';
   var pubBtnModal = a.status === 'Draft'
     ? '<button class="btn-publish" style="padding:10px 20px" onclick="doPublish(\'' + a.id + '\')">&#128640; Publish Sekarang</button>'
@@ -2486,6 +2486,17 @@ function openArtikelModal(id) {
 
 function escHtml(str) {
   return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Untuk nilai yang disisipkan ke dalam onclick="fungsi('...')" — escape lapis string-JS lalu lapis atribut-HTML.
+// PATCH KEAMANAN: menggantikan pola lama .replace(/'/g,"\\'") yang tidak menutup celah breakout via karakter " .
+function escJsAttr(str) {
+  return String(str == null ? '' : str)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 }
 
 async function simpanEditArtikel(id) {
@@ -2628,8 +2639,8 @@ function btnDokHtml(r) {
   var BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','nikah_bimwin','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
   if (!BISA.includes(r.jenis_layanan)) return '';
   var ada  = !!r.dok_url;
-  var nama = (r.nama_pemohon || '').replace(/'/g, "\\'");
-  var lbl  = (r.jenis_label  || '').replace(/'/g, "\\'");
+  var nama = escJsAttr(r.nama_pemohon || '');
+  var lbl  = escJsAttr(r.jenis_label  || '');
   return '<button class="btn-dok ' + (ada ? 'sudah' : '') + '" ' +
     'onclick="event.stopPropagation();bukaModalGenerate(\'' + r.id + '\',\'' +
     r.jenis_layanan + '\',\'' + nama + '\',\'' + lbl + '\',\'' + (r.dok_url||'') + '\')">' +
@@ -2837,15 +2848,14 @@ function renderGenerate() {
     tbody.innerHTML = slice.map(function(r) {
       var ada = !!r.dok_url;
       var dokBadge = ada ? '<span class="badge selesai">&#10003; Ada</span>' : '<span class="badge baru">&#8987; Belum</span>';
-      var nm = (r.nama_pemohon||'').replace(/'/g,"\'");
-      var lb = (r.jenis_label||'').replace(/'/g,"\'");
-            var dokUrl = r.dok_url || '';
-      var btn = '<button class="btn-dok' + (ada ? ' sudah' : '') + '" onclick="bukaModalGenerate(' +
-        JSON.stringify(r.id) + ',' + JSON.stringify(r.jenis_layanan) + ',' +
-        JSON.stringify(r.nama_pemohon||'') + ',' + JSON.stringify(r.jenis_label||'') + ',' +
-        JSON.stringify(dokUrl) + ')">' +
+      var nm = escJsAttr(r.nama_pemohon||'');
+      var lb = escJsAttr(r.jenis_label||'');
+      var dokUrl = r.dok_url || '';
+      var btn = '<button class="btn-dok' + (ada ? ' sudah' : '') + '" onclick="bukaModalGenerate(\'' +
+        r.id + '\',\'' + r.jenis_layanan + '\',\'' +
+        nm + '\',\'' + lb + '\',\'' + escJsAttr(dokUrl) + '\')">' +
         (ada ? '&#128196; Lihat / Re-generate' : '&#128196; Generate') + '</button>';
-      return '<tr><td class="id-col">'+r.id+'</td><td class="nama-col">'+(r.nama_pemohon||'&#8212;')+'</td><td>'+(r.jenis_label||'&#8212;')+'</td><td>'+(r.kategori||'&#8212;')+'</td><td class="nowrap">'+formatTs(r.timestamp)+'</td><td>'+badgeHtml(r.status_layanan)+'</td><td>'+dokBadge+'</td><td>'+btn+'</td></tr>';
+      return '<tr><td class="id-col">'+r.id+'</td><td class="nama-col">'+escHtml(r.nama_pemohon||'—')+'</td><td>'+escHtml(r.jenis_label||'—')+'</td><td>'+escHtml(r.kategori||'—')+'</td><td class="nowrap">'+formatTs(r.timestamp)+'</td><td>'+badgeHtml(r.status_layanan)+'</td><td>'+dokBadge+'</td><td>'+btn+'</td></tr>';
     }).join('');
   }
   document.getElementById('gen-pg-info').textContent = (start+1)+'–'+Math.min(start+GEN_PER_PAGE,total)+' dari '+total;
