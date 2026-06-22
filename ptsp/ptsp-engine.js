@@ -164,6 +164,7 @@ function renderLayananList() {
 
 function showForm(jenis) {
   currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
+  var _pw = document.getElementById('pasfoto-inline-wrap'); if (_pw) _pw.remove();
   const f = CONFIG.forms[jenis]; if (!f) return;
   document.getElementById('form-title').textContent = f.label;
   document.getElementById('form-desc').textContent = f.deskripsi || f.kategori;
