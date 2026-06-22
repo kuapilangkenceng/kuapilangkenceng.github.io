@@ -189,6 +189,11 @@ function showForm(jenis) {
     }
   }
 
+  // Mode petugas + nikah_alur_lengkap: skip surat_keluar & photoSteps
+  if (session && jenis === 'nikah_alur_lengkap') {
+    mainFields = mainFields.filter(function(fd){ return fd.id !== '_sec_surat_keluar' && fd.id !== 'surat_keluar'; });
+    currentPhotoSteps = [];
+  }
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
   if (mainFields.length) { addST(body,'Data Layanan'); mainFields.forEach(function(fd){ renderField(body,fd); }); }
   if (f.autofill && session) setupAutofill(f.autofill);
@@ -475,6 +480,38 @@ function renderRekap() {
   const body = document.getElementById('rekap-foto-body'); body.innerHTML='';
   photoFiles = []; // reset, foto tahap 1 sudah terkirim
   if (currentTahap2Field) renderField(body, currentTahap2Field);
+  // Mode petugas + nikah_alur_lengkap: tampilkan pasfoto dari record
+  if (session && currentJenis === 'nikah_alur_lengkap' && currentLayananId) {
+    renderPasfotoCatin(body);
+  }
+}
+
+function renderPasfotoCatin(container) {
+  var wrap = document.createElement('div');
+  wrap.style.cssText = 'margin-top:16px;padding:14px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px';
+  wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
+    + '<div id="pasfoto-wrap" style="display:flex;gap:16px;flex-wrap:wrap"><div style="font-size:12px;color:#888">Memuat foto...</div></div>';
+  container.appendChild(wrap);
+  fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId))
+    .then(function(r){ return r.json(); })
+    .then(function(json) {
+      var pw = document.getElementById('pasfoto-wrap'); if (!pw) return;
+      var urls = (json.record && json.record.foto_urls) ? json.record.foto_urls : {};
+      var fields = [{id:'pasfoto_pa',label:'Catin Pria'},{id:'pasfoto_pi',label:'Catin Wanita'}];
+      var found = 0;
+      fields.forEach(function(f) {
+        var url = urls[f.id]; if (!url) return;
+        found++;
+        var card = document.createElement('div');
+        card.style.cssText = 'text-align:center;font-size:11px;color:#555';
+        card.innerHTML = '<img src="' + url + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + f.label;
+        pw.appendChild(card);
+      });
+      if (!found) pw.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
+    })
+    .catch(function() {
+      var pw = document.getElementById('pasfoto-wrap'); if (pw) pw.innerHTML = '<div style="font-size:12px;color:#aaa">Gagal memuat foto.</div>';
+    });
 }
 
 // ── Multi-step foto (photoSteps) ─────────────────────────────
