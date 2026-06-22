@@ -189,9 +189,10 @@ function showForm(jenis) {
     }
   }
 
-  // Mode petugas + nikah_alur_lengkap: skip surat_keluar & photoSteps
+  // Mode petugas + nikah_alur_lengkap: skip surat_keluar, pasfoto upload, & photoSteps
   if (session && jenis === 'nikah_alur_lengkap') {
-    mainFields = mainFields.filter(function(fd){ return fd.id !== '_sec_surat_keluar' && fd.id !== 'surat_keluar'; });
+    var skipIds = ['_sec_surat_keluar','surat_keluar','_sec_pasfoto','pasfoto_pa','pasfoto_pi'];
+    mainFields = mainFields.filter(function(fd){ return skipIds.indexOf(fd.id) === -1; });
     currentPhotoSteps = [];
   }
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
