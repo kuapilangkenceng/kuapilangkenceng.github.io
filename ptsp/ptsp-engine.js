@@ -189,9 +189,10 @@ function showForm(jenis) {
     }
   }
 
-  // Mode petugas + nikah_alur_lengkap: skip surat_keluar, pasfoto upload, & photoSteps
+  // Mode petugas + nikah_alur_lengkap: skip field tertentu & photoSteps
   if (session && jenis === 'nikah_alur_lengkap') {
-    var skipIds = ['_sec_surat_keluar','surat_keluar','_sec_pasfoto','pasfoto_pa','pasfoto_pi'];
+    var skipIds = ['petugas_penerima','_sec_surat_keluar','surat_keluar',
+                   '_sec_pasfoto','pasfoto_pa','pasfoto_pi','foto_petugas_ptsp'];
     mainFields = mainFields.filter(function(fd){ return skipIds.indexOf(fd.id) === -1; });
     currentPhotoSteps = [];
   }
@@ -199,6 +200,7 @@ function showForm(jenis) {
   if (mainFields.length) { addST(body,'Data Layanan'); mainFields.forEach(function(fd){ renderField(body,fd); }); }
   if (f.autofill && session) setupAutofill(f.autofill);
   if (jenis === 'nikah_bimwin' && session) setTimeout(triggerAutofillBimwin, 100);
+  if (jenis === 'nikah_alur_lengkap' && session) setTimeout(triggerRecallCatin, 100);
   if ((CONFIG.publishMode||{})[jenis]==='kegiatan' && session && CONFIG.consentField) {
     addST(body,'Izin Publikasi'); const d=document.createElement('div'); d.className='consent-box'; renderField(d,CONFIG.consentField); body.appendChild(d);
   }
@@ -355,6 +357,87 @@ function triggerAutofillBimwin() {
     });
 }
 
+function triggerRecallCatin() {
+  var body = document.getElementById('form-body'); if (!body) return;
+  var wrap = document.createElement('div');
+  wrap.id = 'catin-recall-wrap';
+  wrap.style.cssText = 'background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;padding:14px 16px;margin-bottom:16px';
+  wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#2d8c5e);margin-bottom:8px">&#128203; Pilih Pendaftaran Nikah</div>'
+    + '<select id="catin-recall-select" style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;background:#fff">'
+    + '<option value="">\xe2\x80\x94 Memuat data pendaftaran... \xe2\x80\x94</option></select>'
+    + '<div id="catin-recall-info" style="font-size:11px;color:#666;margin-top:6px"></div>';
+  body.insertBefore(wrap, body.firstChild);
+
+  fetch(API_URL + '?action=listpendaftaran')
+    .then(function(r){ return r.json(); })
+    .then(function(json) {
+      var sel = document.getElementById('catin-recall-select'); if (!sel) return;
+      var list = json.results || [];
+      if (!list.length) { sel.innerHTML = '<option value="">\xe2\x80\x94 Belum ada pendaftaran \xe2\x80\x94</option>'; return; }
+      sel.innerHTML = '<option value="">\xe2\x80\x94 Pilih pasangan catin \xe2\x80\x94</option>';
+      list.forEach(function(r) {
+        var opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = r.label;
+        sel.appendChild(opt);
+      });
+      document.getElementById('catin-recall-info').textContent = list.length + ' pendaftaran belum terlaksana';
+      sel.addEventListener('change', function() {
+        var id = sel.value; if (!id) return;
+        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(id))
+          .then(function(r){ return r.json(); })
+          .then(function(json) {
+            if (!json.ok || !json.record) { showToast('Gagal memuat data pendaftaran.', true); return; }
+            var d = json.record.data || {};
+            // Autofill semua field yang ada di form
+            document.querySelectorAll('[id^="field_"]').forEach(function(el) {
+              var key = el.id.replace('field_', '');
+              if (d[key] !== undefined && d[key] !== null && d[key] !== '') {
+                el.value = d[key];
+                el.setAttribute('readonly', 'readonly');
+                el.style.background = '#f5f5f5';
+                el.style.color = '#555';
+              }
+            });
+            // Simpan ID pendaftaran untuk rekap
+            currentLayananId = id;
+            evalAllConditions();
+            showToast('Data catin terisi dari pendaftaran');
+            // Render pasfoto inline sebelum tombol Kirim
+            var existing = document.getElementById('pasfoto-inline-wrap');
+            if (existing) existing.remove();
+            var submitWrap = document.querySelector('.btn-submit') ? document.querySelector('.btn-submit').parentElement : null;
+            if (submitWrap) {
+              var pw = document.createElement('div');
+              pw.id = 'pasfoto-inline-wrap';
+              pw.style.cssText = 'padding:14px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;margin-bottom:16px';
+              pw.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
+                + '<div id="pasfoto-inline-imgs" style="display:flex;gap:16px;flex-wrap:wrap"></div>';
+              submitWrap.parentElement.insertBefore(pw, submitWrap);
+              var urls = (json.record.foto_urls) ? json.record.foto_urls : {};
+              var fotoFields = [{id:'pasfoto_pa',label:'Catin Pria'},{id:'pasfoto_pi',label:'Catin Wanita'}];
+              var imgWrap = document.getElementById('pasfoto-inline-imgs');
+              var found = 0;
+              fotoFields.forEach(function(ff) {
+                var url = urls[ff.id]; if (!url) return;
+                found++;
+                var card = document.createElement('div');
+                card.style.cssText = 'text-align:center;font-size:11px;color:#555';
+                card.innerHTML = '<img src="' + url + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + ff.label;
+                imgWrap.appendChild(card);
+              });
+              if (!found) imgWrap.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
+            }
+          })
+          .catch(function(){ showToast('Tidak dapat memuat data.', true); });
+      });
+    })
+    .catch(function() {
+      var sel = document.getElementById('catin-recall-select');
+      if (sel) sel.innerHTML = '<option value="">\xe2\x80\x94 Gagal memuat data \xe2\x80\x94</option>';
+    });
+}
+
 function renderBannerEcoteologyLuar(containerEl) {
   const lama=document.getElementById('banner-eco-luar'); if(lama) lama.remove();
   const banner=document.createElement('div'); banner.id='banner-eco-luar';
@@ -445,6 +528,21 @@ async function submitForm() {
   const isTwoStage = !!currentTahap2Field;
   const isMultiStep = currentPhotoSteps.length > 0;
   const recaptchaToken = await getRecaptchaToken('submit_layanan');
+  // Mode petugas review nikah_alur_lengkap: kirim updateData ke record existing
+  if (session && currentJenis === 'nikah_alur_lengkap' && currentLayananId) {
+    const btn2=document.getElementById('btn-submit');
+    btn2.disabled=true; btn2.classList.add('loading'); btn2.textContent='Menyimpan...';
+    try {
+      const res2=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'updateData',id:currentLayananId,data:data,pelaku:session.nama})});
+      const result2=await res2.json();
+      if(result2.ok){
+        showToast('Data pendaftaran berhasil diperbarui.');
+        setTimeout(function(){ resetAll(); }, 1500);
+      } else { showToast('Gagal: '+(result2.error||'Unknown error'),true); }
+    } catch(e){ showToast('Tidak dapat terhubung ke server.',true); }
+    btn2.disabled=false; btn2.classList.remove('loading'); btn2.textContent='\uD83D\uDCE4 Kirim Layanan';
+    return;
+  }
   const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,recaptchaToken:recaptchaToken,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
   if (isTwoStage) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
