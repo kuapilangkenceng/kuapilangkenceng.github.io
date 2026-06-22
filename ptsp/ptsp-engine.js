@@ -423,7 +423,9 @@ function triggerRecallCatin() {
                 found++;
                 var card = document.createElement('div');
                 card.style.cssText = 'text-align:center;font-size:11px;color:#555';
-                card.innerHTML = '<img src="' + url + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + ff.label;
+                var imgUrl = url.replace(/\/file\/d\/([^/]+).*/, '/uc?export=view&id=$1');
+                if (imgUrl === url && url.indexOf('id=') !== -1) { var m = url.match(/id=([^&]+)/); if(m) imgUrl = 'https://drive.google.com/uc?export=view&id=' + m[1]; }
+                card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + ff.label;
                 imgWrap.appendChild(card);
               });
               if (!found) imgWrap.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
@@ -579,10 +581,6 @@ function renderRekap() {
   const body = document.getElementById('rekap-foto-body'); body.innerHTML='';
   photoFiles = []; // reset, foto tahap 1 sudah terkirim
   if (currentTahap2Field) renderField(body, currentTahap2Field);
-  // Mode petugas + nikah_alur_lengkap: tampilkan pasfoto dari record
-  if (session && currentJenis === 'nikah_alur_lengkap' && currentLayananId) {
-    renderPasfotoCatin(body);
-  }
 }
 
 function renderPasfotoCatin(container) {
