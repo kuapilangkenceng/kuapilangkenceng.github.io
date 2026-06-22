@@ -461,6 +461,7 @@ function _clearPendingTahap2() {
   try { localStorage.removeItem('ptsp_pending_tahap2'); } catch(e) {}
 }
 function _checkPendingTahap2() {
+  if (session) return; // Mode petugas: skip resume Tahap 2
   try {
     const raw = localStorage.getItem('ptsp_pending_tahap2');
     if (!raw) return;
