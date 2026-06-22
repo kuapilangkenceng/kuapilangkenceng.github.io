@@ -193,7 +193,7 @@ function showForm(jenis) {
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
   if (mainFields.length) { addST(body,'Data Layanan'); mainFields.forEach(function(fd){ renderField(body,fd); }); }
   if (f.autofill && session) setupAutofill(f.autofill);
-  if (['nikah_bimwin','nikah_rafak','nikah_verifikasi_pendaftaran'].includes(jenis) && session) setTimeout(triggerAutofillBimwin, 100);
+  if (jenis === 'nikah_bimwin' && session) setTimeout(triggerAutofillBimwin, 100);
   if ((CONFIG.publishMode||{})[jenis]==='kegiatan' && session && CONFIG.consentField) {
     addST(body,'Izin Publikasi'); const d=document.createElement('div'); d.className='consent-box'; renderField(d,CONFIG.consentField); body.appendChild(d);
   }
@@ -308,20 +308,46 @@ function applyAutofill(srcData,map,triggerField) { let filled=0; Object.entries(
 function setupAutofill(cfg) { document.addEventListener('click',function(e){ if(!e.target.closest('.autocomplete-wrap')) document.querySelectorAll('.autocomplete-dropdown').forEach(function(d){d.style.display='none';}); }); }
 
 function triggerAutofillBimwin() {
-  const namaField=document.getElementById('field_nama_pa'); if(!namaField) return;
-  namaField.placeholder='Ketik nama catin pria untuk autofill...';
-  namaField.addEventListener('input',function(){
-    clearTimeout(this._afTimer); this._afTimer=setTimeout(async function(){
-      const q=namaField.value.trim(); if(q.length<3) return;
-      try{ const res=await fetch(API_URL+'?action=lookup&jenis=nikah_pendaftaran&field=nama_pa&q='+encodeURIComponent(q)); const json=await res.json(); if(json.results&&json.results.length) showAutofillBimwinDropdown(json.results,namaField); }catch(e){}
-    },500);
-  });
-}
-function showAutofillBimwinDropdown(results,anchor) {
-  let dd=document.getElementById('bimwin-af-dd');
-  if(!dd){ dd=document.createElement('div'); dd.id='bimwin-af-dd'; dd.style.cssText='position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--green);border-top:none;border-radius:0 0 8px 8px;z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.12)'; anchor.parentElement.style.position='relative'; anchor.parentElement.appendChild(dd); }
-  dd.innerHTML=''; results.forEach(function(r){ const item=document.createElement('div'); item.style.cssText='padding:10px 14px;font-size:13px;cursor:pointer;border-bottom:1px solid #eee'; item.textContent=r.label; item.onmouseenter=function(){item.style.background='var(--green-light)';}; item.onmouseleave=function(){item.style.background='';}; item.onclick=function(){ applyAutofill(r.data,{nama_pa:'nama_pa',nama_pi:'nama_pi',kontak:'kontak'},'nama_pa'); dd.remove(); showToast('Data catin terisi otomatis dari pendaftaran'); }; dd.appendChild(item); });
-  dd.style.display=results.length?'block':'none';
+  var body = document.getElementById('form-body'); if (!body) return;
+  var wrap = document.createElement('div');
+  wrap.id = 'bimwin-recall-wrap';
+  wrap.style.cssText = 'background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;padding:14px 16px;margin-bottom:16px';
+  wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#2d8c5e);margin-bottom:8px">📋 Pilih Pendaftaran Nikah</div>'
+    + '<select id="bimwin-recall-select" style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;background:#fff">'
+    + '<option value="">— Memuat data pendaftaran... —</option></select>'
+    + '<div id="bimwin-recall-info" style="font-size:11px;color:#666;margin-top:6px"></div>';
+  body.insertBefore(wrap, body.firstChild);
+
+  fetch(API_URL + '?action=listpendaftaran')
+    .then(function(r){ return r.json(); })
+    .then(function(json) {
+      var sel = document.getElementById('bimwin-recall-select'); if (!sel) return;
+      var list = json.results || [];
+      if (!list.length) {
+        sel.innerHTML = '<option value="">— Belum ada pendaftaran —</option>';
+        return;
+      }
+      sel.innerHTML = '<option value="">— Pilih pasangan catin —</option>';
+      list.forEach(function(r) {
+        var opt = document.createElement('option');
+        opt.value = r.id;
+        opt.textContent = r.label;
+        opt.dataset.payload = JSON.stringify(r.data);
+        sel.appendChild(opt);
+      });
+      document.getElementById('bimwin-recall-info').textContent = list.length + ' pendaftaran belum terlaksana';
+      sel.addEventListener('change', function() {
+        var opt = sel.options[sel.selectedIndex];
+        if (!opt || !opt.dataset.payload) return;
+        var d = JSON.parse(opt.dataset.payload);
+        var map = { nama_pa:'nama_pa', nama_pi:'nama_pi', kontak:'kontak', surat_keluar:'surat_keluar' };
+        applyAutofill(d, map, 'nama_pa');
+        showToast('Data catin terisi otomatis dari pendaftaran');
+      });
+    })
+    .catch(function() {
+      var sel = document.getElementById('bimwin-recall-select'); if (sel) sel.innerHTML = '<option value="">— Gagal memuat data —</option>';
+    });
 }
 
 function renderBannerEcoteologyLuar(containerEl) {
