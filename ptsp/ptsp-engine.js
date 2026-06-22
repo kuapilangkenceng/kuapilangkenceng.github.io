@@ -173,21 +173,20 @@ function showForm(jenis) {
   const ov = f.universalOverrides || {};
   const uFields = (CONFIG.universal || []).filter(function(u){ return !(ov[u.name] && ov[u.name].hidden); });
 
-  // Deteksi pola 2-tahap: jika 2 field TERAKHIR di f.fields bertipe 'photo', field kedua
-  // disisihkan untuk halaman rekap (Tahap 2), tidak dirender di form awal.
+  // // Deteksi photoSteps DULU - kalau ada photoSteps, skip deteksi Tahap 2 otomatis
+  if (f.photoSteps && f.photoSteps.length > 0) {
+    currentPhotoSteps = f.photoSteps;
+  }
+
+  // Deteksi pola 2-tahap: SKIP jika form pakai photoSteps.
   let mainFields = (f.fields || []).slice();
-  if (mainFields.length >= 2) {
+  if (!currentPhotoSteps.length && mainFields.length >= 2) {
     const last = mainFields[mainFields.length-1];
     const prev = mainFields[mainFields.length-2];
     if (last.type === 'photo' && prev.type === 'photo') {
       currentTahap2Field = last;
       mainFields = mainFields.slice(0, -1);
     }
-  }
-
-  // Deteksi photoSteps (multi-step foto untuk nikah_alur_lengkap dan sejenisnya)
-  if (f.photoSteps && f.photoSteps.length > 0) {
-    currentPhotoSteps = f.photoSteps;
   }
 
   if (uFields.length) { addST(body,'Data Umum'); uFields.forEach(function(u){ renderField(body, Object.assign({},u,{required:(ov[u.name]&&ov[u.name].required===false)?false:u.required})); }); }
