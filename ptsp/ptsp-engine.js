@@ -582,6 +582,15 @@ function renderRekap() {
   document.getElementById('rekap-jenis').textContent = currentRekapInfo.jenis_label;
   const body = document.getElementById('rekap-foto-body'); body.innerHTML='';
   photoFiles = []; // reset, foto tahap 1 sudah terkirim
+  // Banner peringatan jika masih ada photoSteps
+  if (currentPhotoSteps.length > 0) {
+    const alertBanner = document.createElement('div');
+    alertBanner.style.cssText = 'margin-bottom:14px;padding:14px 16px;background:#fff3cd;border:2px solid #f59e0b;border-radius:10px;text-align:center';
+    alertBanner.innerHTML = '<div style="font-size:22px;margin-bottom:4px">&#9888;&#65039;</div>'
+      + '<div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:2px">Pendaftaran Belum Selesai!</div>'
+      + '<div style="font-size:12px;color:#78350f">Data berhasil tersimpan. Silakan <strong>serahkan perangkat ke petugas KUA</strong> untuk menyelesaikan ' + currentPhotoSteps.length + ' langkah foto berikutnya.</div>';
+    body.appendChild(alertBanner);
+  }
   if (currentTahap2Field) renderField(body, currentTahap2Field);
 }
 
@@ -629,6 +638,15 @@ function renderPhotoStep() {
   body.innerHTML = '';
   photoFiles = [];
 
+  // Banner PERHATIAN - mencolok di atas
+  const alertBanner = document.createElement('div');
+  alertBanner.style.cssText = 'margin-bottom:14px;padding:14px 16px;background:#fff3cd;border:2px solid #f59e0b;border-radius:10px;text-align:center';
+  alertBanner.innerHTML = '<div style="font-size:22px;margin-bottom:4px">&#9888;&#65039;</div>'
+    + '<div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:2px">Pendaftaran Belum Selesai!</div>'
+    + '<div style="font-size:12px;color:#78350f">Masih ada <strong>' + (total - stepNum + 1) + ' langkah foto</strong> yang harus diselesaikan bersama petugas KUA.</div>';
+  body.appendChild(alertBanner);
+
+  // Progress step
   const progress = document.createElement('div');
   progress.style.cssText = 'margin-bottom:16px;padding:10px 14px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;font-size:13px;color:var(--green,#1a6b45);font-weight:600;text-align:center';
   progress.innerHTML = 'Langkah ' + stepNum + ' dari ' + total + ' &mdash; ' + step.label;
