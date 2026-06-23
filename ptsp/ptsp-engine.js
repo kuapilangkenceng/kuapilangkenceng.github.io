@@ -571,7 +571,7 @@ async function submitForm() {
         renderRekap();
         goPage('page-rekap');
       } else {
-        tampilkanSuksesSelesai(result.id);
+        tampilkanSuksesSelesai(result.id, result.foto_urls);
       }
     }
     else showToast('Gagal: '+(result.error||'Unknown error'),true);
@@ -728,7 +728,7 @@ async function submitComplete() {
  * surat yang foto Penghulu-nya berfungsi sebagai Verifikasi Data. Jenis lain
  * tetap tampilan sukses biasa (cuma ID). */
 var JENIS_VERIFIKASI_SELESAI = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rekomendasi'];
-function tampilkanSuksesSelesai(id) {
+function tampilkanSuksesSelesai(id, fotoUrls) {
   document.getElementById('success-id').textContent = id;
   var msgEl = document.getElementById('success-verifikasi-msg');
   var f = CONFIG.forms[currentJenis];
@@ -743,6 +743,22 @@ function tampilkanSuksesSelesai(id) {
     msgEl.style.display = 'block';
   } else if (msgEl) {
     msgEl.style.display = 'none';
+  }
+  // Link dokumen Bimwin jika auto-generated
+  var dokEl = document.getElementById('success-dok-bimwin');
+  var dokUrl = fotoUrls && fotoUrls._dok_bimwin ? fotoUrls._dok_bimwin : null;
+  if (dokUrl) {
+    if (!dokEl) {
+      dokEl = document.createElement('div');
+      dokEl.id = 'success-dok-bimwin';
+      dokEl.style.cssText = 'margin-top:12px;padding:12px 16px;background:#fff3cd;border:1.5px solid #f59e0b;border-radius:10px;font-size:13px;color:#92400e;text-align:center';
+      document.getElementById('success-id').insertAdjacentElement('afterend', dokEl);
+    }
+    dokEl.innerHTML = '\uD83D\uDCC4 <strong>SK Bimwin telah digenerate</strong><br>'
+      + '<a href="' + dokUrl + '" target="_blank" style="color:#92400e;font-weight:700">Buka / Download Dokumen</a>';
+    dokEl.style.display = 'block';
+  } else if (dokEl) {
+    dokEl.style.display = 'none';
   }
   goPage('page-success');
 }
