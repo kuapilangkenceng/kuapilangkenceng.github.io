@@ -217,7 +217,8 @@ function renderField(parent, field) {
   const f = field; const fname = f.name || f.id;
   if (!fname || f.type==='section') { if (f.type==='section') addST(parent,f.label); return; }
   const group = document.createElement('div'); group.className='form-group'; group.id='group_'+fname;
-  if (f.showIf) group.dataset.showIf = JSON.stringify(f.showIf);
+  if (f.showIf)    group.dataset.showIf    = JSON.stringify(f.showIf);
+  if (f.showIfNot) group.dataset.showIfNot = JSON.stringify(f.showIfNot);
   const lbl = '<label class="form-label" for="field_'+fname+'">'+f.label+(f.required?'<span class="req">*</span>':' <span style="color:#aaa;font-size:11px">(opsional)</span>')+'</label>';
   let inp = '';
   if (['text','tel','email','number','date','time'].includes(f.type)) {
@@ -289,13 +290,20 @@ function renderPhotoPreview(obj) { const idx=photoFiles.indexOf(obj); const wrap
 function removePhoto(idx) { photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
 
 function evalAllConditions() {
-  document.querySelectorAll('[data-show-if]').forEach(function(group){
+  document.querySelectorAll('[data-show-if],[data-show-if-not]').forEach(function(group){
     try {
-      const cond = JSON.parse(group.dataset.showIf);
-      const trigger = document.querySelector('[name="'+cond.field+'"]') || document.getElementById('field_'+cond.field);
-      let val = '';
-      if (trigger) { if(trigger.type==='radio'){ const c=document.querySelector('[name="'+cond.field+'"]:checked'); val=c?c.value:''; } else val=trigger.value; }
-      const tampil = cond.valueIn ? cond.valueIn.includes(val) : (val===cond.value);
+      let tampil = true;
+      if (group.dataset.showIf) {
+        const cond = JSON.parse(group.dataset.showIf);
+        const trigger = document.querySelector('[name="'+cond.field+'"') || document.getElementById('field_'+cond.field);
+        let val = ''; if (trigger) { if(trigger.type==='radio'){ const c=document.querySelector('[name="'+cond.field+'"]:checked'); val=c?c.value:''; } else val=trigger.value; }
+        tampil = cond.valueIn ? cond.valueIn.includes(val) : (val===cond.value);
+      } else if (group.dataset.showIfNot) {
+        const condN = JSON.parse(group.dataset.showIfNot);
+        const trigN = document.querySelector('[name="'+condN.field+'"') || document.getElementById('field_'+condN.field);
+        let valN = ''; if (trigN) { if(trigN.type==='radio'){ const c=document.querySelector('[name="'+condN.field+'"]:checked'); valN=c?c.value:''; } else valN=trigN.value; }
+        tampil = condN.valueIn ? !condN.valueIn.includes(valN) : (valN!==condN.value);
+      }
       group.style.display = tampil ? '' : 'none';
       if (!tampil) { const inp=group.querySelector('input,select,textarea'); if(inp&&inp.type!=='radio'&&inp.type!=='checkbox') inp.value=''; }
     } catch(e) {}
