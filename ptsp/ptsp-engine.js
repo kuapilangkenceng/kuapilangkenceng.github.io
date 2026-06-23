@@ -87,7 +87,20 @@ function applySessionUI() {
   const btn = document.getElementById('btn-login-header');
   if (btn) { btn.textContent = '\u2705 ' + session.nama; btn.classList.add('active'); }
   const bar = document.getElementById('session-bar');
-  if (bar) { bar.classList.add('show'); const si = document.getElementById('session-info'); if (si) si.textContent = 'Petugas: ' + session.nama + ' (' + session.role + ')'; }
+  if (bar) {
+    bar.classList.add('show');
+    const si = document.getElementById('session-info');
+    if (si) si.textContent = 'Petugas: ' + session.nama + ' (' + session.role + ')';
+    if (!document.getElementById('petugas-quick-btns')) {
+      const qbtns = document.createElement('div');
+      qbtns.id = 'petugas-quick-btns';
+      qbtns.style.cssText = 'display:flex;gap:6px;margin-left:auto;flex-wrap:wrap';
+      qbtns.innerHTML =
+        '<a href="post-artikel.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--green,#2d8c5e);color:#fff;border-radius:8px;font-size:11.5px;font-weight:700;text-decoration:none">\u270f\ufe0f Post Artikel</a>'
+        + '<a href="galeri-upload.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:#c9a030;color:#1b5e35;border-radius:8px;font-size:11.5px;font-weight:700;text-decoration:none">\uD83D\uDDBC\uFE0F Upload Galeri</a>';
+      bar.appendChild(qbtns);
+    }
+  }
 }
 
 function toggleLoginPanel() {
@@ -461,6 +474,22 @@ function renderBannerEcoteologyLuar(containerEl) {
   banner.innerHTML='<div style="font-size:36px;flex-shrink:0">\uD83C\uDF33</div><div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:3px">Ecotheology Nikah \u2014 Di Luar Kantor</div><div style="color:rgba(255,255,255,.82);font-size:12px;line-height:1.5">Khusus calon pengantin yang menikah <strong style="color:#fde68a">di luar KUA</strong>. Isi form penanaman pohon di halaman terpisah.</div></div><div style="color:#fde68a;font-size:22px;flex-shrink:0">\u2192</div>';
   banner.addEventListener('click',function(){window.open('ecoteology.html','_blank');});
   containerEl.appendChild(banner);
+
+  // ── Tombol Sistem Eksternal: LIONTIN & SIMKAH ──
+  const oldExt = document.getElementById('banner-ext-nikah'); if (oldExt) oldExt.remove();
+  const extWrap = document.createElement('div');
+  extWrap.id = 'banner-ext-nikah';
+  extWrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px';
+  extWrap.innerHTML =
+    '<a href="https://liontin.kankemenagkabmadiun.com/register" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:#fff;border:1.5px solid #c3dfc9;border-radius:10px;text-decoration:none;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)" onmouseenter="this.style.background=\'#eaf5ee\';this.style.borderColor=\'#237a3e\'" onmouseleave="this.style.background=\'#fff\';this.style.borderColor=\'#c3dfc9\'">'
+    + '<span style="font-size:24px;flex-shrink:0">\uD83D\uDD17</span>'
+    + '<div><div style="font-size:13px;font-weight:700;color:#1b5e35">LIONTIN</div><div style="font-size:10.5px;color:#536356;line-height:1.4">Kemenag Kab. Madiun</div></div>'
+    + '<span style="margin-left:auto;color:#8fa392;font-size:16px">\u2197</span></a>'
+    + '<a href="https://simkah4.kemenag.go.id/admin/authentication" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:13px 16px;background:#fff;border:1.5px solid #c3dfc9;border-radius:10px;text-decoration:none;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)" onmouseenter="this.style.background=\'#eaf5ee\';this.style.borderColor=\'#237a3e\'" onmouseleave="this.style.background=\'#fff\';this.style.borderColor=\'#c3dfc9\'">'
+    + '<span style="font-size:24px;flex-shrink:0">\uD83D\uDDC2\uFE0F</span>'
+    + '<div><div style="font-size:13px;font-weight:700;color:#1b5e35">SIMKAH</div><div style="font-size:10.5px;color:#536356;line-height:1.4">Kemenag RI</div></div>'
+    + '<span style="margin-left:auto;color:#8fa392;font-size:16px">\u2197</span></a>';
+  containerEl.appendChild(extWrap);
 }
 
 /* PATCH: resume otomatis kalau Tahap 2 belum selesai (halaman tertutup di tengah proses) */

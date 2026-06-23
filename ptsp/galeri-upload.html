@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Upload Galeri — KUA Pilangkenceng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hijau-tua: #1b5e35; --hijau: #237a3e; --hijau-muda: #2ea04f;
+    --hijau-terang: #eaf5ee; --hijau-border: #c3dfc9;
+    --emas: #c9a030; --emas-muda: #fdf3dc;
+    --putih: #ffffff; --abu: #f4f6f4;
+    --teks: #1a2b1e; --teks-abu: #536356; --teks-ringan: #8fa392;
+    --merah: #c0392b; --merah-muda: #fdecea;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --font-display: 'Playfair Display', serif;
+    --radius: 10px; --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); color: var(--teks); background: var(--abu); font-size: 14px; line-height: 1.65; min-height: 100vh; padding: 1.25rem; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: var(--putih); border: 1px solid var(--hijau-border); border-radius: var(--radius-lg);
+    padding: .875rem 1.25rem; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; max-width: 860px; margin-left: auto; margin-right: auto; flex-wrap: wrap; gap: .75rem;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar h1 { font-family: var(--font-display); font-size: 17px; color: var(--hijau-tua); }
+  .user-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--teks-abu); }
+  .user-badge strong { color: var(--hijau-tua); }
+  .btn-back { background: none; border: 1px solid var(--hijau-border); border-radius: 8px;
+    padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--teks-abu);
+    cursor: pointer; font-family: var(--font); transition: all .15s; }
+  .btn-back:hover { background: var(--hijau-terang); color: var(--hijau-tua); border-color: var(--hijau); }
+
+  /* ── CARD ── */
+  .app-wrap { max-width: 860px; margin: 0 auto; }
+  .card { background: var(--putih); border: 1px solid var(--hijau-border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .card-title { font-family: var(--font-display); font-size: 16px; color: var(--hijau-tua); margin-bottom: 1.1rem; display: flex; align-items: center; gap: 8px; }
+
+  /* ── TEMA GRID ── */
+  .tema-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: .625rem; margin-bottom: 1.25rem; }
+  @media (max-width: 640px) { .tema-grid { grid-template-columns: repeat(2, 1fr); gap: .5rem; } }
+  .tema-item {
+    border: 2px solid var(--hijau-border); border-radius: var(--radius); padding: .75rem .5rem;
+    text-align: center; cursor: pointer; transition: all .2s; background: var(--putih); user-select: none;
+  }
+  .tema-item:hover { border-color: var(--hijau-muda); background: var(--hijau-terang); }
+  .tema-item.active { border-color: var(--hijau-tua); background: var(--hijau-terang); box-shadow: 0 0 0 3px rgba(35,122,62,.15); }
+  .tema-item .tema-icon { font-size: 26px; margin-bottom: 5px; }
+  .tema-item .tema-label { font-size: 11.5px; font-weight: 600; color: var(--teks); line-height: 1.3; }
+  .tema-item.active .tema-label { color: var(--hijau-tua); }
+
+  /* ── FORM FIELDS ── */
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--teks); margin-bottom: 5px; }
+  .field label .opsional { font-weight: 400; color: var(--teks-ringan); }
+  .field input[type="text"], .field input[type="date"], .field select, .field textarea {
+    width: 100%; padding: 10px 12px; font-size: 13px; font-family: var(--font);
+    border: 1px solid var(--hijau-border); border-radius: var(--radius); background: var(--putih); color: var(--teks); transition: border-color .15s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--hijau-muda); }
+  .field textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 600px) { .field-row { grid-template-columns: 1fr; } }
+
+  /* ── FOTO MULTI-UPLOAD ── */
+  .foto-zone {
+    border: 2px dashed var(--hijau-border); border-radius: var(--radius-lg);
+    padding: 1.75rem; text-align: center; cursor: pointer; transition: all .2s; background: var(--hijau-terang);
+    position: relative;
+  }
+  .foto-zone:hover, .foto-zone.dragover { border-color: var(--hijau-muda); background: #e2f3e7; }
+  .foto-zone input { display: none; }
+  .foto-zone .zone-icon { font-size: 36px; margin-bottom: 8px; }
+  .foto-zone .zone-text { font-size: 13px; color: var(--teks-abu); margin-bottom: 4px; font-weight: 600; }
+  .foto-zone .zone-sub { font-size: 11px; color: var(--teks-ringan); }
+  .foto-zone .zone-btn {
+    display: inline-block; margin-top: 10px; background: var(--hijau-tua); color: #fff;
+    padding: 7px 18px; border-radius: 8px; font-size: 12.5px; font-weight: 700; font-family: var(--font);
+  }
+
+  /* ── FOTO PREVIEW GRID ── */
+  .foto-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: .75rem; margin-top: 1rem; }
+  .foto-prev-item { position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; background: var(--abu); border: 1.5px solid var(--hijau-border); }
+  .foto-prev-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .foto-prev-label { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(27,94,53,.8); color: #fff; font-size: 9px; font-weight: 600; padding: 3px 5px; text-align: center; }
+  .foto-prev-del { position: absolute; top: 3px; right: 3px; background: rgba(192,57,43,.85); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+  .foto-prev-del:hover { background: var(--merah); }
+
+  /* ── OPSI ARTIKEL ── */
+  .artikel-toggle {
+    display: flex; align-items: center; gap: 10px; padding: 1rem 1.125rem;
+    background: var(--emas-muda); border: 1.5px solid rgba(201,160,48,.4); border-radius: var(--radius-lg);
+    cursor: pointer; user-select: none; transition: background .15s;
+  }
+  .artikel-toggle:hover { background: #fbe9bf; }
+  .artikel-toggle input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--hijau-tua); cursor: pointer; flex-shrink: 0; }
+  .artikel-toggle .toggle-info { flex: 1; }
+  .artikel-toggle .toggle-title { font-size: 13px; font-weight: 700; color: var(--hijau-tua); }
+  .artikel-toggle .toggle-desc { font-size: 11.5px; color: var(--teks-abu); margin-top: 2px; line-height: 1.4; }
+  .toggle-badge { font-size: 10px; font-weight: 700; background: var(--emas); color: var(--hijau-tua); padding: 2px 8px; border-radius: 10px; flex-shrink: 0; }
+
+  .artikel-fields { margin-top: 1rem; padding: 1.25rem; background: var(--abu); border-radius: var(--radius-lg); border: 1px solid var(--hijau-border); display: none; }
+  .artikel-fields.show { display: block; }
+
+  /* ── BUTTONS ── */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 11px 22px; border-radius: var(--radius); font-size: 13.5px; font-weight: 600;
+    font-family: var(--font); border: none; cursor: pointer; transition: background .15s; width: 100%; }
+  .btn-primary { background: var(--hijau-tua); color: var(--putih); }
+  .btn-primary:hover:not(:disabled) { background: var(--hijau); }
+  .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-secondary { background: var(--hijau-terang); color: var(--hijau-tua); margin-top: .6rem; }
+  .btn-secondary:hover { background: var(--hijau-border); }
+  a.btn { text-decoration: none; }
+
+  /* ── ALERT ── */
+  .alert { padding: 10px 14px; border-radius: var(--radius); font-size: 12.5px; margin-bottom: 1rem; display: none; }
+  .alert.show { display: block; }
+  .alert-error { background: var(--merah-muda); color: var(--merah); border: 1px solid #f5c6c0; }
+  .alert-success { background: var(--hijau-terang); color: var(--hijau-tua); border: 1px solid var(--hijau-border); }
+
+  /* ── PROGRESS ── */
+  .progress-bar { height: 6px; background: var(--hijau-border); border-radius: 4px; overflow: hidden; margin: .75rem 0; display: none; }
+  .progress-bar.show { display: block; }
+  .progress-fill { height: 100%; background: var(--hijau-muda); border-radius: 4px; transition: width .3s; }
+  .progress-label { font-size: 11.5px; color: var(--teks-abu); text-align: center; }
+
+  /* ── RESULT ── */
+  .result-box { text-align: center; padding: 1.5rem 0; }
+  .result-box .icon { font-size: 52px; margin-bottom: .75rem; }
+  .result-box h3 { font-family: var(--font-display); font-size: 18px; color: var(--hijau-tua); margin-bottom: 6px; }
+  .result-box p { font-size: 13px; color: var(--teks-abu); margin-bottom: 1rem; }
+  .result-summary { background: var(--hijau-terang); border: 1px solid var(--hijau-border); border-radius: var(--radius); padding: .875rem 1rem; margin-bottom: 1rem; font-size: 12.5px; text-align: left; }
+  .result-summary .rs-row { display: flex; gap: 6px; padding: 3px 0; }
+  .result-summary .rs-label { color: var(--teks-ringan); font-size: 11.5px; min-width: 100px; flex-shrink: 0; }
+  .result-summary .rs-val { color: var(--teks); font-weight: 600; }
+  .result-actions { display: flex; gap: .75rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+  .result-actions a, .result-actions button { flex: 1; min-width: 140px; }
+
+  /* ── SPINNER ── */
+  .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.4); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hidden { display: none !important; }
+
+  /* ── UNAUTH ── */
+  .unauth-box { max-width: 400px; margin: 4rem auto; text-align: center; background: var(--putih);
+    border: 1px solid var(--hijau-border); border-radius: var(--radius-lg); padding: 2.5rem 2rem; }
+  .unauth-box .icon { font-size: 48px; margin-bottom: 1rem; }
+  .unauth-box h2 { font-family: var(--font-display); font-size: 18px; color: var(--hijau-tua); margin-bottom: .5rem; }
+  .unauth-box p { font-size: 13px; color: var(--teks-abu); margin-bottom: 1.5rem; line-height: 1.6; }
+
+  @media (max-width: 600px) { body { padding: .75rem; } }
+</style>
+</head>
+<body>
+
+<!-- ═══ UNAUTH ═══ -->
+<div class="unauth-box hidden" id="unauthView">
+  <div class="icon">🔐</div>
+  <h2>Akses Terbatas</h2>
+  <p>Halaman ini hanya dapat diakses oleh petugas yang sudah login melalui sistem PTSP.</p>
+  <a href="index.html" class="btn btn-primary" style="display:inline-flex;width:auto">← Kembali ke PTSP</a>
+</div>
+
+<!-- ═══ MAIN APP ═══ -->
+<div class="app-wrap hidden" id="appView">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="btn-back" onclick="window.location.href='index.html'">← PTSP</button>
+      <h1>🖼️ Upload Galeri</h1>
+    </div>
+    <div class="user-badge">Login sebagai <strong id="userNama">-</strong></div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="card" id="formCard">
+    <div class="card-title">📸 Upload Foto Kegiatan</div>
+    <div class="alert alert-error" id="formAlert"></div>
+
+    <!-- STEP 1: TEMA -->
+    <div class="field">
+      <label>Tema Kegiatan <span style="color:var(--merah)">*</span></label>
+      <div class="tema-grid" id="temaGrid">
+        <div class="tema-item active" data-tema="Akad Nikah" onclick="pilihTema(this)">
+          <div class="tema-icon">💍</div>
+          <div class="tema-label">Akad Nikah</div>
+        </div>
+        <div class="tema-item" data-tema="Bimwin" onclick="pilihTema(this)">
+          <div class="tema-icon">📖</div>
+          <div class="tema-label">Bimwin</div>
+        </div>
+        <div class="tema-item" data-tema="Penyuluhan Agama" onclick="pilihTema(this)">
+          <div class="tema-icon">🎤</div>
+          <div class="tema-label">Penyuluhan Agama</div>
+        </div>
+        <div class="tema-item" data-tema="Ecotheology" onclick="pilihTema(this)">
+          <div class="tema-icon">🌿</div>
+          <div class="tema-label">Ecotheology</div>
+        </div>
+        <div class="tema-item" data-tema="Pelayanan Terpadu" onclick="pilihTema(this)">
+          <div class="tema-icon">🏛️</div>
+          <div class="tema-label">Pelayanan Terpadu</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KETERANGAN FOTO -->
+    <div class="field-row">
+      <div class="field">
+        <label for="keterangan">Keterangan Foto <span style="color:var(--merah)">*</span></label>
+        <input type="text" id="keterangan" placeholder="mis. Akad Nikah di Ds. Bulu, 20 Jun 2026" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="tglKegiatan">Tanggal Kegiatan</label>
+        <input type="date" id="tglKegiatan">
+      </div>
+    </div>
+
+    <!-- UPLOAD ZONA -->
+    <div class="field">
+      <label>Foto <span style="color:var(--merah)">*</span> <span class="opsional">(maks 10 foto, masing-masing &le; 5MB)</span></label>
+      <div class="foto-zone" id="fotoZone"
+        ondragover="event.preventDefault();this.classList.add('dragover')"
+        ondragleave="this.classList.remove('dragover')"
+        ondrop="handleDrop(event)">
+        <div class="zone-icon">🖼️</div>
+        <div class="zone-text">Seret foto ke sini</div>
+        <div class="zone-sub">JPG, PNG · Maks 10 foto · 5MB per foto</div>
+        <label class="zone-btn">
+          📂 Pilih Foto
+          <input type="file" id="fotoInput" accept="image/*" multiple onchange="handleFileInput(this)">
+        </label>
+      </div>
+      <div class="foto-preview-grid" id="fotoPreviewGrid"></div>
+    </div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label hidden" id="progressLabel"></div>
+
+    <!-- OPSI ARTIKEL -->
+    <div class="field">
+      <label class="artikel-toggle" for="cbArtikel">
+        <input type="checkbox" id="cbArtikel" onchange="toggleArtikelFields()">
+        <div class="toggle-info">
+          <div class="toggle-title">📰 Jadikan Artikel</div>
+          <div class="toggle-desc">Foto ini juga akan muncul sebagai artikel di halaman Informasi & Artikel website publik.</div>
+        </div>
+        <span class="toggle-badge">OPSIONAL</span>
+      </label>
+
+      <div class="artikel-fields" id="artikelFields">
+        <div class="field">
+          <label for="artJudul">Judul Artikel <span style="color:var(--merah)">*</span></label>
+          <input type="text" id="artJudul" placeholder="mis. Pelaksanaan Akad Nikah di Desa Bulu, 20 Juni 2026" maxlength="120">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="artKategori">Kategori Artikel</label>
+            <select id="artKategori">
+              <option value="Pernikahan">💒 Pernikahan</option>
+              <option value="Bimwin">📖 Bimwin</option>
+              <option value="Penyuluhan">🎤 Penyuluhan Agama</option>
+              <option value="Ecotheology">🌿 Ecotheology</option>
+              <option value="Wakaf">🕌 Wakaf</option>
+              <option value="Pelayanan">🏛️ Pelayanan Terpadu</option>
+              <option value="Pengumuman">📢 Pengumuman</option>
+              <option value="Informasi">📋 Informasi</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="artTanggal">Tanggal Artikel</label>
+            <input type="date" id="artTanggal">
+          </div>
+        </div>
+        <div class="field">
+          <label for="artIsi">Isi Artikel <span class="opsional">(opsional — bisa singkat, 2–3 kalimat)</span></label>
+          <textarea id="artIsi" placeholder="Deskripsi singkat kegiatan untuk isi artikel..." style="min-height:90px"></textarea>
+        </div>
+        <div class="field">
+          <label for="artTags">Tags <span class="opsional">(opsional, pisahkan koma)</span></label>
+          <input type="text" id="artTags" placeholder="nikah, bulu, akad, kua pilangkenceng">
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="submitBtn" onclick="submitGaleri()">
+      <span id="submitBtnText">🚀 Upload Galeri</span>
+    </button>
+  </div>
+
+  <!-- SUCCESS CARD -->
+  <div class="card hidden" id="successCard">
+    <div class="result-box">
+      <div class="icon">✅</div>
+      <h3>Foto Berhasil Diupload!</h3>
+      <div class="result-summary" id="resultSummary"></div>
+      <div class="result-actions">
+        <a href="https://kuapilangkenceng.github.io/#galeri" target="_blank" class="btn btn-primary">Lihat Galeri →</a>
+        <button class="btn btn-secondary" id="uploadLagiBtn" onclick="resetForm()">+ Upload Foto Lain</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#appView -->
+
+<script>
+  const API_URL = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+  const SESSION_KEY = 'ptsp_session';
+
+  /* ── FOTO STATE ── */
+  let fotoFiles = []; // [{file, base64, mimeType, name}]
+  let selectedTema = 'Akad Nikah';
+
+  /* ── AUTH ── */
+  function getSession() { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || 'null'); } catch(x) { return null; } }
+
+  function init() {
+    const sess = getSession();
+    if (!sess || !sess.username) { document.getElementById('unauthView').classList.remove('hidden'); return; }
+    document.getElementById('appView').classList.remove('hidden');
+    document.getElementById('userNama').textContent = sess.nama || sess.username;
+    const today = new Date().toISOString().substring(0, 10);
+    document.getElementById('tglKegiatan').value = today;
+    document.getElementById('artTanggal').value = today;
+    // Default kategori artikel sesuai tema pertama
+    syncKategoriArtikel();
+  }
+
+  /* ── TEMA ── */
+  const TEMA_KATEGORI = {
+    'Akad Nikah': 'Pernikahan',
+    'Bimwin': 'Bimwin',
+    'Penyuluhan Agama': 'Penyuluhan',
+    'Ecotheology': 'Ecotheology',
+    'Pelayanan Terpadu': 'Pelayanan'
+  };
+  function pilihTema(el) {
+    document.querySelectorAll('.tema-item').forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+    selectedTema = el.dataset.tema;
+    syncKategoriArtikel();
+  }
+  function syncKategoriArtikel() {
+    const sel = document.getElementById('artKategori');
+    const kat = TEMA_KATEGORI[selectedTema] || 'Informasi';
+    Array.from(sel.options).forEach(function(o) { o.selected = (o.value === kat); });
+  }
+
+  /* ── FOTO UPLOAD ── */
+  function handleFileInput(input) {
+    Array.from(input.files).forEach(function(f) { addFotoFile(f); });
+    input.value = '';
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('fotoZone').classList.remove('dragover');
+    Array.from(e.dataTransfer.files).filter(function(f) { return f.type.startsWith('image/'); }).forEach(addFotoFile);
+  }
+  function addFotoFile(file) {
+    if (fotoFiles.length >= 10) { showAlert('formAlert', 'Maksimal 10 foto per upload.'); return; }
+    if (file.size > 5 * 1024 * 1024) { showAlert('formAlert', 'File "' + file.name + '" terlalu besar (maks 5MB).'); return; }
+    hideAlert('formAlert');
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const obj = { file: file, base64: ev.target.result.split(',')[1], mimeType: file.type, name: file.name };
+      fotoFiles.push(obj);
+      renderFotoPreview(obj, fotoFiles.length - 1);
+    };
+    reader.readAsDataURL(file);
+  }
+  function renderFotoPreview(obj, idx) {
+    const grid = document.getElementById('fotoPreviewGrid');
+    const item = document.createElement('div');
+    item.className = 'foto-prev-item';
+    item.id = 'fprev_' + idx;
+    item.innerHTML = '<img src="data:' + obj.mimeType + ';base64,' + obj.base64 + '" alt="">'
+      + '<div class="foto-prev-label">' + (idx + 1) + '. ' + obj.name.substring(0, 18) + '</div>'
+      + '<button class="foto-prev-del" onclick="removeFoto(' + idx + ')" title="Hapus">&times;</button>';
+    grid.appendChild(item);
+  }
+  function removeFoto(idx) {
+    fotoFiles.splice(idx, 1);
+    // Re-render semua
+    const grid = document.getElementById('fotoPreviewGrid');
+    grid.innerHTML = '';
+    fotoFiles.forEach(function(o, i) { renderFotoPreview(o, i); });
+  }
+
+  /* ── OPSI ARTIKEL ── */
+  function toggleArtikelFields() {
+    const cb = document.getElementById('cbArtikel');
+    const fields = document.getElementById('artikelFields');
+    fields.classList.toggle('show', cb.checked);
+    if (cb.checked) {
+      // Auto-isi judul jika keterangan sudah ada
+      const ket = document.getElementById('keterangan').value.trim();
+      if (ket && !document.getElementById('artJudul').value) {
+        document.getElementById('artJudul').value = ket;
+      }
+    }
+  }
+
+  /* ── ALERT ── */
+  function showAlert(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+  function hideAlert(id) { document.getElementById(id).classList.remove('show'); }
+  function setLoading(btn, textEl, loading, normal, loadingTxt) {
+    btn.disabled = loading;
+    textEl.innerHTML = loading ? '<span class="spinner"></span> ' + loadingTxt : normal;
+  }
+
+  /* ── SUBMIT ── */
+  async function submitGaleri() {
+    const sess = getSession();
+    if (!sess || !sess.username) { showAlert('formAlert', 'Sesi login tidak valid.'); return; }
+
+    const keterangan = document.getElementById('keterangan').value.trim();
+    const tglKegiatan = document.getElementById('tglKegiatan').value;
+    if (!keterangan) { showAlert('formAlert', 'Keterangan foto wajib diisi.'); return; }
+    if (!fotoFiles.length) { showAlert('formAlert', 'Pilih minimal 1 foto untuk diupload.'); return; }
+
+    const buatArtikel = document.getElementById('cbArtikel').checked;
+    let artJudul = '', artIsi = '', artKategori = '', artTanggal = '', artTags = '';
+    if (buatArtikel) {
+      artJudul = document.getElementById('artJudul').value.trim();
+      artIsi = document.getElementById('artIsi').value.trim();
+      artKategori = document.getElementById('artKategori').value;
+      artTanggal = document.getElementById('artTanggal').value;
+      artTags = document.getElementById('artTags').value.trim();
+      if (!artJudul) { showAlert('formAlert', 'Judul artikel wajib diisi jika opsi Jadikan Artikel diaktifkan.'); return; }
+    }
+
+    const btn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('submitBtnText');
+    setLoading(btn, btnText, true, '🚀 Upload Galeri', 'Mengupload...');
+    hideAlert('formAlert');
+
+    // Upload per foto, update progress
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    const progressLabel = document.getElementById('progressLabel');
+    progressBar.classList.add('show');
+    progressLabel.classList.remove('hidden');
+
+    const fotoPayload = fotoFiles.map(function(f) {
+      return { base64: f.base64, mimeType: f.mimeType, nama_file: f.name };
+    });
+
+    const payload = {
+      action: 'uploadGaleri',
+      token: sess.token,
+      tema: selectedTema,
+      keterangan: keterangan,
+      tanggal: tglKegiatan,
+      uploader: sess.username,
+      foto: fotoPayload,
+      buat_artikel: buatArtikel,
+      artikel: buatArtikel ? { judul: artJudul, isi: artIsi || keterangan, kategori: artKategori, tanggal: artTanggal, tags: artTags, editor: sess.username } : null
+    };
+
+    // Animasi progress semu (GAS bisa lambat)
+    let prog = 0;
+    const progInterval = setInterval(function() {
+      prog = Math.min(prog + 3, 85);
+      progressFill.style.width = prog + '%';
+      progressLabel.textContent = 'Mengupload foto ke Google Drive... (' + Math.round(prog) + '%)';
+    }, 400);
+
+    try {
+      const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+      const data = await res.json();
+      clearInterval(progInterval);
+      progressFill.style.width = '100%';
+      progressLabel.textContent = 'Selesai!';
+
+      if (data.ok) {
+        setTimeout(function() {
+          progressBar.classList.remove('show');
+          progressLabel.classList.add('hidden');
+          showSuccess(data, buatArtikel, artJudul);
+        }, 600);
+      } else {
+        showAlert('formAlert', data.error || 'Upload gagal. Coba lagi.');
+        progressBar.classList.remove('show');
+        progressLabel.classList.add('hidden');
+      }
+    } catch(err) {
+      clearInterval(progInterval);
+      showAlert('formAlert', 'Gagal terhubung ke server. Coba lagi.');
+      progressBar.classList.remove('show');
+      progressLabel.classList.add('hidden');
+    } finally {
+      setLoading(btn, btnText, false, '🚀 Upload Galeri', '');
+    }
+  }
+
+  function showSuccess(data, buatArtikel, artJudul) {
+    const sum = document.getElementById('resultSummary');
+    sum.innerHTML =
+      '<div class="rs-row"><span class="rs-label">Tema</span><span class="rs-val">' + selectedTema + '</span></div>'
+      + '<div class="rs-row"><span class="rs-label">Foto diupload</span><span class="rs-val">' + fotoFiles.length + ' foto</span></div>'
+      + (data.galeri_ids ? '<div class="rs-row"><span class="rs-label">ID Galeri</span><span class="rs-val">' + data.galeri_ids.join(', ') + '</span></div>' : '')
+      + (buatArtikel && data.artikel_id ? '<div class="rs-row"><span class="rs-label">Artikel</span><span class="rs-val">' + data.artikel_id + ' — ' + artJudul + '</span></div>' : '')
+      + (!buatArtikel ? '<div class="rs-row"><span class="rs-label">Artikel</span><span class="rs-val" style="color:var(--teks-ringan)">Tidak dibuat (hanya galeri)</span></div>' : '');
+    document.getElementById('formCard').classList.add('hidden');
+    document.getElementById('successCard').classList.remove('hidden');
+  }
+
+  function resetForm() {
+    fotoFiles = [];
+    document.getElementById('fotoPreviewGrid').innerHTML = '';
+    document.getElementById('keterangan').value = '';
+    document.getElementById('tglKegiatan').value = new Date().toISOString().substring(0, 10);
+    document.getElementById('cbArtikel').checked = false;
+    document.getElementById('artikelFields').classList.remove('show');
+    document.getElementById('artJudul').value = '';
+    document.getElementById('artIsi').value = '';
+    document.getElementById('artTags').value = '';
+    document.getElementById('artTanggal').value = new Date().toISOString().substring(0, 10);
+    hideAlert('formAlert');
+    document.getElementById('successCard').classList.add('hidden');
+    document.getElementById('formCard').classList.remove('hidden');
+    // Reset tema ke default
+    document.querySelectorAll('.tema-item').forEach(function(t, i) { t.classList.toggle('active', i === 0); });
+    selectedTema = 'Akad Nikah';
+    syncKategoriArtikel();
+  }
+
+  init();
+</script>
+</body>
+</html>
