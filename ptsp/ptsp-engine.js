@@ -234,7 +234,7 @@ function renderField(parent, field) {
     const opts = (f.options||[]).map(function(o){ return '<label class="check-opt" onclick="toggleCheck(this)"><input type="checkbox" name="'+fname+'" value="'+o+'"/> '+o+'</label>'; }).join('');
     inp = '<div class="check-group" id="field_'+fname+'">'+opts+'</div>';
   } else if (f.type==='photo') {
-    inp = '<div class="photo-upload-area" id="photo_area_'+fname+'" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="handleDrop(event,\''+fname+'\')"><input type="file" class="photo-input" id="field_'+fname+'" accept="image/*" capture="environment" '+(f.multiple?'multiple':'')+' onchange="handlePhotoInput(event,\''+fname+'\')"/><span class="photo-upload-icon">\uD83D\uDCF7</span><div class="photo-upload-label">Klik atau seret foto ke sini</div><div class="photo-upload-sub">JPG, PNG \u00B7 Maks 5MB per foto</div></div><div class="photo-previews" id="previews_'+fname+'"></div>';
+    inp = '<div class="photo-upload-area" id="photo_area_'+fname+'" ondragover="event.preventDefault();this.classList.add(\'dragover\')" ondragleave="this.classList.remove(\'dragover\')" ondrop="handleDrop(event,\''+fname+'\')"><input type="file" class="photo-input" id="field_'+fname+'" accept="image/*" '+(f.multiple?'multiple':'')+' onchange="handlePhotoInput(event,\''+fname+'\')"/><span class="photo-upload-icon">\uD83D\uDCF7</span><div class="photo-upload-label">Klik atau seret foto ke sini</div><div class="photo-upload-sub">JPG, PNG \u00B7 Maks 5MB per foto</div></div><div class="photo-previews" id="previews_'+fname+'"></div>';
   } else if (f.type==='surat_kua') {
     const now = new Date();
     const bulan = String(now.getMonth()+1).padStart(2,'0');
@@ -424,8 +424,11 @@ function triggerRecallCatin() {
                 found++;
                 var card = document.createElement('div');
                 card.style.cssText = 'text-align:center;font-size:11px;color:#555';
-                var imgUrl = url.replace(/\/file\/d\/([^/]+).*/, '/uc?export=view&id=$1');
-                if (imgUrl === url && url.indexOf('id=') !== -1) { var m = url.match(/id=([^&]+)/); if(m) imgUrl = 'https://drive.google.com/uc?export=view&id=' + m[1]; }
+                // Normalisasi semua format Drive URL ke thumbnail
+                var imgUrl = url;
+                var m = url.match(/[?&]id=([^&]+)/);
+                if (!m) m = url.match(/\/d\/([^/?]+)/);
+                if (m) imgUrl = 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w200';
                 card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + ff.label;
                 imgWrap.appendChild(card);
               });
