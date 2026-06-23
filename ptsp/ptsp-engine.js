@@ -415,7 +415,7 @@ function triggerRecallCatin() {
               pw.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
                 + '<div id="pasfoto-inline-imgs" style="display:flex;gap:16px;flex-wrap:wrap"></div>';
               _formBody.appendChild(pw);
-              var urls = (json.record.foto_urls) ? json.record.foto_urls : {};
+              var urls = json.record.foto_urls ? (typeof json.record.foto_urls === 'string' ? JSON.parse(json.record.foto_urls) : json.record.foto_urls) : {};
               var fotoFields = [{id:'pasfoto_pa',label:'Catin Pria'},{id:'pasfoto_pi',label:'Catin Wanita'}];
               var imgWrap = document.getElementById('pasfoto-inline-imgs');
               var found = 0;
