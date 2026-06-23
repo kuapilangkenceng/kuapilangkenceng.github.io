@@ -91,6 +91,12 @@ function applySessionUI() {
     bar.classList.add('show');
     const si = document.getElementById('session-info');
     if (si) si.textContent = 'Petugas: ' + session.nama + ' (' + session.role + ')';
+    // Tombol statis di HTML (ptsp/index.html)
+    var ba = document.getElementById('btn-post-artikel');
+    if (ba) ba.style.display = 'inline-flex';
+    var bg = document.getElementById('btn-upload-galeri');
+    if (bg) bg.style.display = 'inline-flex';
+    // Tombol injeksi JS (nikah.html, wakaf.html, dst pakai ptsp-engine)
     if (!document.getElementById('petugas-quick-btns')) {
       const qbtns = document.createElement('div');
       qbtns.id = 'petugas-quick-btns';

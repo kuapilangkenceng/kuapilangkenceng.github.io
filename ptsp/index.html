@@ -120,7 +120,7 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 </style>
 </head>
 <body>
-<div class="session-bar" id="session-bar"><span class="session-dot"></span><span id="session-info">Petugas: -</span><button onclick="logout()">Keluar</button></div>
+<div class="session-bar" id="session-bar"><span class="session-dot"></span><span id="session-info">Petugas: -</span><a href="post-artikel.html" id="btn-post-artikel" style="display:none;align-items:center;gap:5px;padding:4px 11px;background:rgba(255,255,255,.18);color:#fff;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;font-family:var(--font-main)">✏️ Post Artikel</a><a href="galeri-upload.html" id="btn-upload-galeri" style="display:none;align-items:center;gap:5px;padding:4px 11px;background:rgba(201,160,48,.85);color:#1b5e35;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;font-family:var(--font-main)">🖼️ Upload Galeri</a><button onclick="logout()">Keluar</button></div>
 <header><div class="header-inner">
 <a href="https://kuapilangkenceng.github.io" style="color:rgba(255,255,255,0.75);font-size:12px;text-decoration:none;display:flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid rgba(255,255,255,0.25);border-radius:6px">&#127968; Beranda</a>
 <div class="header-logo">&#128203;</div>
@@ -149,7 +149,7 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 <div class="toast" id="toast"></div>
 <script>const API_URL=(typeof KUA_CONFIG!=="undefined"&&KUA_CONFIG.API_URL)?KUA_CONFIG.API_URL:"https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec";
 var session=null;
-try{var _s=sessionStorage.getItem("ptsp_session");if(_s){session=JSON.parse(_s);var _btn=document.getElementById("btn-login-header");if(_btn){_btn.textContent="\u2705 "+session.nama;_btn.classList.add("active");}var _bar=document.getElementById("session-bar");if(_bar){_bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";}}}catch(e){}
+try{var _s=sessionStorage.getItem("ptsp_session");if(_s){session=JSON.parse(_s);var _btn=document.getElementById("btn-login-header");if(_btn){_btn.textContent="\u2705 "+session.nama;_btn.classList.add("active");}var _bar=document.getElementById("session-bar");if(_bar){_bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";var _ba=document.getElementById("btn-post-artikel");if(_ba)_ba.style.display="inline-flex";var _bg=document.getElementById("btn-upload-galeri");if(_bg)_bg.style.display="inline-flex";}}}catch(e){}
 var KAT_PAGES={"Layanan Nikah":"nikah.html","Layanan Wakaf":"wakaf.html","Layanan Kiblat":"kiblat.html","SKT Masjid / Musholla":"skt.html","Konseling & Rekomendasi":"konseling.html","Konsultasi Umum":"konsultasi-umum.html"};
 var KAT_ICONS={"Layanan Nikah":"\uD83D\uDC8D","Layanan Wakaf":"\uD83C\uDFE0","Layanan Kiblat":"\uD83E\uDDED","SKT Masjid / Musholla":"\uD83D\uDD4B","Konseling & Rekomendasi":"\uD83E\uDD1D","Konsultasi Umum":"\uD83D\uDCAC"};
 async function init(){
