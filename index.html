@@ -1230,12 +1230,22 @@
  
   /* ── LOAD ARTIKEL DARI SHEETS ── */
   function loadArtikel() {
-    fetch(API_URL + '?action=getartikel&status=Published&limit=3')
+    fetch(API_URL + '?action=getartikel&status=Published')
       .then(r => r.json())
       .then(d => {
         if ((d.ok || d.status === 'ok') && (d.results || d.data) && (d.results || d.data).length > 0) {
           const container = document.getElementById('artikelContainer');
-          const artikelData = d.results || d.data;
+          const artikelData = (d.results || d.data)
+            .filter(a => a.tanggal)
+            .sort((a, b) => {
+              // Sort by tanggal DESC, fallback ke id DESC
+              const tA = new Date(a.tanggal).getTime() || 0;
+              const tB = new Date(b.tanggal).getTime() || 0;
+              if (tB !== tA) return tB - tA;
+              return String(b.id).localeCompare(String(a.id));
+            })
+            .slice(0, 6);
+          if (!artikelData.length) return;
           container.innerHTML = artikelData.map(a => {
             const thumb = a.foto_url
               ? `<img src="${a.foto_url}" alt="${a.judul}" style="width:100%;height:100%;object-fit:cover">`
