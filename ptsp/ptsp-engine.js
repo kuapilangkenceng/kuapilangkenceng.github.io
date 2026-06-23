@@ -165,7 +165,6 @@ function renderLayananList() {
 function showForm(jenis) {
   currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
   var _pw = document.getElementById('pasfoto-inline-wrap'); if (_pw) _pw.remove();
-  var _pw = document.getElementById('pasfoto-inline-wrap'); if (_pw) _pw.remove();
   const f = CONFIG.forms[jenis]; if (!f) return;
   document.getElementById('form-title').textContent = f.label;
   document.getElementById('form-desc').textContent = f.deskripsi || f.kategori;
@@ -408,14 +407,14 @@ function triggerRecallCatin() {
             // Render pasfoto inline sebelum tombol Kirim
             var existing = document.getElementById('pasfoto-inline-wrap');
             if (existing) existing.remove();
-            var submitWrap = document.querySelector('.btn-submit') ? document.querySelector('.btn-submit').parentElement : null;
-            if (submitWrap) {
+            var _formBody = document.getElementById('form-body');
+            if (_formBody) {
               var pw = document.createElement('div');
               pw.id = 'pasfoto-inline-wrap';
               pw.style.cssText = 'padding:14px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;margin-bottom:16px';
               pw.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
                 + '<div id="pasfoto-inline-imgs" style="display:flex;gap:16px;flex-wrap:wrap"></div>';
-              submitWrap.parentElement.insertBefore(pw, submitWrap);
+              _formBody.appendChild(pw);
               var urls = (json.record.foto_urls) ? json.record.foto_urls : {};
               var fotoFields = [{id:'pasfoto_pa',label:'Catin Pria'},{id:'pasfoto_pi',label:'Catin Wanita'}];
               var imgWrap = document.getElementById('pasfoto-inline-imgs');
