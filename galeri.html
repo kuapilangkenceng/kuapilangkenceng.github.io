@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galeri Kegiatan — KUA Pilangkenceng</title>
+<meta name="description" content="Galeri foto kegiatan KUA Kecamatan Pilangkenceng — Akad Nikah, Bimwin, Penyuluhan Agama, Ecotheology, Pelayanan Terpadu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hijau-tua:#1b5e35;--hijau:#237a3e;--hijau-muda:#2ea04f;
+  --hijau-terang:#eaf5ee;--hijau-border:#c3dfc9;
+  --emas:#c9a030;--putih:#ffffff;--abu:#f4f6f4;
+  --teks:#1a2b1e;--teks-abu:#536356;--teks-ringan:#8fa392;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --font-display:'Playfair Display',serif;
+  --radius:10px;--radius-lg:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--teks);background:var(--abu);font-size:14px;line-height:1.65}
+
+/* ── NAV ── */
+.navbar{background:var(--hijau-tua);padding:.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:36px;height:36px;border-radius:8px;object-fit:cover}
+.nav-brand-text .nav-title{color:#fff;font-weight:700;font-size:14px;line-height:1.2}
+.nav-brand-text .nav-sub{color:rgba(255,255,255,.7);font-size:11px}
+.nav-back{color:rgba(255,255,255,.85);font-size:12.5px;font-weight:600;text-decoration:none;padding:6px 14px;border:1.5px solid rgba(255,255,255,.3);border-radius:8px;transition:all .15s}
+.nav-back:hover{background:rgba(255,255,255,.15);color:#fff}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,var(--hijau-tua) 0%,var(--hijau) 60%,#2d8c5e 100%);padding:2.5rem 1.5rem 2rem;text-align:center}
+.hero h1{font-family:var(--font-display);font-size:clamp(22px,4vw,32px);color:#fff;margin-bottom:.5rem}
+.hero p{color:rgba(255,255,255,.8);font-size:13.5px;max-width:520px;margin:0 auto}
+
+/* ── FILTER TEMA ── */
+.filter-wrap{background:var(--putih);border-bottom:1px solid var(--hijau-border);padding:.875rem 1.5rem;position:sticky;top:60px;z-index:99;overflow-x:auto}
+.filter-inner{display:flex;gap:.5rem;min-width:max-content}
+.btn-tema{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--hijau-border);background:var(--putih);color:var(--teks-abu);font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+.btn-tema:hover{border-color:var(--hijau-muda);background:var(--hijau-terang);color:var(--hijau-tua)}
+.btn-tema.active{background:var(--hijau-tua);color:#fff;border-color:var(--hijau-tua)}
+.tema-count{font-size:10px;background:rgba(255,255,255,.25);padding:1px 6px;border-radius:10px}
+.btn-tema:not(.active) .tema-count{background:var(--hijau-terang);color:var(--hijau-tua)}
+
+/* ── MAIN ── */
+.container{max-width:1100px;margin:0 auto;padding:1.5rem}
+
+/* ── SKELETON ── */
+.skeleton-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.skeleton-item{aspect-ratio:4/3;background:linear-gradient(90deg,#e8ede9 25%,#dce8de 50%,#e8ede9 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-lg)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── GRID GALERI ── */
+.galeri-grid{columns:4;column-gap:1rem}
+@media(max-width:900px){.galeri-grid{columns:3}}
+@media(max-width:600px){.galeri-grid{columns:2}}
+@media(max-width:380px){.galeri-grid{columns:1}}
+
+.galeri-item{break-inside:avoid;margin-bottom:1rem;border-radius:var(--radius-lg);overflow:hidden;position:relative;cursor:pointer;background:var(--putih);box-shadow:0 2px 8px rgba(0,0,0,.07);transition:transform .2s,box-shadow .2s}
+.galeri-item:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(27,94,53,.18)}
+.galeri-item img{width:100%;display:block;object-fit:cover}
+.galeri-item .gi-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(27,94,53,.75) 0%,transparent 50%);opacity:0;transition:opacity .2s;display:flex;align-items:flex-end;padding:.75rem}
+.galeri-item:hover .gi-overlay{opacity:1}
+.gi-label{color:#fff;font-size:11.5px;font-weight:600;line-height:1.35}
+.gi-tema-badge{position:absolute;top:8px;left:8px;background:rgba(27,94,53,.82);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.gi-zoom{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.85);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;opacity:0;transition:opacity .2s}
+.galeri-item:hover .gi-zoom{opacity:1}
+
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:4rem 1rem;color:var(--teks-ringan)}
+.empty-state .icon{font-size:52px;margin-bottom:1rem;display:block}
+.empty-state h3{font-family:var(--font-display);font-size:18px;color:var(--teks-abu);margin-bottom:.5rem}
+.empty-state p{font-size:13px;line-height:1.6}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{text-align:center;padding:1.5rem 0}
+.btn-load-more{display:inline-flex;align-items:center;gap:8px;padding:10px 28px;background:var(--hijau-tua);color:#fff;border:none;border-radius:var(--radius);font-size:13.5px;font-weight:600;font-family:var(--font);cursor:pointer;transition:background .15s}
+.btn-load-more:hover{background:var(--hijau)}
+.btn-load-more:disabled{opacity:.55;cursor:not-allowed}
+
+/* ── STATS BAR ── */
+.stats-bar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-bottom:1.25rem}
+.stats-count{font-size:12.5px;color:var(--teks-abu);font-weight:500}
+.stats-count strong{color:var(--hijau-tua)}
+
+/* ── LIGHTBOX ── */
+.lb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center}
+.lb-overlay.open{display:flex}
+.lb-img-wrap{max-width:92vw;max-height:80vh;display:flex;align-items:center;justify-content:center}
+.lb-overlay img{max-width:92vw;max-height:80vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.lb-caption{color:rgba(255,255,255,.85);font-size:13px;font-weight:500;text-align:center;margin-top:12px;max-width:600px;padding:0 1rem}
+.lb-sub{color:rgba(255,255,255,.5);font-size:11px;margin-top:4px}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:30px;cursor:pointer;background:none;border:none;line-height:1;padding:4px;opacity:.8;transition:opacity .15s}
+.lb-close:hover{opacity:1}
+.lb-nav{position:fixed;top:50%;transform:translateY(-50%);color:#fff;font-size:36px;cursor:pointer;background:rgba(255,255,255,.1);border:none;padding:8px 14px;border-radius:8px;transition:background .15s;line-height:1}
+.lb-nav:hover{background:rgba(255,255,255,.2)}
+.lb-prev{left:12px}.lb-next{right:12px}
+.lb-counter{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:12px}
+
+/* ── FOOTER ── */
+footer{background:var(--hijau-tua);color:rgba(255,255,255,.7);text-align:center;padding:1.25rem;font-size:12px;margin-top:2rem}
+footer a{color:rgba(255,255,255,.85);text-decoration:none}
+
+@media(max-width:600px){
+  .navbar{padding:.75rem 1rem}
+  .hero{padding:1.75rem 1rem 1.5rem}
+  .container{padding:1rem}
+  .filter-wrap{padding:.75rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <img src="assets/img/Gedung.jpg" alt="KUA" class="nav-logo" onerror="this.style.display='none'">
+    <div class="nav-brand-text">
+      <div class="nav-title">KUA Pilangkenceng</div>
+      <div class="nav-sub">Kab. Madiun</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Beranda</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <h1>📸 Galeri Kegiatan</h1>
+  <p>Dokumentasi foto kegiatan KUA Kecamatan Pilangkenceng — Akad Nikah, Bimwin, Penyuluhan Agama, Ecotheology, dan Pelayanan Terpadu.</p>
+</div>
+
+<!-- ── FILTER TEMA ── -->
+<div class="filter-wrap">
+  <div class="filter-inner" id="filterInner">
+    <button class="btn-tema active" data-tema="" onclick="filterTema(this)">
+      🗂️ Semua <span class="tema-count" id="cnt-all">—</span>
+    </button>
+    <button class="btn-tema" data-tema="Akad Nikah" onclick="filterTema(this)">
+      💍 Akad Nikah <span class="tema-count" id="cnt-Akad Nikah">—</span>
+    </button>
+    <button class="btn-tema" data-tema="Bimwin" onclick="filterTema(this)">
+      📖 Bimwin <span class="tema-count" id="cnt-Bimwin">—</span>
+    </button>
+    <button class="btn-tema" data-tema="Penyuluhan Agama" onclick="filterTema(this)">
+      🎤 Penyuluhan <span class="tema-count" id="cnt-Penyuluhan Agama">—</span>
+    </button>
+    <button class="btn-tema" data-tema="Ecotheology" onclick="filterTema(this)">
+      🌿 Ecotheology <span class="tema-count" id="cnt-Ecotheology">—</span>
+    </button>
+    <button class="btn-tema" data-tema="Pelayanan Terpadu" onclick="filterTema(this)">
+      🏛️ Pelayanan Terpadu <span class="tema-count" id="cnt-Pelayanan Terpadu">—</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="container">
+  <div class="stats-bar">
+    <span class="stats-count" id="statsCount">Memuat foto...</span>
+  </div>
+  <div id="galeriWrap">
+    <!-- skeleton -->
+    <div class="skeleton-grid" id="skeleton">
+      <div class="skeleton-item"></div><div class="skeleton-item"></div>
+      <div class="skeleton-item"></div><div class="skeleton-item"></div>
+      <div class="skeleton-item"></div><div class="skeleton-item"></div>
+      <div class="skeleton-item"></div><div class="skeleton-item"></div>
+    </div>
+  </div>
+  <div class="load-more-wrap hidden" id="loadMoreWrap">
+    <button class="btn-load-more" id="btnLoadMore" onclick="loadMore()">
+      ⬇️ Muat Lebih Banyak
+    </button>
+  </div>
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lb-overlay" id="lbOverlay">
+  <button class="lb-close" onclick="lbClose()">×</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <div class="lb-img-wrap">
+    <img id="lbImg" src="" alt="">
+  </div>
+  <div class="lb-caption" id="lbCaption"></div>
+  <div class="lb-sub" id="lbSub"></div>
+  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<footer>
+  <p>© 2026 KUA Kecamatan Pilangkenceng &nbsp;·&nbsp; <a href="index.html">Beranda</a> &nbsp;·&nbsp; <a href="ptsp/">PTSP Digital</a></p>
+</footer>
+
+<script>
+const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.apiUrl)
+  ? KUA_CONFIG.apiUrl
+  : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+
+const PER_PAGE = 24;
+let allFoto    = [];   // semua foto dari API
+let filtered   = [];   // hasil filter tema
+let shown      = 0;    // jumlah yang sudah di-render
+let lbIdx      = 0;    // index lightbox di filtered
+
+/* ── FORMAT TANGGAL ── */
+function formatTgl(str) {
+  if (!str) return '';
+  const d = new Date(str);
+  if (isNaN(d)) return str;
+  return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+}
+
+/* ── LOAD DATA ── */
+async function loadGaleri() {
+  try {
+    const res  = await fetch(API_URL + '?action=getgaleri&limit=200&_=' + Date.now());
+    const data = await res.json();
+    allFoto = (data.results || []).sort(function(a, b) {
+      return new Date(b.tanggal || 0) - new Date(a.tanggal || 0);
+    });
+  } catch(e) {
+    allFoto = [];
+  }
+  updateCounts();
+  applyFilter('');
+}
+
+/* ── UPDATE COUNTER PER TEMA ── */
+function updateCounts() {
+  const TEMA = ['Akad Nikah','Bimwin','Penyuluhan Agama','Ecotheology','Pelayanan Terpadu'];
+  document.getElementById('cnt-all').textContent = allFoto.length;
+  TEMA.forEach(function(t) {
+    const el = document.getElementById('cnt-' + t);
+    if (el) el.textContent = allFoto.filter(function(f){ return f.tema === t; }).length;
+  });
+}
+
+/* ── FILTER TEMA ── */
+let activeTema = '';
+function filterTema(btn) {
+  document.querySelectorAll('.btn-tema').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  activeTema = btn.dataset.tema;
+  applyFilter(activeTema);
+}
+
+function applyFilter(tema) {
+  filtered = tema ? allFoto.filter(function(f){ return f.tema === tema; }) : allFoto.slice();
+  shown = 0;
+  document.getElementById('galeriWrap').innerHTML = '<div class="galeri-grid" id="galeriGrid"></div>';
+  document.getElementById('skeleton').remove && (() => {})();
+  renderSlice();
+  updateStats();
+}
+
+/* ── RENDER SLICE ── */
+function renderSlice() {
+  const grid  = document.getElementById('galeriGrid');
+  const slice = filtered.slice(shown, shown + PER_PAGE);
+  if (!grid) return;
+
+  if (!slice.length && shown === 0) {
+    document.getElementById('galeriWrap').innerHTML =
+      '<div class="empty-state"><span class="icon">📷</span><h3>Belum Ada Foto</h3>' +
+      '<p>Foto kegiatan akan ditampilkan di sini setelah petugas mengupload melalui sistem PTSP.</p></div>';
+    document.getElementById('loadMoreWrap').classList.add('hidden');
+    return;
+  }
+
+  slice.forEach(function(f, i) {
+    const idx  = shown + i;
+    const item = document.createElement('div');
+    item.className = 'galeri-item';
+    item.onclick   = function(){ lbOpen(idx); };
+    item.innerHTML =
+      '<img src="' + escHtml(f.foto_url) + '" alt="' + escHtml(f.keterangan || '') +
+        '" loading="lazy" onerror="this.parentNode.style.display=\'none\'">' +
+      '<div class="gi-tema-badge">' + escHtml(f.tema || '') + '</div>' +
+      '<div class="gi-zoom">🔍</div>' +
+      '<div class="gi-overlay"><div class="gi-label">' + escHtml(f.keterangan || '') + '</div></div>';
+    grid.appendChild(item);
+  });
+
+  shown += slice.length;
+  // Load more button
+  const lmWrap = document.getElementById('loadMoreWrap');
+  if (shown < filtered.length) {
+    lmWrap.classList.remove('hidden');
+    document.getElementById('btnLoadMore').disabled = false;
+    document.getElementById('btnLoadMore').innerHTML = '⬇️ Muat Lebih Banyak (' + (filtered.length - shown) + ' lagi)';
+  } else {
+    lmWrap.classList.add('hidden');
+  }
+}
+
+function loadMore() {
+  document.getElementById('btnLoadMore').disabled = true;
+  renderSlice();
+}
+
+/* ── STATS ── */
+function updateStats() {
+  const el = document.getElementById('statsCount');
+  const total = filtered.length;
+  const tema  = activeTema || 'semua tema';
+  el.innerHTML = 'Menampilkan <strong>' + Math.min(shown, total) + '</strong> dari <strong>' + total + '</strong> foto' +
+    (activeTema ? ' · tema <strong>' + activeTema + '</strong>' : '');
+}
+
+/* ── ESCAPE ── */
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── LIGHTBOX ── */
+function lbOpen(idx) {
+  lbIdx = idx;
+  lbShow();
+  document.getElementById('lbOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function lbShow() {
+  const f = filtered[lbIdx];
+  if (!f) return;
+  document.getElementById('lbImg').src          = f.foto_url || '';
+  document.getElementById('lbCaption').textContent = f.keterangan || '';
+  document.getElementById('lbSub').textContent  = (f.tema || '') + (f.tanggal ? '  ·  ' + formatTgl(f.tanggal) : '');
+  document.getElementById('lbCounter').textContent = (lbIdx + 1) + ' / ' + filtered.length;
+}
+function lbClose() {
+  document.getElementById('lbOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbNav(dir) {
+  lbIdx = (lbIdx + dir + filtered.length) % filtered.length;
+  // Jika foto belum di-render, load dulu
+  if (lbIdx >= shown) { renderSlice(); }
+  lbShow();
+}
+document.getElementById('lbOverlay').addEventListener('click', function(e){
+  if (e.target === this) lbClose();
+});
+document.addEventListener('keydown', function(e){
+  if (!document.getElementById('lbOverlay').classList.contains('open')) return;
+  if (e.key === 'Escape')      lbClose();
+  if (e.key === 'ArrowLeft')   lbNav(-1);
+  if (e.key === 'ArrowRight')  lbNav(1);
+});
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  // Hapus skeleton setelah data masuk
+  loadGaleri().then(function() {
+    const sk = document.getElementById('skeleton');
+    if (sk) sk.remove();
+  });
+});
+</script>
+</body>
+</html>
