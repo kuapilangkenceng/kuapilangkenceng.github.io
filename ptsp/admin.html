@@ -1302,6 +1302,7 @@ async function loadData() {
   filtered = [...allData];
   renderTable();
   renderRecent();
+  updateBadgeGen();
 }
 
 function refreshData() {
@@ -2786,6 +2787,7 @@ async function doGenerateDokumen() {
       });
       var rec = allData.find(function(r) { return r.id === _gId; });
       if (rec) rec.dok_url = data.url;
+      updateBadgeGen();
       showToast('✅ Dokumen berhasil digenerate!');
       document.getElementById('btn-gselesai').style.display = 'flex';
     } else {
@@ -2806,11 +2808,16 @@ async function doGenerateDokumen() {
 var GEN_BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','nikah_alur_lengkap','nikah_bimwin','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
 var genFiltered = [], genPage = 1, GEN_PER_PAGE = 15;
 
-function loadGenerate() {
+function updateBadgeGen() {
   var pending = allData.filter(function(r){ return GEN_BISA.includes(r.jenis_layanan) && !r.dok_url; }).length;
   var badge = document.getElementById('badge-gen');
+  if (!badge) return;
   badge.textContent = pending;
   badge.style.display = pending > 0 ? 'inline-flex' : 'none';
+}
+
+function loadGenerate() {
+  updateBadgeGen();
   filterGenerate();
 }
 
