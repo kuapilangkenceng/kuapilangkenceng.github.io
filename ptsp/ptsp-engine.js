@@ -705,8 +705,12 @@ function renderPhotoStep() {
   const btnWrap = document.getElementById('rekap-btn-wrap');
   if (btnWrap) {
     const isLast = currentPhotoStepIdx >= total - 1;
-    btnWrap.innerHTML = '<button class="btn-submit" id="btn-submit-complete" onclick="submitPhotoStep()">' +
-      (isLast ? '✅ Selesai &amp; Kirim' : '📤 Kirim &amp; Lanjut') + '</button>';
+    btnWrap.innerHTML =
+      '<div style="display:flex;gap:8px">'
+      + '<button class="btn-submit" id="btn-submit-complete" onclick="submitPhotoStep()" style="flex:1">' +
+        (isLast ? '✅ Selesai &amp; Kirim' : '📤 Kirim &amp; Lanjut') + '</button>'
+      + (!isLast ? '<button onclick="skipPhotoStep()" style="padding:9px 16px;background:#f3f4f6;color:#555;border:1px solid #ddd;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Lewati ›</button>' : '')
+      + '</div>';
   }
 }
 
@@ -744,6 +748,18 @@ async function submitPhotoStep() {
     showToast('Tidak dapat terhubung ke server.', true);
   }
   btn.disabled = false; btn.classList.remove('loading');
+}
+
+function skipPhotoStep() {
+  if (currentPhotoStepIdx >= currentPhotoSteps.length - 1) {
+    showToast('Step dilewati. Pendaftaran selesai.');
+    setTimeout(function() { tampilkanSuksesSelesai(currentLayananId); }, 800);
+    return;
+  }
+  showToast('Step dilewati.');
+  currentPhotoStepIdx++;
+  photoFiles = [];
+  renderPhotoStep();
 }
 
 async function submitComplete() {
@@ -942,16 +958,8 @@ function _doResumePhotoStep(rec) {
       : (rec.foto_urls || {});
   } catch(x) {}
   currentPhotoSteps = f.photoSteps;
-  var startIdx = 0;
-  for (var i = 0; i < f.photoSteps.length; i++) {
-    if (!existingFoto[f.photoSteps[i].id]) { startIdx = i; break; }
-    if (i === f.photoSteps.length - 1) startIdx = f.photoSteps.length;
-  }
-  if (startIdx >= f.photoSteps.length) {
-    showToast('Semua foto sudah lengkap untuk kode ini.', true);
-    return;
-  }
-  currentPhotoStepIdx = startIdx;
+  // Selalu mulai dari step 0 agar petugas bisa ulang/skip foto manapun
+  currentPhotoStepIdx = 0;
   renderPhotoStep();
   goPage('page-rekap');
 }
