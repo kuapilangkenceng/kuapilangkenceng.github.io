@@ -1054,13 +1054,14 @@
 
 
 <!-- ═══ GALERI ═══ -->
-<section class="galeri-section">
+<section class="galeri-section" id="galeri">
   <div class="container">
     <div class="section-hd">
       <p class="section-title">Galeri Kegiatan</p>
-      <a href="#" class="lihat-semua">Lihat Semua →</a>
+      <a href="galeri.html" class="lihat-semua" id="lihatSemuaGaleri">Lihat Semua →</a>
     </div>
-    <div class="galeri-grid reveal">
+    <div class="galeri-grid reveal" id="galeriGrid">
+      <!-- placeholder emoji tampil saat API belum ada data -->
       <div class="galeri-item"><span class="gicon">💍</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Akad Nikah</div></div>
       <div class="galeri-item"><span class="gicon">📖</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Bimwin</div></div>
       <div class="galeri-item"><span class="gicon">🎤</span><div class="goverlay"><span>🔍</span></div><div class="glabel">Penyuluhan Agama</div></div>
@@ -1069,6 +1070,16 @@
     </div>
   </div>
 </section>
+
+<!-- ═══ LIGHTBOX GALERI ═══ -->
+<div id="lbOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center">
+  <button onclick="lbClose()" style="position:fixed;top:16px;right:20px;background:none;border:none;color:#fff;font-size:32px;cursor:pointer;line-height:1">×</button>
+  <button onclick="lbNav(-1)" style="position:fixed;left:12px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:36px;padding:8px 14px;border-radius:8px;cursor:pointer">&#8249;</button>
+  <img id="lbImg" src="" alt="" style="max-width:92vw;max-height:80vh;object-fit:contain;border-radius:8px">
+  <div id="lbCaption" style="color:rgba(255,255,255,.85);font-size:13px;font-weight:600;margin-top:10px;text-align:center;max-width:600px;padding:0 1rem"></div>
+  <div id="lbSub" style="color:rgba(255,255,255,.5);font-size:11px;margin-top:4px"></div>
+  <button onclick="lbNav(1)" style="position:fixed;right:12px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:36px;padding:8px 14px;border-radius:8px;cursor:pointer">&#8250;</button>
+</div>
 
 <!-- ═══ STATS ═══ -->
 <section class="stats-section">
@@ -1344,10 +1355,62 @@
     setInterval(function() { goTo(cur + 1); }, 4000);
   })();
 
+  /* ── GALERI: load dari API, maks 5 foto terbaru di homepage ── */
+  let _lbFoto = [], _lbIdx = 0;
+
+  async function loadGaleri() {
+    try {
+      const res  = await fetch(API_URL + '?action=getgaleri&limit=10&_=' + Date.now());
+      const data = await res.json();
+      const foto = (data.results || [])
+        .filter(f => f.foto_url)
+        .sort((a, b) => new Date(b.tanggal || 0) - new Date(a.tanggal || 0))
+        .slice(0, 5);
+      if (!foto.length) return;
+      _lbFoto = foto;
+      const grid = document.getElementById('galeriGrid');
+      grid.innerHTML = foto.map((f, i) =>
+        `<div class="galeri-item" onclick="lbOpen(${i})" style="cursor:pointer">
+          <img src="${f.foto_url}" alt="" style="width:100%;height:100%;object-fit:cover" loading="lazy"
+            onerror="this.parentNode.innerHTML='<span class=gicon>\uD83D\uDDBC\uFE0F</span><div class=glabel>${(f.keterangan||'').replace(/['"<>]/g,'')}</div>'">
+          <div class="goverlay"><span>🔍</span></div>
+          <div class="glabel">${(f.keterangan||f.tema||'').replace(/</g,'&lt;')}</div>
+        </div>`
+      ).join('');
+    } catch(e) { /* biarkan placeholder */ }
+  }
+
+  function lbOpen(idx) {
+    _lbIdx = idx; lbShow();
+    document.getElementById('lbOverlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function lbShow() {
+    const f = _lbFoto[_lbIdx]; if (!f) return;
+    document.getElementById('lbImg').src = f.foto_url || '';
+    document.getElementById('lbCaption').textContent = f.keterangan || '';
+    document.getElementById('lbSub').textContent = (f.tema || '') + (f.tanggal ? ' · ' + f.tanggal : '');
+  }
+  function lbClose() {
+    document.getElementById('lbOverlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  function lbNav(dir) {
+    _lbIdx = (_lbIdx + dir + _lbFoto.length) % _lbFoto.length; lbShow();
+  }
+  document.getElementById('lbOverlay').addEventListener('click', function(e) { if (e.target===this) lbClose(); });
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('lbOverlay').style.display !== 'flex') return;
+    if (e.key==='Escape') lbClose();
+    if (e.key==='ArrowLeft') lbNav(-1);
+    if (e.key==='ArrowRight') lbNav(1);
+  });
+
   /* ── INIT ── */
   window.addEventListener('load', () => {
     loadArtikel();
     loadPengumuman();
+    loadGaleri();
     setTimeout(() => {
       animCount('s1', 187, '', 1400);
       animCount('s2', 524, '', 1400);
