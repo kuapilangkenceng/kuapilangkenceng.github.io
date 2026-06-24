@@ -595,7 +595,7 @@ async function submitForm() {
     return;
   }
   const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,recaptchaToken:recaptchaToken,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
-  if (isTwoStage) payload.tahap = 1;
+  if (isTwoStage || isMultiStep) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
   try{
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
@@ -632,11 +632,11 @@ function renderRekap() {
   // Banner peringatan jika masih ada photoSteps
   if (currentPhotoSteps.length > 0) {
     const alertBanner = document.createElement('div');
-    alertBanner.style.cssText = 'margin-bottom:14px;padding:16px;background:#fff3cd;border:2px solid #f59e0b;border-radius:10px;text-align:center';
-    alertBanner.innerHTML = '<div style="font-size:32px;margin-bottom:6px">&#9888;&#65039;</div>'
-      + '<div style="font-size:16px;font-weight:800;color:#92400e;margin-bottom:6px">Jangan Tutup Halaman!</div>'
-      + '<div style="font-size:13px;color:#78350f;line-height:1.6">Data berhasil tersimpan.<br>Masih ada <strong>' + currentPhotoSteps.length + ' langkah foto</strong> yang harus diselesaikan.<br>Serahkan perangkat ke petugas KUA.</div>';
-    body.insertBefore(alertBanner, body.firstChild);
+    alertBanner.style.cssText = 'margin-bottom:14px;padding:14px 16px;background:#fff3cd;border:2px solid #f59e0b;border-radius:10px;text-align:center';
+    alertBanner.innerHTML = '<div style="font-size:22px;margin-bottom:4px">&#9888;&#65039;</div>'
+      + '<div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:2px">Pendaftaran Belum Selesai!</div>'
+      + '<div style="font-size:12px;color:#78350f">Data berhasil tersimpan. Silakan <strong>serahkan perangkat ke petugas KUA</strong> untuk menyelesaikan ' + currentPhotoSteps.length + ' langkah foto berikutnya.</div>';
+    body.appendChild(alertBanner);
   }
   if (currentTahap2Field) renderField(body, currentTahap2Field);
 }
