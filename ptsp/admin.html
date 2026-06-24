@@ -1128,6 +1128,15 @@ let session    = null;
 let allData    = [];
 let filtered   = [];
 let stats      = null;
+
+/* Sort array DESC by timestamp/tanggal — dipakai di semua render */
+function sortDesc(arr, key) {
+  return arr.slice().sort(function(a, b) {
+    var tA = new Date(a[key] || 0).getTime();
+    var tB = new Date(b[key] || 0).getTime();
+    return tB - tA;
+  });
+}
 let curPage    = 1;
 const PER_PAGE = 20;
 let activeStatusFilter = null;
@@ -1289,6 +1298,7 @@ async function loadData() {
     const json = await res.json();
     allData = json.results || [];
     allData = filterByLayananAkses(allData);
+    allData = sortDesc(allData, 'timestamp');
   } catch {
     // Demo data
     allData = [
@@ -2160,7 +2170,7 @@ async function loadLogAktivitas() {
     const res = await fetch(API_URL + '?action=getlogaktivitas&_=' + Date.now());
     const data = await res.json();
     if (!data.ok) { wrap.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#c00">Gagal: ' + (data.error||'') + '</td></tr>'; return; }
-    renderLogAktivitas(data.logs || []);
+    renderLogAktivitas(sortDesc(data.logs || [], 'timestamp'));
   } catch (e) {
     wrap.innerHTML = '<tr><td colspan="5" style="padding:20px;text-align:center;color:#c00">Error: ' + e.message + '</td></tr>';
   }
@@ -2394,6 +2404,7 @@ async function loadArtikel() {
     const res  = await fetch(API_URL + '?action=getartikel&_=' + Date.now());
     const data = await res.json();
     artikelData = data.results || [];
+    artikelData = sortDesc(artikelData, 'tanggal');
   } catch {
     artikelData = [];
     wrap.innerHTML = '<div style="padding:20px;color:var(--red)">⚠️ Gagal memuat artikel dari server. Periksa koneksi atau coba refresh.</div>';
@@ -2825,14 +2836,14 @@ function filterGenerate() {
   var q   = (document.getElementById('gen-f-q').value || '').trim().toLowerCase();
   var kat = document.getElementById('gen-f-kat').value;
   var dok = document.getElementById('gen-f-dok').value;
-  genFiltered = allData.filter(function(r) {
+  genFiltered = sortDesc(allData.filter(function(r) {
     if (!GEN_BISA.includes(r.jenis_layanan)) return false;
     if (q && !(r.id + ' ' + r.nama_pemohon).toLowerCase().includes(q)) return false;
     if (kat && r.kategori !== kat) return false;
     if (dok === 'belum' && r.dok_url) return false;
     if (dok === 'sudah' && !r.dok_url) return false;
     return true;
-  });
+  }), 'timestamp');
   genPage = 1;
   renderGenerate();
 }
@@ -3040,7 +3051,7 @@ async function submitPelaksanaan() {
     .then(function(r){ return r.json(); })
     .then(function(d){
       if (!d.ok) { tbody.innerHTML = '<tr><td colspan="8" style="padding:20px;text-align:center;color:#c00">Gagal: ' + (d.error||'') + '</td></tr>'; return; }
-      _btData = d.results || [];
+      _btData = sortDesc(d.results || [], 'tanggal');
       renderBukuTamu(_btData);
       if (info) info.textContent = 'Total ' + _btData.length + ' entri';
     })
