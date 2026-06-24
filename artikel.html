@@ -499,6 +499,22 @@
     return d.toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
   }
 
+  /* ── SANITASI FOTO: exclude pasfoto catin dari artikel publik ── */
+  const FOTO_EXCLUDE = /^pasfoto/i;
+  function sanitasiFotoArtikel(a) {
+    // Bersihkan fotoGaleri
+    const galeriAsli = a.fotoGaleri || [];
+    a.fotoGaleri = galeriAsli.filter(f => !FOTO_EXCLUDE.test(f.field || ''));
+    // Jika foto_url utama berasal dari field pasfoto, cari pengganti dari galeri yang lolos filter
+    // (foto_url tidak punya info field-nya — cek apakah URL-nya sama dengan pasfoto yang dibuang)
+    const urlBuang = new Set(galeriAsli.filter(f => FOTO_EXCLUDE.test(f.field || '')).map(f => f.url));
+    if (a.foto_url && urlBuang.has(a.foto_url)) {
+      // Pakai foto pertama yang lolos, atau kosongkan
+      a.foto_url = (a.fotoGaleri[0] || {}).url || '';
+    }
+    return a;
+  }
+
   /* ── LOAD ARTIKEL DARI API ── */
   async function loadArtikel() {
     try {
@@ -506,7 +522,7 @@
       const data = await res.json();
 
       if ((data.ok || data.status === 'ok') && (data.results || data.data || data.artikel)) {
-        semuaArtikel = data.results || data.data || data.artikel || [];
+        semuaArtikel = (data.results || data.data || data.artikel || []).map(sanitasiFotoArtikel);
       } else {
         semuaArtikel = [];
       }
@@ -679,8 +695,12 @@
       : getEmoji(normKategori(a.kategori));
 
     // Galeri foto (semua foto berlabel, jika ada lebih dari 1)
+    // Exclude pas foto calon pengantin (field pasfoto_pa, pasfoto_pi, dst)
     const galeriEl = document.getElementById('modalGaleri');
-    const galeri = (a.fotoGaleri || []).filter(f => f.url && f.url !== a.foto_url);
+    const EXCLUDE_FIELDS = /^pasfoto/i;
+    const galeri = (a.fotoGaleri || []).filter(f =>
+      f.url && f.url !== a.foto_url && !EXCLUDE_FIELDS.test(f.field || '')
+    );
     if (galeri.length) {
       galeriEl.innerHTML = galeri.map(f => `
         <div class="modal-galeri-item">
