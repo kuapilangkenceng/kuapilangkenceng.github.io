@@ -178,6 +178,7 @@ function renderLayananList() {
     list.appendChild(item);
   });
   if (currentKatLabel === 'Layanan Nikah') renderBannerEcoteologyLuar(list);
+  if (currentKatLabel === 'Layanan Nikah') renderCallbackPanel(list);
   goPage('page-layanan');
 }
 
@@ -810,6 +811,151 @@ function resetAll() { currentJenis=null; photoFiles=[]; currentTahap2Field=null;
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
+
+/* ── CALLBACK PHOTO STEP ────────────────────────────────────────────── */
+function renderCallbackPanel(containerEl) {
+  const old = document.getElementById('callback-panel'); if (old) old.remove();
+  const panel = document.createElement('div');
+  panel.id = 'callback-panel';
+  panel.style.cssText = 'margin-top:14px;border:1.5px solid var(--green,#2d8c5e);border-radius:12px;overflow:hidden';
+  const header = document.createElement('div');
+  header.style.cssText = 'padding:12px 16px;background:var(--green-light,#e8f5ee);cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none';
+  header.innerHTML = '<span style="font-size:18px">\uD83D\uDCF7</span>'
+    + '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--green,#1a6b45)">Lanjutkan Foto yang Tertunda</div>'
+    + '<div style="font-size:11px;color:#555;margin-top:1px">Sudah dapat kode layanan? Lanjutkan langkah foto di sini.</div></div>'
+    + '<span id="callback-toggle-icon" style="font-size:16px;color:var(--green,#1a6b45)">\uFF0B</span>';
+  const body = document.createElement('div');
+  body.id = 'callback-body';
+  body.style.cssText = 'display:none;padding:16px';
+  if (session) {
+    body.innerHTML = '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px">Pilih pendaftaran yang menunggu foto:</div>'
+      + '<select id="callback-dropdown" style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;background:#fff;margin-bottom:10px">'
+      + '<option value="">\u2014 Memuat data... \u2014</option></select>'
+      + '<div id="callback-dropdown-info" style="font-size:11px;color:#666;margin-bottom:10px"></div>'
+      + '<button onclick="resumeFromDropdown()" style="padding:9px 20px;background:var(--green,#2d8c5e);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;width:100%">&#9654; Lanjutkan Foto</button>';
+    setTimeout(loadPendingPhotoDropdown, 100);
+  } else {
+    body.innerHTML = '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px">Masukkan Kode Layanan Anda:</div>'
+      + '<input id="callback-kode-input" type="text" placeholder="Contoh: LYN-20240624-001"'
+      + ' style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;margin-bottom:8px;box-sizing:border-box"'
+      + ' onkeydown="if(event.key===\'Enter\')resumeFromKode()">'
+      + '<div id="callback-kode-error" style="display:none;color:#c0392b;font-size:12px;margin-bottom:8px"></div>'
+      + '<button onclick="resumeFromKode()" style="padding:9px 20px;background:var(--green,#2d8c5e);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;width:100%">&#128269; Cari &amp; Lanjutkan</button>';
+  }
+  header.onclick = function() {
+    const open = body.style.display !== 'none';
+    body.style.display = open ? 'none' : 'block';
+    document.getElementById('callback-toggle-icon').textContent = open ? '\uFF0B' : '\uFF0D';
+  };
+  panel.appendChild(header);
+  panel.appendChild(body);
+  containerEl.appendChild(panel);
+}
+
+function loadPendingPhotoDropdown() {
+  const sel = document.getElementById('callback-dropdown'); if (!sel) return;
+  fetch(API_URL + '?action=getpendingphoto')
+    .then(function(r){ return r.json(); })
+    .then(function(json) {
+      const list = json.data || [];
+      if (!list.length) {
+        sel.innerHTML = '<option value="">\u2014 Tidak ada pendaftaran tertunda \u2014</option>';
+        return;
+      }
+      sel.innerHTML = '<option value="">\u2014 Pilih pendaftaran \u2014</option>';
+      list.forEach(function(r) {
+        const opt = document.createElement('option');
+        opt.value = r.id;
+        const d = r.data || {};
+        const label = (d.nama_pa || r.nama_pemohon || r.id)
+          + (d.nama_pi ? ' & ' + d.nama_pi : '')
+          + (d.tgl_akad ? ' \u2014 ' + d.tgl_akad : '');
+        opt.textContent = r.id + ' | ' + label;
+        opt.dataset.rec = JSON.stringify(r);
+        sel.appendChild(opt);
+      });
+      const info = document.getElementById('callback-dropdown-info');
+      if (info) info.textContent = list.length + ' pendaftaran menunggu foto';
+    })
+    .catch(function() {
+      const sel2 = document.getElementById('callback-dropdown');
+      if (sel2) sel2.innerHTML = '<option value="">\u2014 Gagal memuat data \u2014</option>';
+    });
+}
+
+async function resumeFromDropdown() {
+  const sel = document.getElementById('callback-dropdown');
+  if (!sel || !sel.value) { showToast('Pilih pendaftaran dulu.', true); return; }
+  const opt = sel.options[sel.selectedIndex];
+  if (!opt || !opt.dataset.rec) { showToast('Data tidak ditemukan.', true); return; }
+  _doResumePhotoStep(JSON.parse(opt.dataset.rec));
+}
+
+async function resumeFromKode() {
+  const input = document.getElementById('callback-kode-input'); if (!input) return;
+  const kode = input.value.trim().toUpperCase();
+  const errEl = document.getElementById('callback-kode-error');
+  if (!kode) { errEl.textContent = 'Masukkan kode layanan.'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  input.disabled = true;
+  try {
+    const res = await fetch(API_URL + '?action=cekstatuspublik&kode=' + encodeURIComponent(kode));
+    const data = await res.json();
+    if (!data.ok) {
+      errEl.textContent = data.error || 'Kode tidak ditemukan.';
+      errEl.style.display = 'block';
+      input.disabled = false;
+      return;
+    }
+    if (data.status_submit !== 'Menunggu Foto Tahap 2') {
+      errEl.textContent = 'Kode ini sudah selesai atau tidak membutuhkan foto tambahan.';
+      errEl.style.display = 'block';
+      input.disabled = false;
+      return;
+    }
+    _doResumePhotoStep(data);
+  } catch(e) {
+    errEl.textContent = 'Tidak dapat terhubung ke server.';
+    errEl.style.display = 'block';
+  }
+  input.disabled = false;
+}
+
+function _doResumePhotoStep(rec) {
+  currentJenis = rec.jenis_layanan || 'nikah_alur_lengkap';
+  currentLayananId = rec.id;
+  currentRekapInfo = {
+    id:           rec.id,
+    nama_pemohon: rec.nama_pemohon || '-',
+    jenis_label:  rec.jenis_label  || 'Pendaftaran Nikah'
+  };
+  photoFiles = [];
+  const f = CONFIG.forms && CONFIG.forms[currentJenis];
+  if (!f || !f.photoSteps || !f.photoSteps.length) {
+    showToast('Tidak ada langkah foto untuk layanan ini.', true);
+    return;
+  }
+  var existingFoto = {};
+  try {
+    existingFoto = typeof rec.foto_urls === 'string'
+      ? JSON.parse(rec.foto_urls)
+      : (rec.foto_urls || {});
+  } catch(x) {}
+  currentPhotoSteps = f.photoSteps;
+  var startIdx = 0;
+  for (var i = 0; i < f.photoSteps.length; i++) {
+    if (!existingFoto[f.photoSteps[i].id]) { startIdx = i; break; }
+    if (i === f.photoSteps.length - 1) startIdx = f.photoSteps.length;
+  }
+  if (startIdx >= f.photoSteps.length) {
+    showToast('Semua foto sudah lengkap untuk kode ini.', true);
+    return;
+  }
+  currentPhotoStepIdx = startIdx;
+  renderPhotoStep();
+  goPage('page-rekap');
+}
+/* ── END CALLBACK PHOTO STEP ────────────────────────────────────────────── */
 
 function updateNoSurat(fname) {
   const now    = new Date();
