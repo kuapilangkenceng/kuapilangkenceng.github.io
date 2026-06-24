@@ -522,7 +522,9 @@
       const data = await res.json();
 
       if ((data.ok || data.status === 'ok') && (data.results || data.data || data.artikel)) {
-        semuaArtikel = (data.results || data.data || data.artikel || []).map(sanitasiFotoArtikel);
+        semuaArtikel = (data.results || data.data || data.artikel || [])
+          .map(sanitasiFotoArtikel)
+          .sort((a, b) => new Date(b.tanggal || 0) - new Date(a.tanggal || 0));
       } else {
         semuaArtikel = [];
       }
