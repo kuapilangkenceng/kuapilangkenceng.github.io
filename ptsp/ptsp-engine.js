@@ -594,6 +594,66 @@ async function submitForm() {
     btn2.disabled=false; btn2.classList.remove('loading'); btn2.textContent='\uD83D\uDCE4 Kirim Layanan';
     return;
   }
+
+  // ── Mode Petugas: Submit Bimbingan Pernikahan (Penghulu/Penyuluh) ──────
+  if (session && currentJenis === 'nikah_bimwin') {
+    const btnB = document.getElementById('btn-submit');
+    btnB.disabled = true;
+    btnB.classList.add('loading');
+    btnB.textContent = 'Memproses...';
+    const roleP = (session.role || '').toLowerCase();
+    const namaP = session.nama || '';
+    let labelJenis = /penyuluh/i.test(namaP) || roleP === 'penyuluh'
+      ? 'Bimbingan Konseling'
+      : 'Bimbingan Perkawinan Mandiri';
+    try {
+      const resBimwin = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action : 'submitBimwinPetugas',
+          token  : session.token,
+          id     : currentLayananId || null,
+          data   : data
+        })
+      });
+      const hasilBimwin = await resBimwin.json();
+      if (hasilBimwin.ok) {
+        const jenisFinal = hasilBimwin.jenis_surat || labelJenis;
+        const noSurat    = hasilBimwin.no_surat    || '';
+        const dokUrl     = hasilBimwin.dok_url      || null;
+        showToast('\u2705 Bimwin tercatat sebagai "' + jenisFinal + '" \u2014 Status: Selesai');
+        setTimeout(function() {
+          const sid = document.getElementById('success-id');
+          if (sid && currentRekapInfo) sid.textContent = currentRekapInfo.id || '';
+          let infoEl = document.getElementById('bimwin-result-info');
+          if (!infoEl && sid) {
+            infoEl = document.createElement('div');
+            infoEl.id = 'bimwin-result-info';
+            infoEl.style.cssText = 'margin-top:14px;padding:12px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;font-size:13px;line-height:1.7;text-align:left';
+            sid.insertAdjacentElement('afterend', infoEl);
+          }
+          if (infoEl) {
+            infoEl.innerHTML = '<strong>Jenis Surat:</strong> ' + jenisFinal + '<br>'
+              + '<strong>Petugas:</strong> ' + (hasilBimwin.petugas || session.nama)
+              + (noSurat ? '<br><strong>No. Surat:</strong> ' + noSurat : '')
+              + (dokUrl ? '<br><a href="' + dokUrl + '" target="_blank" style="color:var(--green,#1a6b45);font-weight:700">\uD83D\uDCC4 Buka Dokumen SK</a>' : '');
+            infoEl.style.display = 'block';
+          }
+          goPage('page-success');
+        }, 600);
+      } else {
+        showToast('Gagal: ' + (hasilBimwin.error || 'Tidak diketahui'), true);
+      }
+    } catch (eBimwin) {
+      showToast('Tidak dapat terhubung ke server.', true);
+    }
+    btnB.disabled = false;
+    btnB.classList.remove('loading');
+    btnB.textContent = '\uD83D\uDCE4 Kirim Layanan';
+    return;
+  }
+  // ── END Mode Petugas Bimwin ────────────────────
   const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,recaptchaToken:recaptchaToken,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
   if (isTwoStage || isMultiStep) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
