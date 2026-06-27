@@ -1447,5 +1447,66 @@
   });
 </script>
 
+
+<!-- KUA-SECURITY-DETERRENT -->
+<script>
+(function() {
+  'use strict';
+
+  // 1. Blokir klik kanan
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  // 2. Blokir shortcut keyboard (Ctrl+U, Ctrl+S, Ctrl+A, F12, Ctrl+Shift+I/J/C)
+  document.addEventListener('keydown', function(e) {
+    var key = e.key ? e.key.toLowerCase() : '';
+    if (e.ctrlKey && ['u', 's', 'a'].indexOf(key) !== -1) {
+      e.preventDefault();
+      return false;
+    }
+    if (e.key === 'F12') {
+      e.preventDefault();
+      return false;
+    }
+    if (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].indexOf(key) !== -1) {
+      e.preventDefault();
+      return false;
+    }
+  });
+
+  // 3. Blokir drag & drop konten
+  document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
+  });
+
+  // 4. Watermark di console
+  if (window.console && window.console.log) {
+    console.log(
+      '%c\u26d4 Konten website ini milik KUA Kecamatan Pilangkenceng.\n%cPenyalinan tanpa izin melanggar hak cipta.\nKepentingan resmi: kuapilangkenceng@gmail.com',
+      'color:#c0392b;font-size:18px;font-weight:bold;',
+      'color:#555;font-size:13px;'
+    );
+  }
+
+  // 5. DevTools detection (deterrent, bukan blokir penuh)
+  var devOpen = false;
+  var checkDevTools = function() {
+    var wDiff = window.outerWidth  - window.innerWidth;
+    var hDiff = window.outerHeight - window.innerHeight;
+    if ((wDiff > 200 || hDiff > 200) && !devOpen) {
+      devOpen = true;
+      console.warn('\u26a0\ufe0f KUA Pilangkenceng: Konten ini dilindungi. Penggunaan tanpa izin dilarang.');
+    } else if (wDiff <= 200 && hDiff <= 200) {
+      devOpen = false;
+    }
+  };
+  setInterval(checkDevTools, 2000);
+
+})();
+</script>
+<!-- END KUA-SECURITY-DETERRENT -->
 </body>
 </html>
