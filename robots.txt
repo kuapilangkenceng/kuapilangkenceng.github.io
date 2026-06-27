@@ -1,8 +1,14 @@
+# robots.txt — KUA Pilangkenceng
+# PATCH: Hapus Disallow /ptsp/admin.html karena justru
+# mengiklankan lokasi panel admin ke crawler/attacker.
+
 User-agent: *
 Allow: /
+Disallow: /ptsp/galeri-upload.html
+Disallow: /ptsp/post-artikel.html
 
 Sitemap: https://kuapilangkenceng.github.io/sitemap.xml
 
-# Blok akses ke halaman admin & API internal
-Disallow: /ptsp/admin.html
-Disallow: /ptsp/api/
+# Catatan: admin.html tidak perlu di-Disallow karena:
+# 1. Halaman sudah dilindungi login (token-based auth via GAS)
+# 2. Disallow justru memberitahu attacker bahwa /ptsp/admin.html ada
