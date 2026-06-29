@@ -343,6 +343,25 @@
     .jadwal-table th { color: var(--teks-ringan); text-align: left; padding: 4px 6px; border-bottom: 1px solid var(--hijau-border); font-size: 10.5px; font-weight: 600; }
     .jadwal-table td { padding: 5px 6px; border-bottom: 1px solid #eef2ef; color: var(--teks); }
     .jadwal-table tr:last-child td { border-bottom: none; }
+    /* SLIDE PENGUMUMAN NIKAH ROMANTIS */
+    .nikah-slide-wrap { position:relative; overflow:hidden; border-radius:14px; min-height:230px; background:linear-gradient(135deg,#fff5f7 0%,#fce8ef 50%,#fff8f0 100%); border:1.5px solid #f2b8c6; }
+    .nikah-slide { position:absolute; inset:0; opacity:0; transition:opacity .8s ease; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px 18px; z-index:1; }
+    .nikah-slide.active { opacity:1; }
+    .nikah-slide-bunga { position:absolute; font-size:44px; opacity:.18; pointer-events:none; z-index:0; }
+    .nikah-slide-bunga.tl { top:-2px; left:-2px; transform:rotate(-20deg); }
+    .nikah-slide-bunga.br { bottom:-2px; right:-2px; transform:rotate(160deg); }
+    .nikah-slide-tgl { font-size:11px; font-weight:700; letter-spacing:.8px; color:#c0546a; text-transform:uppercase; margin-bottom:6px; position:relative; z-index:1; }
+    .nikah-slide-nama { font-size:17px; font-weight:800; color:#7b2d3e; line-height:1.35; font-family:Georgia,'Times New Roman',serif; position:relative; z-index:1; }
+    .nikah-slide-amp { font-size:22px; color:#e07090; margin:3px 0; display:block; }
+    .nikah-slide-desa { font-size:11.5px; color:#a0556a; margin-top:7px; position:relative; z-index:1; }
+    .nikah-slide-dots { display:flex; justify-content:center; gap:6px; padding:10px 0 6px; }
+    .nikah-slide-dot { width:7px; height:7px; border-radius:50%; background:#f2b8c6; cursor:pointer; transition:background .3s,transform .3s; border:none; padding:0; }
+    .nikah-slide-dot.active { background:#c0546a; transform:scale(1.35); }
+    .nikah-slide-counter { font-size:10px; color:#c0546a; text-align:center; padding-bottom:4px; font-weight:600; }
+    .nikah-slide-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(192,84,106,.13); border:none; border-radius:50%; width:28px; height:28px; font-size:16px; color:#c0546a; cursor:pointer; z-index:2; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+    .nikah-slide-nav:hover { background:rgba(192,84,106,.28); }
+    .nikah-slide-nav.prev { left:6px; }
+    .nikah-slide-nav.next { right:6px; }
 
     /* ── ALUR ── */
     .alur-section { background: var(--abu); }
@@ -876,13 +895,19 @@
 
       <!-- PENGUMUMAN KEHENDAK NIKAH -->
       <div class="mid-col">
-        <div class="jadwal-box">
-          <div class="jadwal-hd">
-            <p class="box-title">&#128146; Pengumuman Kehendak Nikah</p>
-            <a href="layanan-nikah.html" class="jadwal-link">Selengkapnya</a>
+        <div class="jadwal-box" style="padding:0;overflow:hidden;border:1.5px solid #f2b8c6;background:transparent">
+          <div class="jadwal-hd" style="padding:.75rem 1rem .5rem;background:rgba(255,240,245,.85)">
+            <p class="box-title" style="color:#7b2d3e">&#128150; Pengumuman Kehendak Nikah</p>
+            <a href="layanan-nikah.html" class="jadwal-link" style="color:#c0546a">Selengkapnya</a>
           </div>
-          <div id="pengumumanBody" style="font-size:12.5px;padding:0 4px">
-            <div style="text-align:center;padding:1.5rem;color:var(--teks-ringan)">Memuat pengumuman...</div>
+          <div id="pengumumanBody">
+            <div class="nikah-slide-wrap">
+              <div id="nikahSlideContainer"></div>
+              <button class="nikah-slide-nav prev" onclick="nikahSlideNav(-1)">&#8249;</button>
+              <button class="nikah-slide-nav next" onclick="nikahSlideNav(1)">&#8250;</button>
+            </div>
+            <div class="nikah-slide-dots" id="nikahDots"></div>
+            <div class="nikah-slide-counter" id="nikahCounter"></div>
           </div>
         </div>
       </div>
@@ -1187,24 +1212,64 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
 
   /* ── CEK STATUS ── */
-  async function loadPengumuman() {
-    var box = document.getElementById('pengumumanBody');
-    if (!box) return;
-    try {
-      var res = await fetch(API_URL + '?action=getJadwalNikah&_=' + Date.now());
-      var data = await res.json();
-      var rows = (data.jadwal || []).slice(0, 8);
-      if (!rows.length) { box.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--teks-ringan);font-size:12px">Belum ada pengumuman.</div>'; return; }
-      box.innerHTML = rows.map(function(r) {
-        var _r=r.tanggal_akad||r.tanggal||'', tgl='-';
-        if(_r){try{var _d=new Date(_r),_b=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];tgl=_d.getDate()+' '+_b[_d.getMonth()]+' '+_d.getFullYear();}catch(x){tgl=_r;}}
-        var pa=r.nama_pa||r.nama_calon_suami||'-', pi=r.nama_pi||r.nama_calon_istri||'-', desa=r.desa||r.desa_pa||'-', tmpt=r.tempat_akad||'';
-        return '<div style="padding:8px 0;border-bottom:1px solid rgba(0,0,0,.07);display:grid;grid-template-columns:80px 1fr;gap:6px">'+
-          '<div style="font-size:11px;font-weight:700;color:var(--hijau)">'+tgl+'</div>'+
-          '<div><div style="font-size:12.5px;font-weight:600">'+pa+' &amp; '+pi+'</div>'+
-          '<div style="font-size:11px;color:var(--teks-abu)">&#128205; '+desa+(tmpt?' &mdash; '+tmpt:'')+'</div></div></div>';
-      }).join('');
-    } catch(e) { box.innerHTML = '<div style="text-align:center;padding:1.5rem;color:var(--teks-ringan);font-size:12px">Gagal memuat data.</div>'; }
+  // SLIDE PENGUMUMAN NIKAH ROMANTIS
+  var _nSlides=[],_nIdx=0,_nTimer=null;
+  var _nBln=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  function _nFmtTgl(s){if(!s)return'-';try{var d=new Date(s);return d.getDate()+' '+_nBln[d.getMonth()]+' '+d.getFullYear();}catch(x){return s;}}
+  function _nRender(){
+    var c=document.getElementById('nikahSlideContainer');
+    var dots=document.getElementById('nikahDots');
+    var ctr=document.getElementById('nikahCounter');
+    if(!c) return;
+    if(!_nSlides.length){
+      c.innerHTML='<div class="nikah-slide active" style="min-height:200px"><div style="color:#c0546a;font-size:13px;opacity:.7">Belum ada pengumuman.</div></div>';
+      if(dots) dots.innerHTML=''; if(ctr) ctr.textContent=''; return;
+    }
+    c.innerHTML=_nSlides.map(function(r,i){
+      var tgl=_nFmtTgl(r.tanggal_akad||r.tanggal);
+      var pa=(r.nama_pa||r.nama_calon_suami||'-').split(' ').slice(0,3).join(' ');
+      var pi=(r.nama_pi||r.nama_calon_istri||'-').split(' ').slice(0,3).join(' ');
+      var desa=r.desa||r.desa_pa||r.desa_akad||'-';
+      var tmpt=r.tempat_akad||'';
+      return '<div class="nikah-slide'+(i===0?' active':'')+'"><span class="nikah-slide-bunga tl">🌸</span><span class="nikah-slide-bunga br">🌸</span>'
+        +'<div style="font-size:30px;margin-bottom:4px;position:relative;z-index:1">💍</div>'
+        +'<div class="nikah-slide-tgl">'+tgl+'</div>'
+        +'<div class="nikah-slide-nama">'+pa+'<span class="nikah-slide-amp">&amp;</span>'+pi+'</div>'
+        +'<div class="nikah-slide-desa">📍 '+desa+(tmpt?' \u2014 '+tmpt:'')+'</div>'
+        +'</div>';
+    }).join('');
+    if(dots) dots.innerHTML=_nSlides.map(function(_,i){
+      return '<button class="nikah-slide-dot'+(i===0?' active':'')+'" onclick="nikahSlideGo('+i+')" aria-label="Slide '+(i+1)+'"></button>';
+    }).join('');
+    if(ctr) ctr.textContent=_nSlides.length>1?'1 / '+_nSlides.length:'';
+    _nStartAuto();
+  }
+  function nikahSlideGo(idx){
+    var slides=document.querySelectorAll('.nikah-slide');
+    var dots=document.querySelectorAll('.nikah-slide-dot');
+    var ctr=document.getElementById('nikahCounter');
+    if(!slides.length) return;
+    _nIdx=(idx+slides.length)%slides.length;
+    slides.forEach(function(s,i){s.classList.toggle('active',i===_nIdx);});
+    dots.forEach(function(d,i){d.classList.toggle('active',i===_nIdx);});
+    if(ctr&&slides.length>1) ctr.textContent=(_nIdx+1)+' / '+_nSlides.length;
+    _nStartAuto();
+  }
+  function nikahSlideNav(dir){nikahSlideGo(_nIdx+dir);}
+  function _nStartAuto(){
+    if(_nTimer) clearInterval(_nTimer);
+    if(_nSlides.length<2) return;
+    _nTimer=setInterval(function(){nikahSlideGo(_nIdx+1);},4500);
+  }
+  async function loadPengumuman(){
+    try{
+      var res=await fetch(API_URL+'?action=getJadwalNikah&_='+Date.now());
+      var data=await res.json();
+      _nSlides=data.jadwal||[]; _nIdx=0; _nRender();
+    }catch(e){
+      var c=document.getElementById('nikahSlideContainer');
+      if(c) c.innerHTML='<div class="nikah-slide active" style="min-height:200px"><div style="color:#c0546a;font-size:12px;opacity:.7">Gagal memuat data.</div></div>';
+    }
   }
 
   function cekStatus() {
