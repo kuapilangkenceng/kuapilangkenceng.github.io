@@ -305,13 +305,12 @@ function selectRadio(name,value,el) { document.querySelectorAll('[name="'+name+'
 function toggleCheck(el) { el.classList.toggle('selected'); }
 function handlePhotoInput(e,name) { Array.from(e.target.files).forEach(function(f){ addPhoto(f,name); }); }
 function handleDrop(e,name) { e.preventDefault(); document.getElementById('photo_area_'+name).classList.remove('dragover'); Array.from(e.dataTransfer.files).filter(function(f){ return f.type.startsWith('image/'); }).forEach(function(f){ addPhoto(f,name); }); }
-function addPhoto(file,name) {
-  if (file.size > 8*1024*1024) { showToast('File terlalu besar (maks 8MB): ' + file.name, true); return; }
+function addPhoto(file, name) {
+  if (file.size > 8 * 1024 * 1024) { showToast('File terlalu besar (maks 8MB): ' + file.name, true); return; }
   const r = new FileReader();
   r.onload = function(ev) {
     const img = new Image();
     img.onload = function() {
-      // Kompresi canvas: max 1280px sisi terpanjang, quality 0.75
       const MAX_DIM = 1280;
       let w = img.width, h = img.height;
       if (w > MAX_DIM || h > MAX_DIM) {
@@ -619,6 +618,52 @@ async function submitForm() {
     btn2.disabled=false; btn2.classList.remove('loading'); btn2.textContent='\uD83D\uDCE4 Kirim Layanan';
     return;
   }
+
+  // ── Mode Petugas: Submit Bimbingan Pernikahan ──────────────────────────
+  if (session && currentJenis === 'nikah_bimwin') {
+    const btnB = document.getElementById('btn-submit');
+    btnB.disabled = true; btnB.classList.add('loading'); btnB.textContent = 'Memproses...';
+    const roleP = (session.role || '').toLowerCase();
+    const namaP = session.nama || '';
+    const labelJenis = /penyuluh/i.test(namaP) || roleP === 'penyuluh'
+      ? 'Bimbingan Konseling' : 'Bimbingan Perkawinan Mandiri';
+    try {
+      const resBimwin = await fetch(API_URL, {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'submitBimwinPetugas', token: session.token,
+          id: currentLayananId || null, data: data })
+      });
+      const hasilBimwin = await resBimwin.json();
+      if (hasilBimwin.ok) {
+        const jenisFinal = hasilBimwin.jenis_surat || labelJenis;
+        const noSurat = hasilBimwin.no_surat || '';
+        const dokUrl  = hasilBimwin.dok_url  || null;
+        showToast('\u2705 Bimwin: ' + jenisFinal + ' \u2014 Status: Selesai');
+        setTimeout(function() {
+          const sid = document.getElementById('success-id');
+          if (sid && currentRekapInfo) sid.textContent = currentRekapInfo.id || '';
+          let infoEl = document.getElementById('bimwin-result-info');
+          if (!infoEl && sid) {
+            infoEl = document.createElement('div');
+            infoEl.id = 'bimwin-result-info';
+            infoEl.style.cssText = 'margin-top:14px;padding:12px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;font-size:13px;line-height:1.7';
+            sid.insertAdjacentElement('afterend', infoEl);
+          }
+          if (infoEl) {
+            infoEl.innerHTML = '<strong>Jenis Surat:</strong> ' + jenisFinal + '<br>'
+              + '<strong>Petugas:</strong> ' + (hasilBimwin.petugas || session.nama)
+              + (noSurat ? '<br><strong>No. Surat:</strong> ' + noSurat : '')
+              + (dokUrl ? '<br><a href="' + dokUrl + '" target="_blank" style="color:var(--green,#1a6b45);font-weight:700">Buka Dokumen SK</a>' : '');
+          }
+          goPage('page-success');
+        }, 600);
+      } else { showToast('Gagal: ' + (hasilBimwin.error || 'Tidak diketahui'), true); }
+    } catch (eBimwin) { showToast('Tidak dapat terhubung ke server.', true); }
+    btnB.disabled = false; btnB.classList.remove('loading'); btnB.textContent = 'Kirim Layanan';
+    return;
+  }
+  // ── END Mode Petugas Bimwin ──────────────────────────────────────────────
+
   const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,recaptchaToken:recaptchaToken,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
   if (isTwoStage || isMultiStep) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
@@ -895,7 +940,7 @@ function renderCallbackPanel(containerEl) {
 
 function loadPendingPhotoDropdown() {
   const sel = document.getElementById('callback-dropdown'); if (!sel) return;
-  fetch(API_URL + '?action=getpendingphoto')
+  fetch(API_URL + '?action=getpendingphoto&token=' + encodeURIComponent(session ? session.token : ''))
     .then(function(r){ return r.json(); })
     .then(function(json) {
       const list = json.data || [];
