@@ -985,7 +985,7 @@ async function resumeFromKode() {
   errEl.style.display = 'none';
   input.disabled = true;
   try {
-    const res = await fetch(API_URL + '?action=cekstatuspublik&kode=' + encodeURIComponent(kode));
+    const res = await fetch(API_URL + '?action=cekstatus&kode=' + encodeURIComponent(kode));
     const data = await res.json();
     if (!data.ok) {
       errEl.textContent = data.error || 'Kode tidak ditemukan.';
