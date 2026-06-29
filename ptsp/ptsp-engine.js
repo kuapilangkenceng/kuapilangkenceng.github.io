@@ -305,7 +305,31 @@ function selectRadio(name,value,el) { document.querySelectorAll('[name="'+name+'
 function toggleCheck(el) { el.classList.toggle('selected'); }
 function handlePhotoInput(e,name) { Array.from(e.target.files).forEach(function(f){ addPhoto(f,name); }); }
 function handleDrop(e,name) { e.preventDefault(); document.getElementById('photo_area_'+name).classList.remove('dragover'); Array.from(e.dataTransfer.files).filter(function(f){ return f.type.startsWith('image/'); }).forEach(function(f){ addPhoto(f,name); }); }
-function addPhoto(file,name) { if(file.size>5*1024*1024){showToast('File terlalu besar: '+file.name,true);return;} const r=new FileReader(); r.onload=function(ev){ const b64=ev.target.result.split(',')[1]; const obj={file:file,base64:b64,mimeType:file.type,name:name}; photoFiles.push(obj); renderPhotoPreview(obj); }; r.readAsDataURL(file); }
+function addPhoto(file, name) {
+  if (file.size > 8 * 1024 * 1024) { showToast('File terlalu besar (maks 8MB): ' + file.name, true); return; }
+  const r = new FileReader();
+  r.onload = function(ev) {
+    const img = new Image();
+    img.onload = function() {
+      const MAX_DIM = 1280;
+      let w = img.width, h = img.height;
+      if (w > MAX_DIM || h > MAX_DIM) {
+        if (w >= h) { h = Math.round(h * MAX_DIM / w); w = MAX_DIM; }
+        else        { w = Math.round(w * MAX_DIM / h); h = MAX_DIM; }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+      const b64 = dataUrl.split(',')[1];
+      const obj = { file: file, base64: b64, mimeType: 'image/jpeg', name: name };
+      photoFiles.push(obj);
+      renderPhotoPreview(obj);
+    };
+    img.src = ev.target.result;
+  };
+  r.readAsDataURL(file);
+}
 function renderPhotoPreview(obj) { const idx=photoFiles.indexOf(obj); const wrap=document.createElement('div'); wrap.className='photo-thumb-wrap'; wrap.id='pw_'+idx; wrap.innerHTML='<img class="photo-thumb" src="data:'+obj.mimeType+';base64,'+obj.base64+'"/><div class="photo-thumb-del" onclick="removePhoto('+idx+')">\u00D7</div>'; document.getElementById('previews_'+obj.name).appendChild(wrap); }
 function removePhoto(idx) { photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
 
@@ -595,34 +619,26 @@ async function submitForm() {
     return;
   }
 
-  // ── Mode Petugas: Submit Bimbingan Pernikahan (Penghulu/Penyuluh) ──────
+  // ── Mode Petugas: Submit Bimbingan Pernikahan ──────────────────────────
   if (session && currentJenis === 'nikah_bimwin') {
     const btnB = document.getElementById('btn-submit');
-    btnB.disabled = true;
-    btnB.classList.add('loading');
-    btnB.textContent = 'Memproses...';
+    btnB.disabled = true; btnB.classList.add('loading'); btnB.textContent = 'Memproses...';
     const roleP = (session.role || '').toLowerCase();
     const namaP = session.nama || '';
-    let labelJenis = /penyuluh/i.test(namaP) || roleP === 'penyuluh'
-      ? 'Bimbingan Konseling'
-      : 'Bimbingan Perkawinan Mandiri';
+    const labelJenis = /penyuluh/i.test(namaP) || roleP === 'penyuluh'
+      ? 'Bimbingan Konseling' : 'Bimbingan Perkawinan Mandiri';
     try {
       const resBimwin = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          action : 'submitBimwinPetugas',
-          token  : session.token,
-          id     : currentLayananId || null,
-          data   : data
-        })
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'submitBimwinPetugas', token: session.token,
+          id: currentLayananId || null, data: data })
       });
       const hasilBimwin = await resBimwin.json();
       if (hasilBimwin.ok) {
         const jenisFinal = hasilBimwin.jenis_surat || labelJenis;
-        const noSurat    = hasilBimwin.no_surat    || '';
-        const dokUrl     = hasilBimwin.dok_url      || null;
-        showToast('\u2705 Bimwin tercatat sebagai "' + jenisFinal + '" \u2014 Status: Selesai');
+        const noSurat = hasilBimwin.no_surat || '';
+        const dokUrl  = hasilBimwin.dok_url  || null;
+        showToast('\u2705 Bimwin: ' + jenisFinal + ' \u2014 Status: Selesai');
         setTimeout(function() {
           const sid = document.getElementById('success-id');
           if (sid && currentRekapInfo) sid.textContent = currentRekapInfo.id || '';
@@ -630,30 +646,24 @@ async function submitForm() {
           if (!infoEl && sid) {
             infoEl = document.createElement('div');
             infoEl.id = 'bimwin-result-info';
-            infoEl.style.cssText = 'margin-top:14px;padding:12px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;font-size:13px;line-height:1.7;text-align:left';
+            infoEl.style.cssText = 'margin-top:14px;padding:12px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#1a6b45);border-radius:10px;font-size:13px;line-height:1.7';
             sid.insertAdjacentElement('afterend', infoEl);
           }
           if (infoEl) {
             infoEl.innerHTML = '<strong>Jenis Surat:</strong> ' + jenisFinal + '<br>'
               + '<strong>Petugas:</strong> ' + (hasilBimwin.petugas || session.nama)
               + (noSurat ? '<br><strong>No. Surat:</strong> ' + noSurat : '')
-              + (dokUrl ? '<br><a href="' + dokUrl + '" target="_blank" style="color:var(--green,#1a6b45);font-weight:700">\uD83D\uDCC4 Buka Dokumen SK</a>' : '');
-            infoEl.style.display = 'block';
+              + (dokUrl ? '<br><a href="' + dokUrl + '" target="_blank" style="color:var(--green,#1a6b45);font-weight:700">Buka Dokumen SK</a>' : '');
           }
           goPage('page-success');
         }, 600);
-      } else {
-        showToast('Gagal: ' + (hasilBimwin.error || 'Tidak diketahui'), true);
-      }
-    } catch (eBimwin) {
-      showToast('Tidak dapat terhubung ke server.', true);
-    }
-    btnB.disabled = false;
-    btnB.classList.remove('loading');
-    btnB.textContent = '\uD83D\uDCE4 Kirim Layanan';
+      } else { showToast('Gagal: ' + (hasilBimwin.error || 'Tidak diketahui'), true); }
+    } catch (eBimwin) { showToast('Tidak dapat terhubung ke server.', true); }
+    btnB.disabled = false; btnB.classList.remove('loading'); btnB.textContent = 'Kirim Layanan';
     return;
   }
-  // ── END Mode Petugas Bimwin ────────────────────
+  // ── END Mode Petugas Bimwin ──────────────────────────────────────────────
+
   const payload={action:(isTwoStage||isMultiStep?'submitPartial':'submit'),jenis_layanan:currentJenis,jenis_label:f.label,kategori:f.kategori,nama_pemohon:data.nama_pemohon||data.nama_pa||'',kontak:data.kontak||data.no_hp||'',petugas_ptsp:petugas,data:data,recaptchaToken:recaptchaToken,foto:photoFiles.map(function(p){return {field:p.name,mimeType:p.mimeType,base64:p.base64};})};
   if (isTwoStage || isMultiStep) payload.tahap = 1;
   const btn=document.getElementById('btn-submit'); btn.disabled=true; btn.classList.add('loading'); btn.textContent='Mengirim...';
@@ -930,7 +940,7 @@ function renderCallbackPanel(containerEl) {
 
 function loadPendingPhotoDropdown() {
   const sel = document.getElementById('callback-dropdown'); if (!sel) return;
-  fetch(API_URL + '?action=getpendingphoto')
+  fetch(API_URL + '?action=getpendingphoto&token=' + encodeURIComponent(session ? session.token : ''))
     .then(function(r){ return r.json(); })
     .then(function(json) {
       const list = json.data || [];
