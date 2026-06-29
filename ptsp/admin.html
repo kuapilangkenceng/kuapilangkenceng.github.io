@@ -2711,14 +2711,13 @@ function bukaModalGenerate(id, jenis, nama, label, existingUrl) {
   var tahun = now.getFullYear();
   var urut  = allData.filter(function(r) { return r.dok_url; }).length + 1;
   var kode  = _KODE_SURAT[jenis] || 'KUA';
-  // Override kode surat bimwin: Penyuluh -> PW.03, Penghulu -> PW.02
   if (jenis === 'nikah_bimwin') {
     var recBimwin = allData.find(function(r) { return r.id === id; });
     if (recBimwin) {
       var dataBimwin = recBimwin.data || {};
       var narasumberBimwin = dataBimwin.narasumber || '';
-      var PEMATERI_PENYULUH = ['fatchul', 'aziz', 'rozif', 'abdulloh'];
-      var isPenyuluhBimwin = PEMATERI_PENYULUH.some(function(k) {
+      var KEYWORD_PENYULUH = ['fatchul', 'aziz', 'rozif', 'abdulloh', 'penyuluh'];
+      var isPenyuluhBimwin = KEYWORD_PENYULUH.some(function(k) {
         return narasumberBimwin.toLowerCase().indexOf(k) !== -1;
       });
       kode = isPenyuluhBimwin ? 'PW.03' : 'PW.02';
