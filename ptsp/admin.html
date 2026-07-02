@@ -777,6 +777,7 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
                   <th>Petugas</th>
                   <th>Waktu</th>
                   <th>Status</th>
+                  <th>Dokumen</th>
                 </tr>
               </thead>
               <tbody id="tbl-main"></tbody>
@@ -1405,6 +1406,19 @@ function renderStatusChart(byStatus) {
 /* ══════════════════════════════════════════════
    RENDER TABLE
 ══════════════════════════════════════════════ */
+function _tombolDokTabel(r) {
+  var bisaGen = (typeof GEN_BISA !== 'undefined' ? GEN_BISA : []).includes(r.jenis_layanan);
+  if (!bisaGen || !hasMenuAccess('nav-generate')) return '<span style="color:#bbb;font-size:12px">—</span>';
+  var ada = !!r.dok_url;
+  var nm = escJsAttr(r.nama_pemohon || '');
+  var lb = escJsAttr(r.jenis_label || '');
+  var dokUrl = escJsAttr(r.dok_url || '');
+  return '<button class="btn-dok' + (ada ? ' sudah' : '') + '" style="padding:5px 10px;font-size:11.5px" ' +
+    'onclick="event.stopPropagation();bukaModalGenerate(\'' + r.id + '\',\'' + r.jenis_layanan + '\',\'' +
+    nm + '\',\'' + lb + '\',\'' + dokUrl + '\')">' +
+    (ada ? '📄 Lihat' : '📄 Generate') + '</button>';
+}
+
 function renderTable() {
   const tbody = document.getElementById('tbl-main');
   const total = filtered.length;
@@ -1416,7 +1430,7 @@ function renderTable() {
   document.getElementById('tbl-count').textContent = `${total} record`;
 
   if (!slice.length) {
-    tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><span class="icon">📭</span>Tidak ada data ditemukan.</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="icon">📭</span>Tidak ada data ditemukan.</div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(r => `
       <tr onclick="openDetail('${r.id}')">
@@ -1426,6 +1440,7 @@ function renderTable() {
         <td class="nowrap">${escHtml(r.petugas_ptsp || '—')}</td>
         <td class="nowrap">${formatTs(r.timestamp)}</td>
         <td>${badgeHtml(r.status_layanan)}</td>
+        <td>${_tombolDokTabel(r)}</td>
       </tr>`).join('');
   }
 
