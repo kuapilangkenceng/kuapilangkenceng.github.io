@@ -16,6 +16,34 @@ let session = null;
 let photoFiles = [];
 let autocompleteTimers = {};
 
+/* ── AUTO-KAPITAL: semua input teks/textarea otomatis huruf besar ── */
+(function() {
+  const EXCLUDE_TYPES = ['email', 'date', 'number', 'tel', 'file', 'password', 'hidden', 'checkbox', 'radio'];
+  const css = 'input.form-control:not([type="email"]):not([type="date"]):not([type="number"]):not([type="tel"]):not([type="file"]):not([type="password"]),'
+    + 'textarea.form-control{text-transform:uppercase}';
+  const st = document.createElement('style');
+  st.textContent = css;
+  document.head.appendChild(st);
+
+  document.addEventListener('input', function(e) {
+    const el = e.target;
+    if (!el.classList || !el.classList.contains('form-control')) return;
+    const tag = el.tagName;
+    const type = (el.type || '').toLowerCase();
+    if (tag === 'TEXTAREA' || (tag === 'INPUT' && EXCLUDE_TYPES.indexOf(type) === -1)) {
+      const start = el.selectionStart, end = el.selectionEnd;
+      const upper = el.value.toUpperCase();
+      if (upper !== el.value) {
+        el.value = upper;
+        if (start !== null && typeof el.setSelectionRange === 'function') {
+          try { el.setSelectionRange(start, end); } catch (x) {}
+        }
+      }
+    }
+  }, true);
+})();
+/* ── END AUTO-KAPITAL ──────────────────────────────────────────────── */
+
 /* ── PATCH KEAMANAN: auto-sisip token sesi ke semua request API_URL ── */
 const _fetchAsliEngine = window.fetch.bind(window);
 window.fetch = function(url, opts) {
