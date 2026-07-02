@@ -330,8 +330,36 @@ function addPhoto(file, name) {
   };
   r.readAsDataURL(file);
 }
-function renderPhotoPreview(obj) { const idx=photoFiles.indexOf(obj); const wrap=document.createElement('div'); wrap.className='photo-thumb-wrap'; wrap.id='pw_'+idx; wrap.innerHTML='<img class="photo-thumb" src="data:'+obj.mimeType+';base64,'+obj.base64+'"/><div class="photo-thumb-del" onclick="removePhoto('+idx+')">\u00D7</div>'; document.getElementById('previews_'+obj.name).appendChild(wrap); }
+function renderPhotoPreview(obj) {
+  const idx=photoFiles.indexOf(obj);
+  const src='data:'+obj.mimeType+';base64,'+obj.base64;
+  const wrap=document.createElement('div'); wrap.className='photo-thumb-wrap'; wrap.id='pw_'+idx;
+  wrap.innerHTML='<img class="photo-thumb" src="'+src+'" style="cursor:zoom-in" onclick="openPhotoLightbox(this.src)"/><div class="photo-thumb-del" onclick="event.stopPropagation();removePhoto('+idx+')">\u00D7</div>';
+  document.getElementById('previews_'+obj.name).appendChild(wrap);
+}
 function removePhoto(idx) { photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
+
+/* ── PHOTO LIGHTBOX (klik foto untuk buka ukuran penuh — Mode Petugas) ── */
+function openPhotoLightbox(src) {
+  let ov = document.getElementById('photo-lightbox-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'photo-lightbox-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;cursor:zoom-out';
+    ov.innerHTML = '<img id="photo-lightbox-img" class="photo-lightbox-img" style="max-width:92vw;max-height:92vh;object-fit:contain;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.5)"/>'
+      + '<div id="photo-lightbox-close" style="position:absolute;top:16px;right:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600">&times;</div>';
+    ov.addEventListener('click', function(e){ if (e.target.id === 'photo-lightbox-overlay' || e.target.id === 'photo-lightbox-close') closePhotoLightbox(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePhotoLightbox(); });
+    document.body.appendChild(ov);
+  }
+  document.getElementById('photo-lightbox-img').src = src;
+  ov.style.display = 'flex';
+}
+function closePhotoLightbox() {
+  const ov = document.getElementById('photo-lightbox-overlay');
+  if (ov) ov.style.display = 'none';
+}
+/* ── END PHOTO LIGHTBOX ─────────────────────────────────────────────── */
 
 function evalAllConditions() {
   document.querySelectorAll('[data-show-if],[data-show-if-not]').forEach(function(group){
@@ -481,7 +509,7 @@ function triggerRecallCatin() {
                 var m = url.match(/[?&]id=([^&]+)/);
                 if (!m) m = url.match(/\/d\/([^/?]+)/);
                 if (m) imgUrl = 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w200';
-                card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + ff.label;
+                card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px;cursor:zoom-in" onclick="openPhotoLightbox(this.src)" onerror="this.style.display=\'none\'">' + ff.label;
                 imgWrap.appendChild(card);
               });
               if (!found) imgWrap.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
