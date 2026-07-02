@@ -1448,12 +1448,22 @@ function _tombolDokTabel(r) {
 
 function _tombolAksiCepat(r) {
   if (!hasMenuAccess('nav-layanan')) return '<span style="color:#bbb;font-size:12px">—</span>';
-  return '<div style="display:flex;gap:4px">'
-    + '<button class="btn-dok" style="padding:5px 9px;font-size:11.5px;background:#e8f5ee;color:#1a6b45;border-color:#b8d4c2" '
-    + 'onclick="event.stopPropagation();_setStatusCepat(\'' + r.id + '\',\'Selesai\')" title="Tandai Selesai">&#10003; Selesai</button>'
-    + '<button class="btn-dok" style="padding:5px 9px;font-size:11.5px;background:#fdecea;color:#c0392b;border-color:#f1b3ac" '
-    + 'onclick="event.stopPropagation();_setStatusCepat(\'' + r.id + '\',\'Ditolak\')" title="Tolak Layanan">&#10005; Tolak</button>'
-    + '</div>';
+  return '<select class="sel-aksi-cepat" style="padding:6px 8px;font-size:11.5px;border:1.5px solid #d8e5dc;border-radius:6px;background:#fff;font-family:inherit;color:#555;max-width:130px" '
+    + 'onclick="event.stopPropagation()" '
+    + 'onchange="event.stopPropagation();_konfirmasiAksiCepat(this,\'' + r.id + '\',\'' + escJsAttr(r.nama_pemohon || r.id) + '\')">'
+    + '<option value="" selected>— Aksi Cepat —</option>'
+    + '<option value="Selesai">\u2713 Tandai Selesai</option>'
+    + '<option value="Ditolak">\u2715 Tolak Layanan</option>'
+    + '</select>';
+}
+
+function _konfirmasiAksiCepat(sel, id, nama) {
+  var status = sel.value;
+  if (!status) return;
+  var aksi = status === 'Selesai' ? 'menandai SELESAI' : 'MENOLAK';
+  var ok = confirm('Yakin ingin ' + aksi + ' layanan "' + nama + '" (' + id + ')?');
+  sel.value = '';
+  if (ok) _setStatusCepat(id, status);
 }
 
 async function _setStatusCepat(id, status) {
