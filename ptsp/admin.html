@@ -778,6 +778,7 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
                   <th>Waktu</th>
                   <th>Status</th>
                   <th>Dokumen</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody id="tbl-main"></tbody>
@@ -1406,9 +1407,35 @@ function renderStatusChart(byStatus) {
 /* ══════════════════════════════════════════════
    RENDER TABLE
 ══════════════════════════════════════════════ */
+var MULTI_DOC_JENIS = ['nikah_alur_lengkap', 'nikah_rafak'];
+function _isMultiDoc(jenis) { return MULTI_DOC_JENIS.includes(jenis); }
+function _dokMultiParse(raw) {
+  if (!raw) return {};
+  try { var o = JSON.parse(raw); return (o && typeof o === 'object' && !Array.isArray(o)) ? o : {}; }
+  catch (e) { return {}; }
+}
+var _DOC_TIPE = [
+  { key: 'n8',      label: 'N8' },
+  { key: 'sk_wali', label: 'SK Wali' },
+  { key: 'bimwin',  label: 'Bimwin' }
+];
+function _renderTigaTombolDok(r, ukuranKecil) {
+  var m = _dokMultiParse(r.dok_url);
+  var style = ukuranKecil ? 'padding:4px 8px;font-size:10.5px' : 'padding:6px 10px;font-size:12px';
+  return '<div style="display:flex;gap:4px;flex-wrap:wrap">' + _DOC_TIPE.map(function(d) {
+    var ada = !!m[d.key];
+    return '<button class="btn-dok' + (ada ? ' sudah' : '') + '" style="' + style + '" ' +
+      'onclick="event.stopPropagation();bukaModalGenerate(\'' + r.id + '\',\'' + r.jenis_layanan + '\',\'' +
+      escJsAttr(r.nama_pemohon || '') + '\',\'' + escJsAttr(r.jenis_label || '') + '\',\'' +
+      escJsAttr(m[d.key] || '') + '\',\'' + d.key + '\')" title="' + (ada ? 'Lihat / Re-generate' : 'Generate') + ' ' + d.label + '">' +
+      d.label + (ada ? ' \u2713' : '') + '</button>';
+  }).join('') + '</div>';
+}
+
 function _tombolDokTabel(r) {
   var bisaGen = (typeof GEN_BISA !== 'undefined' ? GEN_BISA : []).includes(r.jenis_layanan);
   if (!bisaGen || !hasMenuAccess('nav-generate')) return '<span style="color:#bbb;font-size:12px">—</span>';
+  if (_isMultiDoc(r.jenis_layanan)) return _renderTigaTombolDok(r, true);
   var ada = !!r.dok_url;
   var nm = escJsAttr(r.nama_pemohon || '');
   var lb = escJsAttr(r.jenis_label || '');
@@ -1417,6 +1444,37 @@ function _tombolDokTabel(r) {
     'onclick="event.stopPropagation();bukaModalGenerate(\'' + r.id + '\',\'' + r.jenis_layanan + '\',\'' +
     nm + '\',\'' + lb + '\',\'' + dokUrl + '\')">' +
     (ada ? '📄 Lihat' : '📄 Generate') + '</button>';
+}
+
+function _tombolAksiCepat(r) {
+  if (!hasMenuAccess('nav-layanan')) return '<span style="color:#bbb;font-size:12px">—</span>';
+  return '<div style="display:flex;gap:4px">'
+    + '<button class="btn-dok" style="padding:5px 9px;font-size:11.5px;background:#e8f5ee;color:#1a6b45;border-color:#b8d4c2" '
+    + 'onclick="event.stopPropagation();_setStatusCepat(\'' + r.id + '\',\'Selesai\')" title="Tandai Selesai">&#10003; Selesai</button>'
+    + '<button class="btn-dok" style="padding:5px 9px;font-size:11.5px;background:#fdecea;color:#c0392b;border-color:#f1b3ac" '
+    + 'onclick="event.stopPropagation();_setStatusCepat(\'' + r.id + '\',\'Ditolak\')" title="Tolak Layanan">&#10005; Tolak</button>'
+    + '</div>';
+}
+
+async function _setStatusCepat(id, status) {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'updateStatus', id: id, status: status, catatan_admin: '', pelaku: session.username })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      var rec = allData.find(function(r) { return r.id === id; });
+      if (rec) rec.status_layanan = status;
+      filtered = filtered.map(function(r) { return r.id === id ? Object.assign({}, r, { status_layanan: status }) : r; });
+      renderTable(); renderRecent();
+      var baru = allData.filter(function(r) { return r.status_layanan === 'Baru'; }).length;
+      var badgeEl = document.getElementById('badge-baru');
+      if (badgeEl) { badgeEl.textContent = baru; badgeEl.style.display = baru > 0 ? 'inline-flex' : 'none'; }
+      showToast((status === 'Selesai' ? '✅' : '🚫') + ' "' + id + '" → ' + status);
+    } else { showToast(data.error || 'Gagal update status.', true); }
+  } catch (e) { showToast('❌ Tidak dapat terhubung ke server.', true); }
 }
 
 function renderTable() {
@@ -1430,7 +1488,7 @@ function renderTable() {
   document.getElementById('tbl-count').textContent = `${total} record`;
 
   if (!slice.length) {
-    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="icon">📭</span>Tidak ada data ditemukan.</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><span class="icon">📭</span>Tidak ada data ditemukan.</div></td></tr>`;
   } else {
     tbody.innerHTML = slice.map(r => `
       <tr onclick="openDetail('${r.id}')">
@@ -1441,6 +1499,7 @@ function renderTable() {
         <td class="nowrap">${formatTs(r.timestamp)}</td>
         <td>${badgeHtml(r.status_layanan)}</td>
         <td>${_tombolDokTabel(r)}</td>
+        <td>${_tombolAksiCepat(r)}</td>
       </tr>`).join('');
   }
 
@@ -1826,17 +1885,23 @@ function _isiGenArea(rec) {
   var _BISA_GEN = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','nikah_alur_lengkap','nikah_bimwin','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
   var _ga = document.getElementById('gen-dok-area');
   if (!_ga) return;
-  if (_BISA_GEN.includes(rec.jenis_layanan) && hasMenuAccess('nav-generate')) {
-    _ga.innerHTML = '<div style="margin-bottom:12px">' +
-      '<button class="btn-dok ' + (rec.dok_url ? 'sudah' : '') + '" ' +
-      'style="width:100%;padding:9px;font-size:13px;border-radius:8px" ' +
-      'onclick="bukaModalGenerate(\'' + rec.id + '\',\'' + rec.jenis_layanan + '\',' +
-      '\'' + escJsAttr(rec.nama_pemohon||'') + '\',' +
-      '\'' + escJsAttr(rec.jenis_label||'') + '\',' +
-      '\'' + (rec.dok_url||'') + '\')">' +
-      (rec.dok_url ? '📄 Lihat / Re-generate Dokumen' : '📄 Generate Dokumen') +
-      '</button></div>';
-  } else { _ga.innerHTML = ''; }
+  if (!_BISA_GEN.includes(rec.jenis_layanan) || !hasMenuAccess('nav-generate')) { _ga.innerHTML = ''; return; }
+  if (_isMultiDoc(rec.jenis_layanan)) {
+    _ga.innerHTML = '<div style="margin-bottom:12px">'
+      + '<div style="font-size:11px;font-weight:700;color:#888;letter-spacing:.4px;margin-bottom:6px">GENERATE DOKUMEN</div>'
+      + _renderTigaTombolDok(rec, false)
+      + '</div>';
+    return;
+  }
+  _ga.innerHTML = '<div style="margin-bottom:12px">' +
+    '<button class="btn-dok ' + (rec.dok_url ? 'sudah' : '') + '" ' +
+    'style="width:100%;padding:9px;font-size:13px;border-radius:8px" ' +
+    'onclick="bukaModalGenerate(\'' + rec.id + '\',\'' + rec.jenis_layanan + '\',' +
+    '\'' + escJsAttr(rec.nama_pemohon||'') + '\',' +
+    '\'' + escJsAttr(rec.jenis_label||'') + '\',' +
+    '\'' + (rec.dok_url||'') + '\')">' +
+    (rec.dok_url ? '📄 Lihat / Re-generate Dokumen' : '📄 Generate Dokumen') +
+    '</button></div>';
 }
 function selectStatus(el, status) {
   document.querySelectorAll('.btn-status').forEach(b => b.classList.remove('selected'));
@@ -2625,6 +2690,17 @@ async function doHapusArtikel(id) {
         <strong id="gen-info-label">—</strong>
         ID: <span id="gen-info-id">—</span> &nbsp;|&nbsp; Pemohon: <span id="gen-info-nama">—</span>
       </div>
+      <div id="gen-narasumber-block" style="display:none;margin-bottom:14px">
+        <label class="gen-lbl">Narasumber / Pemateri Bimwin <span style="color:#c0392b">*</span></label>
+        <select id="inp-narasumber" style="width:100%;padding:10px 12px;border:1.5px solid #d8e5dc;border-radius:8px;font-size:14px;font-family:inherit;background:#fff">
+          <option value="">— Pilih Narasumber —</option>
+          <option value="AHSANUL MUAHID, S.Ag">Ahsanul Muahid, S.Ag (Penghulu)</option>
+          <option value="M. KHOIRUL MUNTOHA AGIL, S.Ag">M. Khoirul Muntoha Agil, S.Ag (Penghulu)</option>
+          <option value="Fatchul Aziz, S.Ag">Fatchul Aziz, S.Ag (Penyuluh)</option>
+          <option value="Muhamad Rozif Abdulloh, S.H.I">Muhamad Rozif Abdulloh, S.H.I (Penyuluh)</option>
+        </select>
+      </div>
+      <div id="gen-nosurat-block">
       <label class="gen-lbl">Nomor Surat Resmi KUA <span style="color:#c0392b">*</span></label>
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:0;border:1.5px solid #d8e5dc;border-radius:8px;overflow:hidden;flex:1;min-width:220px">
@@ -2641,6 +2717,7 @@ async function doHapusArtikel(id) {
       </div>
       <div style="margin-top:6px;padding:6px 10px;background:#e8f5ee;border-radius:6px;font-size:12px;color:#1a6b45;font-weight:600" id="preview-no-surat">—</div>
       <input type="hidden" id="inp-no-surat"/>
+      </div>
     </div>
     <div class="gen-result" id="gen-result">
       <div style="font-weight:700;color:#1a6b45;margin-bottom:6px">✅ Dokumen berhasil dibuat!</div>
@@ -2661,7 +2738,7 @@ async function doHapusArtikel(id) {
 
 <script>
 /* ══ Generate Dokumen ══════════════════════════════════════ */
-var _gId = '', _gJenis = '', _gNama = '', _gLabel = '';
+var _gId = '', _gJenis = '', _gNama = '', _gLabel = '', _gDocType = null;
 
 function btnDokHtml(r) {
   var BISA = ['nikah_sk_belum','nikah_sk_pernah','nikah_itsbat','nikah_rafak','nikah_alur_lengkap','nikah_bimwin','wakaf_ikrar','wakaf_ganti_nadzir','kiblat_pengukuran_ba','kiblat_pengukuran_sertifikat','skt_masjid','rekomendasi_bantuan_masjid','rekomendasi_majelis_taklim','rekomendasi_tpq_madin','rekomendasi_skt_majelis','rekomendasi_skt_masjid'];
@@ -2715,34 +2792,51 @@ function _autoNoSurat(jenis) {
   return 'B-' + nomorStr + '/Kua.13.34.06/' + kode + '/' + bulan + '/' + tahun;
 }
 
-function bukaModalGenerate(id, jenis, nama, label, existingUrl) {
-  _gId = id; _gJenis = jenis; _gNama = nama; _gLabel = label;
+function bukaModalGenerate(id, jenis, nama, label, existingUrl, docType) {
+  _gId = id; _gJenis = jenis; _gNama = nama; _gLabel = label; _gDocType = docType || null;
+  var DOC_LABEL = { n8: 'N8', sk_wali: 'SK Wali', bimwin: 'SK Bimwin' };
   document.getElementById('gen-info-id').textContent    = id;
   document.getElementById('gen-info-nama').textContent  = nama || '-';
-  document.getElementById('gen-info-label').textContent = label || jenis;
-  // Isi field nomor urut & kode
-  var now   = new Date();
-  var bulan = ('0' + (now.getMonth() + 1)).slice(-2);
-  var tahun = now.getFullYear();
-  var urut  = allData.filter(function(r) { return r.dok_url; }).length + 1;
-  var kode  = _KODE_SURAT[jenis] || 'KUA';
-  if (jenis === 'nikah_bimwin') {
-    var recBimwin = allData.find(function(r) { return r.id === id; });
-    if (recBimwin) {
-      var dataBimwin = recBimwin.data || {};
-      var narasumberBimwin = dataBimwin.narasumber || '';
-      var KEYWORD_PENYULUH = ['fatchul', 'aziz', 'rozif', 'abdulloh', 'penyuluh'];
-      var isPenyuluhBimwin = KEYWORD_PENYULUH.some(function(k) {
-        return narasumberBimwin.toLowerCase().indexOf(k) !== -1;
-      });
-      kode = isPenyuluhBimwin ? 'PW.03' : 'PW.02';
+  document.getElementById('gen-info-label').textContent = (label || jenis) + (docType ? ' \u2014 ' + DOC_LABEL[docType] : '');
+
+  var noSuratBlock    = document.getElementById('gen-nosurat-block');
+  var narasumberBlock = document.getElementById('gen-narasumber-block');
+
+  if (_gDocType === 'bimwin') {
+    noSuratBlock.style.display = 'none';
+    narasumberBlock.style.display = 'block';
+    document.getElementById('inp-narasumber').value = '';
+    document.getElementById('inp-narasumber').style.borderColor = '';
+  } else if (_gDocType === 'sk_wali') {
+    noSuratBlock.style.display = 'none';
+    narasumberBlock.style.display = 'none';
+  } else {
+    noSuratBlock.style.display = 'block';
+    narasumberBlock.style.display = 'none';
+    // Isi field nomor urut & kode
+    var now   = new Date();
+    var bulan = ('0' + (now.getMonth() + 1)).slice(-2);
+    var tahun = now.getFullYear();
+    var urut  = allData.filter(function(r) { return r.dok_url; }).length + 1;
+    var kode  = _KODE_SURAT[jenis] || 'KUA';
+    if (jenis === 'nikah_bimwin') {
+      var recBimwin = allData.find(function(r) { return r.id === id; });
+      if (recBimwin) {
+        var dataBimwin = recBimwin.data || {};
+        var narasumberBimwin = dataBimwin.narasumber || '';
+        var KEYWORD_PENYULUH = ['fatchul', 'aziz', 'rozif', 'abdulloh', 'penyuluh'];
+        var isPenyuluhBimwin = KEYWORD_PENYULUH.some(function(k) {
+          return narasumberBimwin.toLowerCase().indexOf(k) !== -1;
+        });
+        kode = isPenyuluhBimwin ? 'PW.03' : 'PW.02';
+      }
     }
+    document.getElementById('inp-no-urut').value   = urut;
+    document.getElementById('inp-kode-surat').value = kode;
+    document.getElementById('inp-bln-thn').textContent = '/' + bulan + '/' + tahun;
+    updatePreviewNoSurat();
+    document.getElementById('inp-no-surat').classList.remove('invalid');
   }
-  document.getElementById('inp-no-urut').value   = urut;
-  document.getElementById('inp-kode-surat').value = kode;
-  document.getElementById('inp-bln-thn').textContent = '/' + bulan + '/' + tahun;
-  updatePreviewNoSurat();
-  document.getElementById('inp-no-surat').classList.remove('invalid');
   document.getElementById('preview-no-surat').textContent = '—';
   document.getElementById('gen-result').style.display   = 'none';
   document.getElementById('btn-gselesai').style.display  = 'none';
@@ -2793,15 +2887,31 @@ document.getElementById('modal-generate').addEventListener('click', function(e) 
 });
 
 async function doGenerateDokumen() {
-  updatePreviewNoSurat();
-  var noSurat = document.getElementById('inp-no-surat').value.trim();
-  if (!noSurat) {
-    document.getElementById('inp-no-surat').classList.add('invalid');
-    setTimeout(function() {
-      document.getElementById('inp-no-surat').classList.remove('invalid');
-  document.getElementById('preview-no-surat').textContent = '—';
-    }, 1500);
-    return;
+  var payload = { action: 'generateDokumen', id: _gId };
+  if (_gDocType === 'bimwin') {
+    var nara = document.getElementById('inp-narasumber').value;
+    if (!nara) {
+      document.getElementById('inp-narasumber').style.borderColor = '#c0392b';
+      showToast('Pilih Narasumber / Pemateri dulu.', true);
+      return;
+    }
+    payload.docType = 'bimwin';
+    payload.narasumber = nara;
+  } else if (_gDocType === 'sk_wali') {
+    payload.docType = 'sk_wali';
+  } else {
+    updatePreviewNoSurat();
+    var noSurat = document.getElementById('inp-no-surat').value.trim();
+    if (!noSurat) {
+      document.getElementById('inp-no-surat').classList.add('invalid');
+      setTimeout(function() {
+        document.getElementById('inp-no-surat').classList.remove('invalid');
+        document.getElementById('preview-no-surat').textContent = '—';
+      }, 1500);
+      return;
+    }
+    payload.no_surat = noSurat;
+    if (_gDocType === 'n8') payload.docType = 'n8';
   }
   var btn = document.getElementById('btn-ggo');
   btn.disabled = true;
@@ -2811,7 +2921,7 @@ async function doGenerateDokumen() {
     var res  = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'generateDokumen', id: _gId, no_surat: noSurat })
+      body: JSON.stringify(payload)
     });
     var data = await res.json();
     if (data.ok) {
@@ -2824,7 +2934,17 @@ async function doGenerateDokumen() {
           '" target="_blank">' + d.label + '</a></div>';
       });
       var rec = allData.find(function(r) { return r.id === _gId; });
-      if (rec) rec.dok_url = data.url;
+      if (rec) {
+        if (_gDocType) {
+          var m = _dokMultiParse(rec.dok_url);
+          m[_gDocType] = data.url;
+          rec.dok_url = JSON.stringify(m);
+        } else {
+          rec.dok_url = data.url;
+        }
+      }
+      filtered = filtered.map(function(r) { return r.id === _gId && rec ? Object.assign({}, r, { dok_url: rec.dok_url }) : r; });
+      renderTable();
       updateBadgeGen();
       showToast('✅ Dokumen berhasil digenerate!');
       document.getElementById('btn-gselesai').style.display = 'flex';
@@ -2894,15 +3014,26 @@ function renderGenerate() {
     tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><span class="icon">&#128397;</span>Tidak ada permohonan.</div></td></tr>';
   } else {
     tbody.innerHTML = slice.map(function(r) {
-      var ada = !!r.dok_url;
-      var dokBadge = ada ? '<span class="badge selesai">&#10003; Ada</span>' : '<span class="badge baru">&#8987; Belum</span>';
-      var nm = escJsAttr(r.nama_pemohon||'');
-      var lb = escJsAttr(r.jenis_label||'');
-      var dokUrl = r.dok_url || '';
-      var btn = '<button class="btn-dok' + (ada ? ' sudah' : '') + '" onclick="bukaModalGenerate(\'' +
-        r.id + '\',\'' + r.jenis_layanan + '\',\'' +
-        nm + '\',\'' + lb + '\',\'' + escJsAttr(dokUrl) + '\')">' +
-        (ada ? '&#128196; Lihat / Re-generate' : '&#128196; Generate') + '</button>';
+      var multi = _isMultiDoc(r.jenis_layanan);
+      var dokBadge, btn;
+      if (multi) {
+        var m = _dokMultiParse(r.dok_url);
+        var jumlah = _DOC_TIPE.filter(function(d){ return !!m[d.key]; }).length;
+        dokBadge = jumlah === 3
+          ? '<span class="badge selesai">&#10003; 3/3 Lengkap</span>'
+          : (jumlah > 0 ? '<span class="badge proses">' + jumlah + '/3 Ada</span>' : '<span class="badge baru">&#8987; Belum</span>');
+        btn = _renderTigaTombolDok(r, true);
+      } else {
+        var ada = !!r.dok_url;
+        dokBadge = ada ? '<span class="badge selesai">&#10003; Ada</span>' : '<span class="badge baru">&#8987; Belum</span>';
+        var nm = escJsAttr(r.nama_pemohon||'');
+        var lb = escJsAttr(r.jenis_label||'');
+        var dokUrl = r.dok_url || '';
+        btn = '<button class="btn-dok' + (ada ? ' sudah' : '') + '" onclick="bukaModalGenerate(\'' +
+          r.id + '\',\'' + r.jenis_layanan + '\',\'' +
+          nm + '\',\'' + lb + '\',\'' + escJsAttr(dokUrl) + '\')">' +
+          (ada ? '&#128196; Lihat / Re-generate' : '&#128196; Generate') + '</button>';
+      }
       return '<tr><td class="id-col">'+r.id+'</td><td class="nama-col">'+escHtml(r.nama_pemohon||'—')+'</td><td>'+escHtml(r.jenis_label||'—')+'</td><td>'+escHtml(r.kategori||'—')+'</td><td class="nowrap">'+formatTs(r.timestamp)+'</td><td>'+badgeHtml(r.status_layanan)+'</td><td>'+dokBadge+'</td><td>'+btn+'</td></tr>';
     }).join('');
   }
