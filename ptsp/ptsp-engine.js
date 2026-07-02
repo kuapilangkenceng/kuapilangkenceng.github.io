@@ -14,6 +14,7 @@ let currentPhotoSteps = [];   // array step foto tambahan (photoSteps dari confi
 let currentPhotoStepIdx = 0;  // index step foto yang sedang aktif
 let session = null;
 let photoFiles = [];
+let galleryPhotos = {}; // { fieldId: srcUrlAtauDataURL } — riwayat foto kumulatif utk galeri verifikasi Mode Petugas
 let autocompleteTimers = {};
 
 /* ── AUTO-KAPITAL: semua input teks/textarea otomatis huruf besar ── */
@@ -211,7 +212,7 @@ function renderLayananList() {
 }
 
 function showForm(jenis) {
-  currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
+  currentJenis = jenis; photoFiles = []; galleryPhotos = {}; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
   var _pw = document.getElementById('pasfoto-inline-wrap'); if (_pw) _pw.remove();
   const f = CONFIG.forms[jenis]; if (!f) return;
   document.getElementById('form-title').textContent = f.label;
@@ -352,6 +353,7 @@ function addPhoto(file, name) {
       const b64 = dataUrl.split(',')[1];
       const obj = { file: file, base64: b64, mimeType: 'image/jpeg', name: name };
       photoFiles.push(obj);
+      galleryPhotos[name] = dataUrl;
       renderPhotoPreview(obj);
     };
     img.src = ev.target.result;
@@ -365,7 +367,7 @@ function renderPhotoPreview(obj) {
   wrap.innerHTML='<img class="photo-thumb" src="'+src+'" style="cursor:zoom-in" onclick="openPhotoLightbox(this.src)"/><div class="photo-thumb-del" onclick="event.stopPropagation();removePhoto('+idx+')">\u00D7</div>';
   document.getElementById('previews_'+obj.name).appendChild(wrap);
 }
-function removePhoto(idx) { photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
+function removePhoto(idx) { const p=photoFiles[idx]; if(p&&galleryPhotos[p.name]) delete galleryPhotos[p.name]; photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
 
 /* ── PHOTO LIGHTBOX (klik foto untuk buka ukuran penuh — Mode Petugas) ── */
 function openPhotoLightbox(src) {
@@ -796,6 +798,60 @@ function renderPasfotoCatin(container) {
 }
 
 // ── Multi-step foto (photoSteps) ─────────────────────────────
+function _normalizeDriveThumb(url) {
+  if (!url) return url;
+  var m = url.match(/[?&]id=([^&]+)/);
+  if (!m) m = url.match(/\/d\/([^/?]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w300' : url;
+}
+
+/* Galeri kumulatif verifikasi foto (Mode Petugas) — memastikan pemohon
+   sudah upload semua foto yang wajib, ditampilkan bertambah di setiap
+   tahap: [foto-foto form awal] + [tahap-tahap sebelumnya yang sudah selesai] */
+function renderPhotoGallery(container) {
+  const f = CONFIG.forms && CONFIG.forms[currentJenis];
+  if (!f) return;
+  const cards = []; // { label, ids: [fieldId,...] }
+  const seenGroup = {};
+  (f.fields || []).forEach(function(fd) {
+    if (fd.type !== 'photo') return;
+    if (fd.galleryGroup) {
+      if (seenGroup[fd.galleryGroup]) { seenGroup[fd.galleryGroup].ids.push(fd.id); return; }
+      const c = { label: fd.galleryGroup, ids: [fd.id] };
+      seenGroup[fd.galleryGroup] = c; cards.push(c);
+    } else {
+      cards.push({ label: fd.galleryLabel || fd.label, ids: [fd.id] });
+    }
+  });
+  currentPhotoSteps.slice(0, currentPhotoStepIdx).forEach(function(st) {
+    cards.push({ label: st.shortLabel || st.label, ids: [st.id] });
+  });
+  if (!cards.length) return;
+
+  const old = document.getElementById('photo-gallery-check'); if (old) old.remove();
+  const wrap = document.createElement('div');
+  wrap.id = 'photo-gallery-check';
+  wrap.style.cssText = 'margin-bottom:16px;padding:12px 14px;background:#f8faf9;border:1.5px solid var(--green-light,#c3dfc9);border-radius:10px';
+  wrap.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Verifikasi Foto Sudah Diunggah (' + cards.length + ')</div>'
+    + '<div id="photo-gallery-grid" style="display:flex;gap:10px;flex-wrap:wrap"></div>';
+  container.appendChild(wrap);
+  const grid = document.getElementById('photo-gallery-grid');
+
+  cards.forEach(function(c) {
+    const srcs = c.ids.map(function(id){ return galleryPhotos[id]; }).filter(Boolean);
+    const card = document.createElement('div');
+    card.style.cssText = 'text-align:center;font-size:10.5px;color:#555;width:76px';
+    if (srcs.length) {
+      card.innerHTML = '<div style="display:flex;gap:2px;justify-content:center;margin-bottom:3px">'
+        + srcs.map(function(s){ return '<img src="'+s+'" style="width:'+(srcs.length>1?'36px':'76px')+';height:76px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);cursor:zoom-in" onclick="openPhotoLightbox(\''+s+'\')">'; }).join('')
+        + '</div>' + c.label;
+    } else {
+      card.innerHTML = '<div style="width:76px;height:76px;border-radius:6px;border:1.5px dashed #d99;background:#fdf2f2;display:flex;align-items:center;justify-content:center;font-size:9px;color:#c0392b;font-weight:600;margin-bottom:3px">Belum ada</div>' + c.label;
+    }
+    grid.appendChild(card);
+  });
+}
+
 function renderPhotoStep() {
   const step = currentPhotoSteps[currentPhotoStepIdx];
   const total = currentPhotoSteps.length;
@@ -825,6 +881,7 @@ function renderPhotoStep() {
   progress.innerHTML = 'Langkah ' + stepNum + ' dari ' + total + ' &mdash; ' + step.label;
   body.appendChild(progress);
 
+  renderPhotoGallery(body);
   renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
 
   // Ganti tombol submit
@@ -949,7 +1006,7 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
   goPage('page-success');
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
@@ -1083,6 +1140,10 @@ function _doResumePhotoStep(rec) {
       ? JSON.parse(rec.foto_urls)
       : (rec.foto_urls || {});
   } catch(x) {}
+  galleryPhotos = {};
+  Object.keys(existingFoto).forEach(function(k) {
+    if (existingFoto[k]) galleryPhotos[k] = _normalizeDriveThumb(existingFoto[k]);
+  });
   currentPhotoSteps = f.photoSteps;
   // Selalu mulai dari step 0 agar petugas bisa ulang/skip foto manapun
   currentPhotoStepIdx = 0;
