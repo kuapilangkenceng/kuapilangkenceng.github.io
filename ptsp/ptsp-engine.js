@@ -918,7 +918,7 @@ async function submitPhotoStep() {
     const result = await res.json();
     if (result.ok) {
       if (isLast) {
-        tampilkanSuksesSelesai(result.id);
+        tampilkanSuksesSelesai(result.id, result.foto_urls);
       } else {
         currentPhotoStepIdx++;
         renderPhotoStep();
@@ -961,7 +961,7 @@ async function submitComplete() {
   try{
     const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
     const result=await res.json();
-    if(result.ok){_clearPendingTahap2();tampilkanSuksesSelesai(result.id);}
+    if(result.ok){_clearPendingTahap2();tampilkanSuksesSelesai(result.id, result.foto_urls);}
     else showToast('Gagal: '+(result.error||'Unknown error'),true);
   }catch(e){showToast('Tidak dapat terhubung ke server.',true);}
   btn.disabled=false; btn.classList.remove('loading'); btn.textContent='\u2705 Selesai & Kirim';
