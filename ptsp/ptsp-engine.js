@@ -20,7 +20,8 @@ let autocompleteTimers = {};
 /* ── AUTO-KAPITAL: semua input teks/textarea otomatis huruf besar ── */
 (function() {
   const EXCLUDE_TYPES = ['email', 'date', 'number', 'tel', 'file', 'password', 'hidden', 'checkbox', 'radio'];
-  const css = 'input.form-control:not([type="email"]):not([type="date"]):not([type="number"]):not([type="tel"]):not([type="file"]):not([type="password"]),'
+  const EXCLUDE_IDS   = ['inp-username', 'inp-password']; // field login — jangan dipaksa uppercase
+  const css = 'input.form-control:not([type="email"]):not([type="date"]):not([type="number"]):not([type="tel"]):not([type="file"]):not([type="password"]):not(#inp-username):not(#inp-password),'
     + 'textarea.form-control{text-transform:uppercase}';
   const st = document.createElement('style');
   st.textContent = css;
@@ -29,6 +30,7 @@ let autocompleteTimers = {};
   document.addEventListener('input', function(e) {
     const el = e.target;
     if (!el.classList || !el.classList.contains('form-control')) return;
+    if (EXCLUDE_IDS.indexOf(el.id) !== -1) return;
     const tag = el.tagName;
     const type = (el.type || '').toLowerCase();
     if (tag === 'TEXTAREA' || (tag === 'INPUT' && EXCLUDE_TYPES.indexOf(type) === -1)) {
@@ -736,6 +738,10 @@ async function submitForm() {
         currentPhotoStepIdx = 0;
         renderPhotoStep();
         goPage('page-rekap');
+        // Auto-open LIONTIN setelah Pendaftaran Nikah (Alur Lengkap) submit
+        if (currentJenis === 'nikah_alur_lengkap') {
+          window.open('https://liontin.kankemenagkabmadiun.com/register', '_blank');
+        }
       } else if (isTwoStage) {
         currentLayananId = result.id;
         currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
@@ -920,6 +926,10 @@ async function submitPhotoStep() {
       if (isLast) {
         tampilkanSuksesSelesai(result.id, result.foto_urls);
       } else {
+        // Auto-open SIMKAH setelah step foto Rafak (Penghulu) disubmit
+        if (fname === 'foto_penghulu') {
+          window.open('https://simkah4.kemenag.go.id/admin/authentication', '_blank');
+        }
         currentPhotoStepIdx++;
         renderPhotoStep();
         goPage('page-rekap');
