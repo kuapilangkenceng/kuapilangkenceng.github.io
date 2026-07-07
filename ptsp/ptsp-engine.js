@@ -1041,7 +1041,14 @@ function renderCallbackPanel(containerEl) {
       + '<select id="callback-dropdown" style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;background:#fff;margin-bottom:10px">'
       + '<option value="">\u2014 Memuat data... \u2014</option></select>'
       + '<div id="callback-dropdown-info" style="font-size:11px;color:#666;margin-bottom:10px"></div>'
-      + '<button onclick="resumeFromDropdown()" style="padding:9px 20px;background:var(--green,#2d8c5e);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;width:100%">&#9654; Lanjutkan Foto</button>';
+      + '<button onclick="resumeFromDropdown()" style="padding:9px 20px;background:var(--green,#2d8c5e);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;width:100%">&#9654; Lanjutkan Foto</button>'
+      + '<div style="display:flex;align-items:center;gap:10px;margin:14px 0"><div style="flex:1;height:1px;background:#ddd"></div><span style="font-size:11px;color:#999">atau</span><div style="flex:1;height:1px;background:#ddd"></div></div>'
+      + '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px">Masukkan Kode Layanan Manual:</div>'
+      + '<input id="callback-kode-input" type="text" placeholder="Contoh: LYN-20240624-001"'
+      + ' style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;margin-bottom:8px;box-sizing:border-box"'
+      + ' onkeydown="if(event.key===\'Enter\')resumeFromKode()">'
+      + '<div id="callback-kode-error" style="display:none;color:#c0392b;font-size:12px;margin-bottom:8px"></div>'
+      + '<button onclick="resumeFromKode()" style="padding:9px 20px;background:#fff;color:var(--green,#1a6b45);border:1.5px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;width:100%">&#128269; Cari &amp; Lanjutkan</button>';
     setTimeout(loadPendingPhotoDropdown, 100);
   } else {
     body.innerHTML = '<div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px">Masukkan Kode Layanan Anda:</div>'
@@ -1066,6 +1073,10 @@ function loadPendingPhotoDropdown() {
   fetch(API_URL + '?action=getpendingphoto&token=' + encodeURIComponent(session ? session.token : ''))
     .then(function(r){ return r.json(); })
     .then(function(json) {
+      if (!json.ok) {
+        sel.innerHTML = '<option value="">\u2014 ' + (json.error || 'Gagal memuat data') + ' \u2014</option>';
+        return;
+      }
       const list = json.data || [];
       if (!list.length) {
         sel.innerHTML = '<option value="">\u2014 Tidak ada pendaftaran tertunda \u2014</option>';
