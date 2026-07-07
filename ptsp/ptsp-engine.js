@@ -14,7 +14,36 @@ let currentPhotoSteps = [];   // array step foto tambahan (photoSteps dari confi
 let currentPhotoStepIdx = 0;  // index step foto yang sedang aktif
 let session = null;
 let photoFiles = [];
+let galleryPhotos = {}; // { fieldId: srcUrlAtauDataURL } — riwayat foto kumulatif utk galeri verifikasi Mode Petugas
 let autocompleteTimers = {};
+
+/* ── AUTO-KAPITAL: semua input teks/textarea otomatis huruf besar ── */
+(function() {
+  const EXCLUDE_TYPES = ['email', 'date', 'number', 'tel', 'file', 'password', 'hidden', 'checkbox', 'radio'];
+  const css = 'input.form-control:not([type="email"]):not([type="date"]):not([type="number"]):not([type="tel"]):not([type="file"]):not([type="password"]),'
+    + 'textarea.form-control{text-transform:uppercase}';
+  const st = document.createElement('style');
+  st.textContent = css;
+  document.head.appendChild(st);
+
+  document.addEventListener('input', function(e) {
+    const el = e.target;
+    if (!el.classList || !el.classList.contains('form-control')) return;
+    const tag = el.tagName;
+    const type = (el.type || '').toLowerCase();
+    if (tag === 'TEXTAREA' || (tag === 'INPUT' && EXCLUDE_TYPES.indexOf(type) === -1)) {
+      const start = el.selectionStart, end = el.selectionEnd;
+      const upper = el.value.toUpperCase();
+      if (upper !== el.value) {
+        el.value = upper;
+        if (start !== null && typeof el.setSelectionRange === 'function') {
+          try { el.setSelectionRange(start, end); } catch (x) {}
+        }
+      }
+    }
+  }, true);
+})();
+/* ── END AUTO-KAPITAL ──────────────────────────────────────────────── */
 
 /* ── PATCH KEAMANAN: auto-sisip token sesi ke semua request API_URL ── */
 const _fetchAsliEngine = window.fetch.bind(window);
@@ -183,7 +212,7 @@ function renderLayananList() {
 }
 
 function showForm(jenis) {
-  currentJenis = jenis; photoFiles = []; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
+  currentJenis = jenis; photoFiles = []; galleryPhotos = {}; currentTahap2Field = null; currentLayananId = null; currentRekapInfo = null; currentPhotoSteps = []; currentPhotoStepIdx = 0;
   var _pw = document.getElementById('pasfoto-inline-wrap'); if (_pw) _pw.remove();
   const f = CONFIG.forms[jenis]; if (!f) return;
   document.getElementById('form-title').textContent = f.label;
@@ -324,14 +353,43 @@ function addPhoto(file, name) {
       const b64 = dataUrl.split(',')[1];
       const obj = { file: file, base64: b64, mimeType: 'image/jpeg', name: name };
       photoFiles.push(obj);
+      galleryPhotos[name] = dataUrl;
       renderPhotoPreview(obj);
     };
     img.src = ev.target.result;
   };
   r.readAsDataURL(file);
 }
-function renderPhotoPreview(obj) { const idx=photoFiles.indexOf(obj); const wrap=document.createElement('div'); wrap.className='photo-thumb-wrap'; wrap.id='pw_'+idx; wrap.innerHTML='<img class="photo-thumb" src="data:'+obj.mimeType+';base64,'+obj.base64+'"/><div class="photo-thumb-del" onclick="removePhoto('+idx+')">\u00D7</div>'; document.getElementById('previews_'+obj.name).appendChild(wrap); }
-function removePhoto(idx) { photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
+function renderPhotoPreview(obj) {
+  const idx=photoFiles.indexOf(obj);
+  const src='data:'+obj.mimeType+';base64,'+obj.base64;
+  const wrap=document.createElement('div'); wrap.className='photo-thumb-wrap'; wrap.id='pw_'+idx;
+  wrap.innerHTML='<img class="photo-thumb" src="'+src+'" style="cursor:zoom-in" onclick="openPhotoLightbox(this.src)"/><div class="photo-thumb-del" onclick="event.stopPropagation();removePhoto('+idx+')">\u00D7</div>';
+  document.getElementById('previews_'+obj.name).appendChild(wrap);
+}
+function removePhoto(idx) { const p=photoFiles[idx]; if(p&&galleryPhotos[p.name]) delete galleryPhotos[p.name]; photoFiles.splice(idx,1); const el=document.getElementById('pw_'+idx); if(el) el.remove(); }
+
+/* ── PHOTO LIGHTBOX (klik foto untuk buka ukuran penuh — Mode Petugas) ── */
+function openPhotoLightbox(src) {
+  let ov = document.getElementById('photo-lightbox-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'photo-lightbox-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;cursor:zoom-out';
+    ov.innerHTML = '<img id="photo-lightbox-img" class="photo-lightbox-img" style="max-width:92vw;max-height:92vh;object-fit:contain;border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.5)"/>'
+      + '<div id="photo-lightbox-close" style="position:absolute;top:16px;right:20px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600">&times;</div>';
+    ov.addEventListener('click', function(e){ if (e.target.id === 'photo-lightbox-overlay' || e.target.id === 'photo-lightbox-close') closePhotoLightbox(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closePhotoLightbox(); });
+    document.body.appendChild(ov);
+  }
+  document.getElementById('photo-lightbox-img').src = src;
+  ov.style.display = 'flex';
+}
+function closePhotoLightbox() {
+  const ov = document.getElementById('photo-lightbox-overlay');
+  if (ov) ov.style.display = 'none';
+}
+/* ── END PHOTO LIGHTBOX ─────────────────────────────────────────────── */
 
 function evalAllConditions() {
   document.querySelectorAll('[data-show-if],[data-show-if-not]').forEach(function(group){
@@ -481,7 +539,7 @@ function triggerRecallCatin() {
                 var m = url.match(/[?&]id=([^&]+)/);
                 if (!m) m = url.match(/\/d\/([^/?]+)/);
                 if (m) imgUrl = 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w200';
-                card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px" onerror="this.style.display=\'none\'">' + ff.label;
+                card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px;cursor:zoom-in" onclick="openPhotoLightbox(this.src)" onerror="this.style.display=\'none\'">' + ff.label;
                 imgWrap.appendChild(card);
               });
               if (!found) imgWrap.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
@@ -740,6 +798,60 @@ function renderPasfotoCatin(container) {
 }
 
 // ── Multi-step foto (photoSteps) ─────────────────────────────
+function _normalizeDriveThumb(url) {
+  if (!url) return url;
+  var m = url.match(/[?&]id=([^&]+)/);
+  if (!m) m = url.match(/\/d\/([^/?]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w300' : url;
+}
+
+/* Galeri kumulatif verifikasi foto (Mode Petugas) — memastikan pemohon
+   sudah upload semua foto yang wajib, ditampilkan bertambah di setiap
+   tahap: [foto-foto form awal] + [tahap-tahap sebelumnya yang sudah selesai] */
+function renderPhotoGallery(container) {
+  const f = CONFIG.forms && CONFIG.forms[currentJenis];
+  if (!f) return;
+  const cards = []; // { label, ids: [fieldId,...] }
+  const seenGroup = {};
+  (f.fields || []).forEach(function(fd) {
+    if (fd.type !== 'photo') return;
+    if (fd.galleryGroup) {
+      if (seenGroup[fd.galleryGroup]) { seenGroup[fd.galleryGroup].ids.push(fd.id); return; }
+      const c = { label: fd.galleryGroup, ids: [fd.id] };
+      seenGroup[fd.galleryGroup] = c; cards.push(c);
+    } else {
+      cards.push({ label: fd.galleryLabel || fd.label, ids: [fd.id] });
+    }
+  });
+  currentPhotoSteps.slice(0, currentPhotoStepIdx).forEach(function(st) {
+    cards.push({ label: st.shortLabel || st.label, ids: [st.id] });
+  });
+  if (!cards.length) return;
+
+  const old = document.getElementById('photo-gallery-check'); if (old) old.remove();
+  const wrap = document.createElement('div');
+  wrap.id = 'photo-gallery-check';
+  wrap.style.cssText = 'margin-bottom:16px;padding:12px 14px;background:#f8faf9;border:1.5px solid var(--green-light,#c3dfc9);border-radius:10px';
+  wrap.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Verifikasi Foto Sudah Diunggah (' + cards.length + ')</div>'
+    + '<div id="photo-gallery-grid" style="display:flex;gap:10px;flex-wrap:wrap"></div>';
+  container.appendChild(wrap);
+  const grid = document.getElementById('photo-gallery-grid');
+
+  cards.forEach(function(c) {
+    const srcs = c.ids.map(function(id){ return galleryPhotos[id]; }).filter(Boolean);
+    const card = document.createElement('div');
+    card.style.cssText = 'text-align:center;font-size:10.5px;color:#555;width:76px';
+    if (srcs.length) {
+      card.innerHTML = '<div style="display:flex;gap:2px;justify-content:center;margin-bottom:3px">'
+        + srcs.map(function(s){ return '<img src="'+s+'" style="width:'+(srcs.length>1?'36px':'76px')+';height:76px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);cursor:zoom-in" onclick="openPhotoLightbox(\''+s+'\')">'; }).join('')
+        + '</div>' + c.label;
+    } else {
+      card.innerHTML = '<div style="width:76px;height:76px;border-radius:6px;border:1.5px dashed #d99;background:#fdf2f2;display:flex;align-items:center;justify-content:center;font-size:9px;color:#c0392b;font-weight:600;margin-bottom:3px">Belum ada</div>' + c.label;
+    }
+    grid.appendChild(card);
+  });
+}
+
 function renderPhotoStep() {
   const step = currentPhotoSteps[currentPhotoStepIdx];
   const total = currentPhotoSteps.length;
@@ -769,6 +881,7 @@ function renderPhotoStep() {
   progress.innerHTML = 'Langkah ' + stepNum + ' dari ' + total + ' &mdash; ' + step.label;
   body.appendChild(progress);
 
+  renderPhotoGallery(body);
   renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
 
   // Ganti tombol submit
@@ -893,7 +1006,7 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
   goPage('page-success');
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
@@ -1027,6 +1140,10 @@ function _doResumePhotoStep(rec) {
       ? JSON.parse(rec.foto_urls)
       : (rec.foto_urls || {});
   } catch(x) {}
+  galleryPhotos = {};
+  Object.keys(existingFoto).forEach(function(k) {
+    if (existingFoto[k]) galleryPhotos[k] = _normalizeDriveThumb(existingFoto[k]);
+  });
   currentPhotoSteps = f.photoSteps;
   // Selalu mulai dari step 0 agar petugas bisa ulang/skip foto manapun
   currentPhotoStepIdx = 0;

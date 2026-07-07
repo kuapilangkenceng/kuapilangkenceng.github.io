@@ -175,8 +175,11 @@ engineInit();
 (function() {
   'use strict';
 
-  // 1. Blokir klik kanan
+  // 1. Blokir klik kanan (kecuali area preview/lightbox foto — Mode Petugas perlu verifikasi foto)
   document.addEventListener('contextmenu', function(e) {
+    if (e.target.closest && e.target.closest('.photo-thumb, #photo-lightbox-overlay, .photo-lightbox-img, .pasfoto-inline-imgs, #pasfoto-inline-imgs')) {
+      return true;
+    }
     e.preventDefault();
     return false;
   });
