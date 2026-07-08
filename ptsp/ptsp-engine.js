@@ -467,6 +467,40 @@ function _renderFotoProgressPanel(containerEl, fotoUrlsRaw) {
  }
 }
 
+/* PATCH: jaring pengaman untuk alur foto multi-step (nikah_alur_lengkap dll).
+   Beda dari _savePendingTahap2, TIDAK ada popup konfirmasi sama sekali (murni
+   diam-diam) — sesuai keputusan sebelumnya untuk tidak mengganggu sesi aktif.
+   Fungsinya cuma jaga-jaga: kalau currentLayananId sampai hilang di tengah
+   jalan (tab di-reload paksa Android, dsb), submitPhotoStep() bisa pulihkan
+   sendiri dari sini tanpa pemohon sadar ada masalah. */
+function _savePendingMultiStep() {
+  try {
+    if (!currentLayananId || !currentPhotoSteps.length) return;
+    localStorage.setItem('ptsp_pending_multistep', JSON.stringify({
+      jenis: currentJenis, id: currentLayananId, rekapInfo: currentRekapInfo,
+      stepIdx: currentPhotoStepIdx, ts: Date.now()
+    }));
+  } catch (e) {}
+}
+function _clearPendingMultiStep() {
+  try { localStorage.removeItem('ptsp_pending_multistep'); } catch (e) {}
+}
+// Dipanggil diam-diam saat currentLayananId ternyata kosong tapi seharusnya ada
+// (mis. saat submitPhotoStep dipanggil). Return true kalau berhasil dipulihkan.
+function _tryRestoreMultiStep() {
+  try {
+    const raw = localStorage.getItem('ptsp_pending_multistep');
+    if (!raw) return false;
+    const pending = JSON.parse(raw);
+    if (!pending || !pending.id || !pending.jenis) return false;
+    if (Date.now() - (pending.ts || 0) > 7 * 24 * 60 * 60 * 1000) { _clearPendingMultiStep(); return false; }
+    if (pending.jenis !== currentJenis) return false; // beda jenis form, jangan dipaksa
+    currentLayananId = pending.id;
+    if (!currentRekapInfo) currentRekapInfo = pending.rekapInfo || { id: pending.id, nama_pemohon: '-', jenis_label: currentJenis };
+    return true;
+  } catch (e) { return false; }
+}
+
 function triggerAutofillBimwin() {
  try {
   var body = document.getElementById('form-body'); if (!body) return;
@@ -830,6 +864,7 @@ async function submitForm() {
         currentLayananId = result.id;
         currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
         currentPhotoStepIdx = 0;
+        _savePendingMultiStep();
         renderPhotoStep();
         goPage('page-rekap');
         // CATATAN: popup LIONTIN TIDAK lagi dibuka di sini (submit awal).
@@ -1089,6 +1124,18 @@ async function submitPhotoStep() {
     return;
   }
 
+  // PATCH: jaring pengaman diam-diam. Kalau currentLayananId ternyata kosong
+  // (state JS hilang, mis. tab di-reload paksa di HP di tengah alur foto),
+  // coba pulihkan dari localStorage dulu SEBELUM kirim ke server — supaya
+  // tidak muncul "ID layanan tidak ditemukan" begitu saja tanpa penjelasan.
+  if (!currentLayananId) {
+    const restored = _tryRestoreMultiStep();
+    if (!restored) {
+      showToast('Sesi terputus. Gunakan menu "Lanjutkan Pendaftaran" dengan Nomor Layanan Anda untuk melanjutkan.', true);
+      return;
+    }
+  }
+
   const payload = {
     action: isLast ? 'submitComplete' : 'submitPhotoStep',
     id: currentLayananId,
@@ -1108,6 +1155,7 @@ async function submitPhotoStep() {
         window.open('https://liontin.kankemenagkabmadiun.com/register', '_blank');
       }
       if (isLast) {
+        _clearPendingMultiStep();
         tampilkanSuksesSelesai(result.id, result.foto_urls);
       } else {
         // Auto-open SIMKAH setelah step foto Rafak (Penghulu) disubmit
@@ -1115,6 +1163,7 @@ async function submitPhotoStep() {
           window.open('https://simkah4.kemenag.go.id/admin/authentication', '_blank');
         }
         currentPhotoStepIdx = nextIncompletePhotoStepIdx(currentPhotoStepIdx);
+        _savePendingMultiStep();
         renderPhotoStep();
         goPage('page-rekap');
       }
@@ -1123,6 +1172,7 @@ async function submitPhotoStep() {
     }
   } catch(e) {
     // PATCH DEBUG: tampilkan pesan error ASLI juga (bukan cuma "tidak dapat terhubung"),
+
     // supaya kalau penyebabnya BUKAN masalah jaringan (mis. JSON tidak valid), ketahuan.
     showToast('Tidak dapat terhubung ke server.', true);
     _showDebugError('submitPhotoStep -> fetch/json', e);
@@ -1207,7 +1257,7 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
   goPage('page-success');
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; _clearPendingMultiStep(); renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
@@ -1390,6 +1440,7 @@ function _doResumePhotoStep(rec) {
   currentPhotoSteps = f.photoSteps;
   // Selalu mulai dari step 0 agar petugas bisa ulang/skip foto manapun
   currentPhotoStepIdx = 0;
+  _savePendingMultiStep();
   renderPhotoStep();
   goPage('page-rekap');
  } catch (errDRPS) {
