@@ -830,7 +830,7 @@ function renderPhotoGallery(container) {
     }
   });
   currentPhotoSteps.slice(0, currentPhotoStepIdx).forEach(function(st) {
-    cards.push({ label: st.shortLabel || st.label, ids: [st.id] });
+    cards.push({ label: st.shortLabel || st.label, ids: [st.id], stepId: st.id });
   });
   if (!cards.length) return;
 
@@ -848,7 +848,11 @@ function renderPhotoGallery(container) {
     const card = document.createElement('div');
     card.style.cssText = 'text-align:center;font-size:10.5px;color:#555;width:76px';
     if (srcs.length) {
-      card.innerHTML = '<div style="display:flex;gap:2px;justify-content:center;margin-bottom:3px">'
+      card.style.position = 'relative';
+      const delBtn = c.stepId
+        ? '<div class="photo-thumb-del" style="position:absolute;top:-6px;right:-6px;z-index:2" onclick="event.stopPropagation();redoPhotoStep(\''+c.stepId+'\')" title="Hapus &amp; upload ulang">\u00D7</div>'
+        : '';
+      card.innerHTML = delBtn + '<div style="display:flex;gap:2px;justify-content:center;margin-bottom:3px">'
         + srcs.map(function(s){ return '<img src="'+s+'" style="width:'+(srcs.length>1?'36px':'76px')+';height:76px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);cursor:zoom-in" onclick="openPhotoLightbox(\''+s+'\')">'; }).join('')
         + '</div>' + c.label;
     } else {
@@ -856,6 +860,30 @@ function renderPhotoGallery(container) {
     }
     grid.appendChild(card);
   });
+}
+
+// Cari index step foto pertama yang belum ada fotonya (dilewati saat rewind).
+// excludeIdx: index yang sedang diproses, tidak ikut dicek (fotonya baru saja diunggah)
+function nextIncompletePhotoStepIdx(excludeIdx) {
+  for (let i = 0; i < currentPhotoSteps.length; i++) {
+    if (i !== excludeIdx && !galleryPhotos[currentPhotoSteps[i].id]) return i;
+  }
+  return currentPhotoSteps.length; // semua step sudah lengkap
+}
+
+// Petugas/pemohon hapus foto step yang sudah terkirim ke server, lalu upload ulang.
+// Step lain yang sudah lengkap tetap tersimpan dan otomatis dilewati.
+function redoPhotoStep(stepId) {
+  const idx = currentPhotoSteps.findIndex(function(s){ return s.id === stepId; });
+  if (idx === -1) return;
+  const step = currentPhotoSteps[idx];
+  const ok = confirm('Hapus foto "' + (step.shortLabel || step.label) + '" dan upload ulang?');
+  if (!ok) return;
+  delete galleryPhotos[stepId];
+  currentPhotoStepIdx = idx;
+  photoFiles = [];
+  renderPhotoStep();
+  goPage('page-rekap');
 }
 
 function renderPhotoStep() {
@@ -890,12 +918,22 @@ function renderPhotoStep() {
   renderPhotoGallery(body);
   renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
 
+  if (galleryPhotos[step.id]) {
+    const existingWrap = document.createElement('div');
+    existingWrap.style.cssText = 'margin-top:8px;padding:8px 10px;background:#eef6f0;border:1px solid var(--green-light,#c3dfc9);border-radius:8px;font-size:11px;color:#2d6a4f;display:flex;align-items:center;gap:8px';
+    existingWrap.innerHTML = '<img src="'+galleryPhotos[step.id]+'" style="width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0;cursor:zoom-in" onclick="openPhotoLightbox(\''+galleryPhotos[step.id]+'\')">'
+      + '<span>Foto tersimpan saat ini. Upload foto baru untuk mengganti, atau langsung lanjut untuk mempertahankan.</span>';
+    body.appendChild(existingWrap);
+  }
+
   // Ganti tombol submit
   const btnWrap = document.getElementById('rekap-btn-wrap');
   if (btnWrap) {
     const isLast = currentPhotoStepIdx >= total - 1;
+    const hasPrev = currentPhotoStepIdx > 0;
     btnWrap.innerHTML =
       '<div style="display:flex;gap:8px">'
+      + (hasPrev ? '<button onclick="goBackPhotoStep()" style="padding:9px 14px;background:#f3f4f6;color:#555;border:1px solid #ddd;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">&lsaquo; Kembali</button>' : '')
       + '<button class="btn-submit" id="btn-submit-complete" onclick="submitPhotoStep()" style="flex:1">' +
         (isLast ? '✅ Selesai &amp; Kirim' : '📤 Kirim &amp; Lanjut') + '</button>'
       + (!isLast ? '<button onclick="skipPhotoStep()" style="padding:9px 16px;background:#f3f4f6;color:#555;border:1px solid #ddd;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Lewati ›</button>' : '')
@@ -903,14 +941,39 @@ function renderPhotoStep() {
   }
 }
 
+// Kembali ke step foto sebelumnya untuk melihat/mengganti foto yang sudah diunggah.
+// Tidak menghapus foto lama — hanya dihapus jika pemohon pilih foto baru lalu kirim.
+function goBackPhotoStep() {
+  if (currentPhotoStepIdx <= 0) return;
+  currentPhotoStepIdx--;
+  photoFiles = [];
+  renderPhotoStep();
+  goPage('page-rekap');
+}
+
 async function submitPhotoStep() {
   const step = currentPhotoSteps[currentPhotoStepIdx];
   const fname = step.id;
-  if (step.required !== false && !photoFiles.some(function(p){ return p.name === fname; })) {
+  const hasNewPhoto = photoFiles.some(function(p){ return p.name === fname; });
+  const hasExisting = !!galleryPhotos[fname];
+  if (step.required !== false && !hasNewPhoto && !hasExisting) {
     showToast('Foto wajib diunggah sebelum melanjutkan.', true);
     return;
   }
-  const isLast = currentPhotoStepIdx >= currentPhotoSteps.length - 1;
+  // isLast dihitung dinamis: true jika SEMUA step lain (selain yang sedang disubmit)
+  // sudah punya foto — ini menangani kasus redo step tengah setelah step-step
+  // berikutnya sudah lebih dulu selesai (lihat redoPhotoStep).
+  const isLast = currentPhotoSteps.every(function(s, i){ return i === currentPhotoStepIdx || !!galleryPhotos[s.id]; });
+
+  // Kembali tanpa ganti foto (foto lama tetap dipakai) & bukan step terakhir:
+  // tidak perlu kirim ulang ke server, cukup lanjut ke step yang masih kosong.
+  if (!hasNewPhoto && hasExisting && !isLast) {
+    currentPhotoStepIdx = nextIncompletePhotoStepIdx(currentPhotoStepIdx);
+    renderPhotoStep();
+    goPage('page-rekap');
+    return;
+  }
+
   const payload = {
     action: isLast ? 'submitComplete' : 'submitPhotoStep',
     id: currentLayananId,
@@ -930,7 +993,7 @@ async function submitPhotoStep() {
         if (fname === 'foto_penghulu') {
           window.open('https://simkah4.kemenag.go.id/admin/authentication', '_blank');
         }
-        currentPhotoStepIdx++;
+        currentPhotoStepIdx = nextIncompletePhotoStepIdx(currentPhotoStepIdx);
         renderPhotoStep();
         goPage('page-rekap');
       }
