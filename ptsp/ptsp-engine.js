@@ -588,7 +588,8 @@ function triggerAutofillBimwin() {
             if (progressEl && json2.ok && json2.record) {
               _renderFotoProgressPanel(progressEl, json2.record.foto_urls);
             } else if (progressEl) {
-              progressEl.innerHTML = '<div style="font-size:11px;color:#c0392b">Gagal memuat status foto.</div>';
+              progressEl.innerHTML = '<div style="font-size:11px;color:#c0392b">Gagal memuat status foto' + (json2.error ? ': ' + json2.error : '') + '.</div>';
+              _showDebugError('triggerAutofillBimwin -> getrecord (ok:false)', new Error(JSON.stringify(json2)));
             }
           })
           .catch(function(eGr2) {
@@ -658,7 +659,11 @@ function _loadCatinRecall() {
         _fetchJsonRetry(API_URL + '?action=getrecord&id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' }, 1)
           .then(function(json2) {
            try {
-            if (!json2.ok || !json2.record) { showToast('Gagal memuat data pendaftaran.', true); return; }
+            if (!json2.ok || !json2.record) {
+              showToast('Gagal memuat data pendaftaran' + (json2.error ? ': ' + json2.error : '') + '.', true);
+              _showDebugError('triggerRecallCatin -> getrecord (ok:false)', new Error(JSON.stringify(json2)));
+              return;
+            }
             var d = json2.record.data || {};
             // Autofill semua field yang ada di form
             document.querySelectorAll('[id^="field_"]').forEach(function(el) {
