@@ -17,6 +17,34 @@ let photoFiles = [];
 let galleryPhotos = {}; // { fieldId: srcUrlAtauDataURL } — riwayat foto kumulatif utk galeri verifikasi Mode Petugas
 let autocompleteTimers = {};
 
+/* PATCH: retry otomatis untuk kegagalan transient Apps Script (kadang balikin
+   halaman HTML "<!DOCTYPE..." alih-alih JSON, terutama request pertama setelah
+   idle — terkonfirmasi manual: klik ulang tanpa reload langsung berhasil).
+   Aman diulang karena kegagalan jenis ini terjadi SEBELUM backend sempat proses
+   request (ditolak di level platform Google, bukan setelah data tersimpan),
+   jadi tidak akan menduplikasi data. Dipakai untuk request GET (selalu aman)
+   dan POST submit foto (submitPhotoStep/submitComplete). TIDAK dipakai untuk
+   aksi yang levih sensitif kalau retry-nya justru berisiko (biarkan manual). */
+async function _fetchJsonRetry(url, options, maxRetries) {
+  maxRetries = (maxRetries == null) ? 1 : maxRetries;
+  var lastErr = null;
+  for (var attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (parseErr) {
+        lastErr = new Error('Respons server bukan JSON (percobaan ke-' + (attempt + 1) + '): ' + text.slice(0, 150));
+      }
+    } catch (netErr) {
+      lastErr = netErr;
+    }
+    if (attempt < maxRetries) { await new Promise(function(r){ setTimeout(r, 900); }); }
+  }
+  throw lastErr;
+}
+
 /* ── AUTO-KAPITAL: semua input teks/textarea otomatis huruf besar ── */
 (function() {
   const EXCLUDE_TYPES = ['email', 'date', 'number', 'tel', 'file', 'password', 'hidden', 'checkbox', 'radio'];
@@ -519,8 +547,7 @@ function triggerAutofillBimwin() {
   if (oldWrap) oldWrap.remove();
   body.insertBefore(wrap, body.firstChild);
 
-  fetch(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' })
-    .then(function(r){ return r.json(); })
+  _fetchJsonRetry(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' }, 1)
     .then(function(json) {
      try {
       var sel = document.getElementById('bimwin-recall-select'); if (!sel) return;
@@ -556,8 +583,7 @@ function triggerAutofillBimwin() {
         currentLayananId = opt.value;
         var progressEl = document.getElementById('bimwin-foto-progress');
         if (progressEl) progressEl.innerHTML = '<div style="font-size:11px;color:#888">Memuat status foto...</div>';
-        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(opt.value) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
-          .then(function(r2){ return r2.json(); })
+        _fetchJsonRetry(API_URL + '?action=getrecord&id=' + encodeURIComponent(opt.value) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' }, 1)
           .then(function(json2) {
             if (progressEl && json2.ok && json2.record) {
               _renderFotoProgressPanel(progressEl, json2.record.foto_urls);
@@ -612,8 +638,7 @@ function _loadCatinRecall() {
  try {
   var sel0 = document.getElementById('catin-recall-select');
   if (sel0) sel0.innerHTML = '<option value="">\u2014 Memuat data pendaftaran... \u2014</option>';
-  fetch(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' })
-    .then(function(r){ return r.json(); })
+  _fetchJsonRetry(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' }, 1)
     .then(function(json) {
      try {
       var sel = document.getElementById('catin-recall-select'); if (!sel) return;
@@ -630,8 +655,7 @@ function _loadCatinRecall() {
       if (infoEl) infoEl.textContent = list.length + ' pendaftaran belum terlaksana';
       sel.addEventListener('change', function() {
         var id = sel.value; if (!id) return;
-        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
-          .then(function(r){ return r.json(); })
+        _fetchJsonRetry(API_URL + '?action=getrecord&id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' }, 1)
           .then(function(json2) {
            try {
             if (!json2.ok || !json2.record) { showToast('Gagal memuat data pendaftaran.', true); return; }
@@ -908,8 +932,7 @@ function renderPasfotoCatin(container) {
   wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
     + '<div id="pasfoto-wrap" style="display:flex;gap:16px;flex-wrap:wrap"><div style="font-size:12px;color:#888">Memuat foto...</div></div>';
   container.appendChild(wrap);
-  fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
-    .then(function(r){ return r.json(); })
+  _fetchJsonRetry(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' }, 1)
     .then(function(json) {
       var pw = document.getElementById('pasfoto-wrap'); if (!pw) return;
       var urls = (json.record && json.record.foto_urls) ? json.record.foto_urls : {};
@@ -1146,8 +1169,7 @@ async function submitPhotoStep() {
   if (!btn) throw new Error('#btn-submit-complete tidak ditemukan di DOM — kemungkinan besar ini penyebab tombol "tidak responsif" (klik tidak melakukan apa-apa karena fungsi berhenti di sini, sebelum sempat fetch ke server).');
   btn.disabled = true; btn.classList.add('loading'); btn.textContent = 'Mengirim...';
   try {
-    const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-    const result = await res.json();
+    const result = await _fetchJsonRetry(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) }, 1);
     if (result.ok) {
       // Auto-open LIONTIN setelah step foto Bimwin (foto_penghulu_penyuluh) disubmit.
       // Dicek di luar isLast supaya tetap kebuka walau kebetulan Bimwin adalah step terakhir.
