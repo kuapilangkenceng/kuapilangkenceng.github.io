@@ -556,7 +556,7 @@ function triggerAutofillBimwin() {
         currentLayananId = opt.value;
         var progressEl = document.getElementById('bimwin-foto-progress');
         if (progressEl) progressEl.innerHTML = '<div style="font-size:11px;color:#888">Memuat status foto...</div>';
-        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(opt.value) + '&_=' + Date.now(), { cache: 'no-store' })
+        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(opt.value) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
           .then(function(r2){ return r2.json(); })
           .then(function(json2) {
             if (progressEl && json2.ok && json2.record) {
@@ -630,7 +630,7 @@ function _loadCatinRecall() {
       if (infoEl) infoEl.textContent = list.length + ' pendaftaran belum terlaksana';
       sel.addEventListener('change', function() {
         var id = sel.value; if (!id) return;
-        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(id) + '&_=' + Date.now(), { cache: 'no-store' })
+        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
           .then(function(r){ return r.json(); })
           .then(function(json2) {
            try {
@@ -908,7 +908,7 @@ function renderPasfotoCatin(container) {
   wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
     + '<div id="pasfoto-wrap" style="display:flex;gap:16px;flex-wrap:wrap"><div style="font-size:12px;color:#888">Memuat foto...</div></div>';
   container.appendChild(wrap);
-  fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId) + '&_=' + Date.now(), { cache: 'no-store' })
+  fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId) + '&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(json) {
       var pw = document.getElementById('pasfoto-wrap'); if (!pw) return;
