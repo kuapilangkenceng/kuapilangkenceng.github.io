@@ -427,20 +427,68 @@ function renderACDropdown(dd,results,autofill,triggerField) { dd.innerHTML=''; i
 function applyAutofill(srcData,map,triggerField) { let filled=0; Object.entries(map).forEach(function(e){ const el=document.getElementById('field_'+e[1]); if(el&&srcData[e[0]]!==undefined){el.value=srcData[e[0]];filled++;} }); if(filled>0){document.getElementById('autofill-banner').style.display='block';evalAllConditions();} }
 function setupAutofill(cfg) { document.addEventListener('click',function(e){ if(!e.target.closest('.autocomplete-wrap')) document.querySelectorAll('.autocomplete-dropdown').forEach(function(d){d.style.display='none';}); }); }
 
+// Daftar semua foto dalam satu alur nikah_alur_lengkap (pas foto + 4 photoStep).
+// Dipakai BARENG oleh triggerRecallCatin() (panel Petugas Pendaftaran) dan
+// triggerAutofillBimwin() (panel Petugas Bimwin) — sengaja 1 sumber supaya
+// kalau step foto berubah di config_nikah.js, cukup update di 1 tempat ini.
+var NIKAH_ALUR_FOTO_STEPS = [
+  { id: 'pasfoto_pa',                label: 'Pas Foto Catin Pria' },
+  { id: 'pasfoto_pi',                label: 'Pas Foto Catin Wanita' },
+  { id: 'foto_penghulu',             label: 'Rafak (Penghulu)' },
+  { id: 'foto_petugas_pendaftaran',  label: 'Petugas Pendaftaran' },
+  { id: 'foto_penghulu_penyuluh',    label: 'Bimwin' },
+  { id: 'foto_validasi',             label: 'Validasi' }
+];
+
+// Render kartu status semua foto (ada / belum) ke dalam containerEl.
+// fotoUrlsRaw boleh string JSON atau object — sama seperti field foto_urls di sheet.
+function _renderFotoProgressPanel(containerEl, fotoUrlsRaw) {
+ try {
+  if (!containerEl) return;
+  var urls = {};
+  try { urls = typeof fotoUrlsRaw === 'string' ? JSON.parse(fotoUrlsRaw || '{}') : (fotoUrlsRaw || {}); } catch(xParse) {}
+  containerEl.innerHTML = '';
+  NIKAH_ALUR_FOTO_STEPS.forEach(function(fs) {
+    var url = urls[fs.id];
+    var card = document.createElement('div');
+    card.style.cssText = 'text-align:center;font-size:10.5px;color:#555;width:76px';
+    if (url) {
+      var imgUrl = url;
+      var m = url.match(/[?&]id=([^&]+)/); if (!m) m = url.match(/\/d\/([^/?]+)/);
+      if (m) imgUrl = 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w200';
+      card.innerHTML = '<img src="' + imgUrl + '" style="width:76px;height:76px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);cursor:zoom-in;margin-bottom:3px" onclick="openPhotoLightbox(this.src)" onerror="this.style.display=\'none\'">' + fs.label;
+    } else {
+      card.innerHTML = '<div style="width:76px;height:76px;border-radius:6px;border:1.5px dashed #d99;background:#fdf2f2;display:flex;align-items:center;justify-content:center;font-size:9px;color:#c0392b;font-weight:600;margin-bottom:3px">Belum upload</div>' + fs.label;
+    }
+    containerEl.appendChild(card);
+  });
+ } catch (errFPP) {
+  _showDebugError('_renderFotoProgressPanel', errFPP);
+ }
+}
+
 function triggerAutofillBimwin() {
+ try {
   var body = document.getElementById('form-body'); if (!body) return;
   var wrap = document.createElement('div');
   wrap.id = 'bimwin-recall-wrap';
   wrap.style.cssText = 'background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;padding:14px 16px;margin-bottom:16px';
-  wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#2d8c5e);margin-bottom:8px">📋 Pilih Pendaftaran Nikah</div>'
+  wrap.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+    + '<div style="font-size:13px;font-weight:600;color:var(--green,#2d8c5e)">📋 Pilih Pendaftaran Nikah</div>'
+    + '<button type="button" onclick="triggerAutofillBimwin()" title="Muat ulang daftar pendaftaran" style="background:#fff;border:1px solid var(--green,#2d8c5e);color:var(--green,#2d8c5e);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;cursor:pointer">&#128260; Refresh</button>'
+    + '</div>'
     + '<select id="bimwin-recall-select" style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;background:#fff">'
     + '<option value="">— Memuat data pendaftaran... —</option></select>'
-    + '<div id="bimwin-recall-info" style="font-size:11px;color:#666;margin-top:6px"></div>';
+    + '<div id="bimwin-recall-info" style="font-size:11px;color:#666;margin-top:6px"></div>'
+    + '<div id="bimwin-foto-progress" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"></div>';
+  var oldWrap = document.getElementById('bimwin-recall-wrap');
+  if (oldWrap) oldWrap.remove();
   body.insertBefore(wrap, body.firstChild);
 
   fetch(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(json) {
+     try {
       var sel = document.getElementById('bimwin-recall-select'); if (!sel) return;
       var list = json.results || [];
       if (!list.length) {
@@ -455,7 +503,8 @@ function triggerAutofillBimwin() {
         opt.dataset.payload = JSON.stringify(r.data);
         sel.appendChild(opt);
       });
-      document.getElementById('bimwin-recall-info').textContent = list.length + ' pendaftaran belum terlaksana';
+      var infoEl = document.getElementById('bimwin-recall-info');
+      if (infoEl) infoEl.textContent = list.length + ' pendaftaran belum terlaksana';
       sel.addEventListener('change', function() {
         var opt = sel.options[sel.selectedIndex];
         if (!opt || !opt.dataset.payload) return;
@@ -463,11 +512,41 @@ function triggerAutofillBimwin() {
         var map = { nama_pa:'nama_pa', nama_pi:'nama_pi', kontak:'kontak', surat_keluar:'surat_keluar' };
         applyAutofill(d, map, 'nama_pa');
         showToast('Data catin terisi otomatis dari pendaftaran');
+
+        // PATCH: sebelumnya currentLayananId TIDAK PERNAH diset di sini, akibatnya
+        // saat submitBimwinPetugas() dipanggil, id yang dikirim selalu null —
+        // dan blok auto-generate SK Bimwin di backend (butuh recordId) tidak
+        // pernah jalan. Sekarang diset + sekalian tarik foto_urls lengkap untuk
+        // ditampilkan (pas foto + status foto tiap step, agar Petugas tahu step
+        // mana yang belum upload sebelum lanjut submit Bimwin).
+        currentLayananId = opt.value;
+        var progressEl = document.getElementById('bimwin-foto-progress');
+        if (progressEl) progressEl.innerHTML = '<div style="font-size:11px;color:#888">Memuat status foto...</div>';
+        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(opt.value) + '&_=' + Date.now(), { cache: 'no-store' })
+          .then(function(r2){ return r2.json(); })
+          .then(function(json2) {
+            if (progressEl && json2.ok && json2.record) {
+              _renderFotoProgressPanel(progressEl, json2.record.foto_urls);
+            } else if (progressEl) {
+              progressEl.innerHTML = '<div style="font-size:11px;color:#c0392b">Gagal memuat status foto.</div>';
+            }
+          })
+          .catch(function(eGr2) {
+            if (progressEl) progressEl.innerHTML = '<div style="font-size:11px;color:#c0392b">Gagal memuat status foto.</div>';
+            _showDebugError('triggerAutofillBimwin -> getrecord', eGr2);
+          });
       });
+     } catch (errList2) {
+      _showDebugError('triggerAutofillBimwin -> listpendaftaran handler', errList2);
+     }
     })
-    .catch(function() {
+    .catch(function(eLp2) {
       var sel = document.getElementById('bimwin-recall-select'); if (sel) sel.innerHTML = '<option value="">— Gagal memuat data —</option>';
+      _showDebugError('triggerAutofillBimwin -> listpendaftaran fetch', eLp2);
     });
+ } catch (errTAB) {
+  _showDebugError('triggerAutofillBimwin', errTAB);
+ }
 }
 
 function triggerRecallCatin() {
@@ -537,7 +616,8 @@ function _loadCatinRecall() {
             currentLayananId = id;
             evalAllConditions();
             showToast('Data catin terisi dari pendaftaran');
-            // Render pasfoto inline sebelum tombol Kirim
+            // Render status semua foto (pas foto + 4 tahap) sebelum tombol Kirim,
+            // supaya Petugas tahu tahap mana yang belum upload foto.
             var existing = document.getElementById('pasfoto-inline-wrap');
             if (existing) existing.remove();
             var _formBody = document.getElementById('form-body');
@@ -545,27 +625,10 @@ function _loadCatinRecall() {
               var pw = document.createElement('div');
               pw.id = 'pasfoto-inline-wrap';
               pw.style.cssText = 'padding:14px 16px;background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;margin-bottom:16px';
-              pw.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
-                + '<div id="pasfoto-inline-imgs" style="display:flex;gap:16px;flex-wrap:wrap"></div>';
+              pw.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Status Foto Pendaftaran</div>'
+                + '<div id="pasfoto-inline-imgs" style="display:flex;gap:10px;flex-wrap:wrap"></div>';
               _formBody.appendChild(pw);
-              var urls = json2.record.foto_urls ? (typeof json2.record.foto_urls === 'string' ? JSON.parse(json2.record.foto_urls) : json2.record.foto_urls) : {};
-              var fotoFields = [{id:'pasfoto_pa',label:'Catin Pria'},{id:'pasfoto_pi',label:'Catin Wanita'}];
-              var imgWrap = document.getElementById('pasfoto-inline-imgs');
-              var found = 0;
-              fotoFields.forEach(function(ff) {
-                var url = urls[ff.id]; if (!url) return;
-                found++;
-                var card = document.createElement('div');
-                card.style.cssText = 'text-align:center;font-size:11px;color:#555';
-                // Normalisasi semua format Drive URL ke thumbnail
-                var imgUrl = url;
-                var m = url.match(/[?&]id=([^&]+)/);
-                if (!m) m = url.match(/\/d\/([^/?]+)/);
-                if (m) imgUrl = 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w200';
-                card.innerHTML = '<img src="' + imgUrl + '" style="width:100px;height:130px;object-fit:cover;border-radius:6px;border:1.5px solid var(--green,#2d8c5e);display:block;margin-bottom:4px;cursor:zoom-in" onclick="openPhotoLightbox(this.src)" onerror="this.style.display=\'none\'">' + ff.label;
-                imgWrap.appendChild(card);
-              });
-              if (!found) imgWrap.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
+              _renderFotoProgressPanel(document.getElementById('pasfoto-inline-imgs'), json2.record.foto_urls);
             }
            } catch (errInner) {
             _showDebugError('triggerRecallCatin -> getrecord handler', errInner);
@@ -769,10 +832,8 @@ async function submitForm() {
         currentPhotoStepIdx = 0;
         renderPhotoStep();
         goPage('page-rekap');
-        // Auto-open LIONTIN setelah Pendaftaran Nikah (Alur Lengkap) submit
-        if (currentJenis === 'nikah_alur_lengkap') {
-          window.open('https://liontin.kankemenagkabmadiun.com/register', '_blank');
-        }
+        // CATATAN: popup LIONTIN TIDAK lagi dibuka di sini (submit awal).
+        // Dipindah ke step foto Bimwin (foto_penghulu_penyuluh) — lihat submitPhotoStep().
       } else if (isTwoStage) {
         currentLayananId = result.id;
         currentRekapInfo = { id: result.id, nama_pemohon: payload.nama_pemohon || '-', jenis_label: f.label };
@@ -1041,6 +1102,11 @@ async function submitPhotoStep() {
     const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
     const result = await res.json();
     if (result.ok) {
+      // Auto-open LIONTIN setelah step foto Bimwin (foto_penghulu_penyuluh) disubmit.
+      // Dicek di luar isLast supaya tetap kebuka walau kebetulan Bimwin adalah step terakhir.
+      if (fname === 'foto_penghulu_penyuluh') {
+        window.open('https://liontin.kankemenagkabmadiun.com/register', '_blank');
+      }
       if (isLast) {
         tampilkanSuksesSelesai(result.id, result.foto_urls);
       } else {
