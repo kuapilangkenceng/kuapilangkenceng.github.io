@@ -420,7 +420,7 @@ async function handleAutocomplete(e,fieldName,jenis) {
   clearTimeout(autocompleteTimers[fieldName]);
   autocompleteTimers[fieldName]=setTimeout(async function(){
     const fd=CONFIG.forms[jenis]; if(!fd||!fd.autofill) return;
-    try{ const res=await fetch(API_URL+'?action=lookup&jenis='+fd.autofill.sourceJenis+'&field='+fd.autofill.lookupField+'&q='+encodeURIComponent(q)); const d=await res.json(); renderACDropdown(dd,d.results||[],fd.autofill,fieldName); }catch(e){dd.style.display='none';}
+    try{ const res=await fetch(API_URL+'?action=lookup&jenis='+fd.autofill.sourceJenis+'&field='+fd.autofill.lookupField+'&q='+encodeURIComponent(q)+'&_='+Date.now(), { cache: 'no-store' }); const d=await res.json(); renderACDropdown(dd,d.results||[],fd.autofill,fieldName); }catch(e){dd.style.display='none';}
   },380);
 }
 function renderACDropdown(dd,results,autofill,triggerField) { dd.innerHTML=''; if(!results.length){dd.style.display='none';return;} results.forEach(function(r){ const item=document.createElement('div'); item.className='autocomplete-item'; item.textContent=r.label; item.onclick=function(){ applyAutofill(r.data,autofill.map,triggerField); dd.style.display='none'; }; dd.appendChild(item); }); dd.style.display='block'; }
@@ -438,7 +438,7 @@ function triggerAutofillBimwin() {
     + '<div id="bimwin-recall-info" style="font-size:11px;color:#666;margin-top:6px"></div>';
   body.insertBefore(wrap, body.firstChild);
 
-  fetch(API_URL + '?action=listpendaftaran')
+  fetch(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(json) {
       var sel = document.getElementById('bimwin-recall-select'); if (!sel) return;
@@ -471,37 +471,58 @@ function triggerAutofillBimwin() {
 }
 
 function triggerRecallCatin() {
+ try {
   var body = document.getElementById('form-body'); if (!body) return;
   var wrap = document.createElement('div');
   wrap.id = 'catin-recall-wrap';
   wrap.style.cssText = 'background:var(--green-light,#e8f5ee);border:1.5px solid var(--green,#2d8c5e);border-radius:10px;padding:14px 16px;margin-bottom:16px';
-  wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#2d8c5e);margin-bottom:8px">&#128203; Pilih Pendaftaran Nikah</div>'
+  wrap.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">'
+    + '<div style="font-size:13px;font-weight:600;color:var(--green,#2d8c5e)">&#128203; Pilih Pendaftaran Nikah</div>'
+    + '<button type="button" onclick="_loadCatinRecall()" title="Muat ulang daftar pendaftaran" style="background:#fff;border:1px solid var(--green,#2d8c5e);color:var(--green,#2d8c5e);border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;cursor:pointer">&#128260; Refresh</button>'
+    + '</div>'
     + '<select id="catin-recall-select" style="width:100%;padding:9px 12px;border:1px solid var(--green,#2d8c5e);border-radius:8px;font-size:13px;background:#fff">'
-    + '<option value="">\xe2\x80\x94 Memuat data pendaftaran... \xe2\x80\x94</option></select>'
+    + '<option value="">\u2014 Memuat data pendaftaran... \u2014</option></select>'
     + '<div id="catin-recall-info" style="font-size:11px;color:#666;margin-top:6px"></div>';
   body.insertBefore(wrap, body.firstChild);
+  _loadCatinRecall();
+ } catch (errTRC) {
+  _showDebugError('triggerRecallCatin', errTRC);
+ }
+}
 
-  fetch(API_URL + '?action=listpendaftaran')
+// Dipisah dari triggerRecallCatin() supaya bisa dipanggil ulang manual lewat
+// tombol Refresh, tanpa perlu render ulang seluruh wrapper-nya.
+// cache:'no-store' + cache-buster (_=Date.now()) supaya TIDAK pernah kena
+// cache browser — ini penyebab paling mungkin data pendaftaran baru tidak
+// muncul walau sudah di-refresh (lihat laporan bug tombol kosong 8 Jul 2026).
+function _loadCatinRecall() {
+ try {
+  var sel0 = document.getElementById('catin-recall-select');
+  if (sel0) sel0.innerHTML = '<option value="">\u2014 Memuat data pendaftaran... \u2014</option>';
+  fetch(API_URL + '?action=listpendaftaran&_=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(json) {
+     try {
       var sel = document.getElementById('catin-recall-select'); if (!sel) return;
       var list = json.results || [];
-      if (!list.length) { sel.innerHTML = '<option value="">\xe2\x80\x94 Belum ada pendaftaran \xe2\x80\x94</option>'; return; }
-      sel.innerHTML = '<option value="">\xe2\x80\x94 Pilih pasangan catin \xe2\x80\x94</option>';
+      if (!list.length) { sel.innerHTML = '<option value="">\u2014 Belum ada pendaftaran \u2014</option>'; return; }
+      sel.innerHTML = '<option value="">\u2014 Pilih pasangan catin \u2014</option>';
       list.forEach(function(r) {
         var opt = document.createElement('option');
         opt.value = r.id;
         opt.textContent = r.label;
         sel.appendChild(opt);
       });
-      document.getElementById('catin-recall-info').textContent = list.length + ' pendaftaran belum terlaksana';
+      var infoEl = document.getElementById('catin-recall-info');
+      if (infoEl) infoEl.textContent = list.length + ' pendaftaran belum terlaksana';
       sel.addEventListener('change', function() {
         var id = sel.value; if (!id) return;
-        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(id))
+        fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(id) + '&_=' + Date.now(), { cache: 'no-store' })
           .then(function(r){ return r.json(); })
-          .then(function(json) {
-            if (!json.ok || !json.record) { showToast('Gagal memuat data pendaftaran.', true); return; }
-            var d = json.record.data || {};
+          .then(function(json2) {
+           try {
+            if (!json2.ok || !json2.record) { showToast('Gagal memuat data pendaftaran.', true); return; }
+            var d = json2.record.data || {};
             // Autofill semua field yang ada di form
             document.querySelectorAll('[id^="field_"]').forEach(function(el) {
               var key = el.id.replace('field_', '');
@@ -527,7 +548,7 @@ function triggerRecallCatin() {
               pw.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
                 + '<div id="pasfoto-inline-imgs" style="display:flex;gap:16px;flex-wrap:wrap"></div>';
               _formBody.appendChild(pw);
-              var urls = json.record.foto_urls ? (typeof json.record.foto_urls === 'string' ? JSON.parse(json.record.foto_urls) : json.record.foto_urls) : {};
+              var urls = json2.record.foto_urls ? (typeof json2.record.foto_urls === 'string' ? JSON.parse(json2.record.foto_urls) : json2.record.foto_urls) : {};
               var fotoFields = [{id:'pasfoto_pa',label:'Catin Pria'},{id:'pasfoto_pi',label:'Catin Wanita'}];
               var imgWrap = document.getElementById('pasfoto-inline-imgs');
               var found = 0;
@@ -546,14 +567,24 @@ function triggerRecallCatin() {
               });
               if (!found) imgWrap.innerHTML = '<div style="font-size:12px;color:#888">Pas foto tidak diunggah oleh pemohon.</div>';
             }
+           } catch (errInner) {
+            _showDebugError('triggerRecallCatin -> getrecord handler', errInner);
+           }
           })
-          .catch(function(){ showToast('Tidak dapat memuat data.', true); });
+          .catch(function(eGr){ showToast('Tidak dapat memuat data.', true); _showDebugError('triggerRecallCatin -> getrecord fetch', eGr); });
       });
+     } catch (errList) {
+      _showDebugError('_loadCatinRecall -> listpendaftaran handler', errList);
+     }
     })
-    .catch(function() {
+    .catch(function(eLp) {
       var sel = document.getElementById('catin-recall-select');
-      if (sel) sel.innerHTML = '<option value="">\xe2\x80\x94 Gagal memuat data \xe2\x80\x94</option>';
+      if (sel) sel.innerHTML = '<option value="">\u2014 Gagal memuat data \u2014</option>';
+      _showDebugError('_loadCatinRecall -> listpendaftaran fetch', eLp);
     });
+ } catch (errOuter) {
+  _showDebugError('_loadCatinRecall', errOuter);
+ }
 }
 
 function renderBannerEcoteologyLuar(containerEl) {
@@ -781,7 +812,7 @@ function renderPasfotoCatin(container) {
   wrap.innerHTML = '<div style="font-size:13px;font-weight:600;color:var(--green,#1a6b45);margin-bottom:10px">&#128247; Pas Foto Calon Pengantin</div>'
     + '<div id="pasfoto-wrap" style="display:flex;gap:16px;flex-wrap:wrap"><div style="font-size:12px;color:#888">Memuat foto...</div></div>';
   container.appendChild(wrap);
-  fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId))
+  fetch(API_URL + '?action=getrecord&id=' + encodeURIComponent(currentLayananId) + '&_=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(json) {
       var pw = document.getElementById('pasfoto-wrap'); if (!pw) return;
@@ -1190,7 +1221,7 @@ function renderCallbackPanel(containerEl) {
 
 function loadPendingPhotoDropdown() {
   const sel = document.getElementById('callback-dropdown'); if (!sel) return;
-  fetch(API_URL + '?action=getpendingphoto&token=' + encodeURIComponent(session ? session.token : ''))
+  fetch(API_URL + '?action=getpendingphoto&token=' + encodeURIComponent(session ? session.token : '') + '&_=' + Date.now(), { cache: 'no-store' })
     .then(function(r){ return r.json(); })
     .then(function(json) {
       if (!json.ok) {
@@ -1243,7 +1274,7 @@ async function resumeFromKode() {
   errEl.style.display = 'none';
   input.disabled = true;
   try {
-    const res = await fetch(API_URL + '?action=cekstatuspublik&kode=' + encodeURIComponent(kode));
+    const res = await fetch(API_URL + '?action=cekstatuspublik&kode=' + encodeURIComponent(kode) + '&_=' + Date.now(), { cache: 'no-store' });
     const data = await res.json();
     if (!data.ok) {
       errEl.textContent = data.error || 'Kode tidak ditemukan.';
