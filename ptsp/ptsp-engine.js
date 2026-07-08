@@ -865,17 +865,23 @@ function renderPhotoGallery(container) {
 // Cari index step foto pertama yang belum ada fotonya (dilewati saat rewind).
 // excludeIdx: index yang sedang diproses, tidak ikut dicek (fotonya baru saja diunggah)
 function nextIncompletePhotoStepIdx(excludeIdx) {
+ try {
   for (let i = 0; i < currentPhotoSteps.length; i++) {
     if (i !== excludeIdx && !galleryPhotos[currentPhotoSteps[i].id]) return i;
   }
   return currentPhotoSteps.length; // semua step sudah lengkap
+ } catch (errNIP) {
+  _showDebugError('nextIncompletePhotoStepIdx(' + excludeIdx + ')', errNIP);
+  return currentPhotoSteps.length;
+ }
 }
 
 // Petugas/pemohon hapus foto step yang sudah terkirim ke server, lalu upload ulang.
 // Step lain yang sudah lengkap tetap tersimpan dan otomatis dilewati.
 function redoPhotoStep(stepId) {
+ try {
   const idx = currentPhotoSteps.findIndex(function(s){ return s.id === stepId; });
-  if (idx === -1) return;
+  if (idx === -1) throw new Error('stepId "' + stepId + '" tidak ditemukan di currentPhotoSteps');
   const step = currentPhotoSteps[idx];
   const ok = confirm('Hapus foto "' + (step.shortLabel || step.label) + '" dan upload ulang?');
   if (!ok) return;
@@ -884,12 +890,17 @@ function redoPhotoStep(stepId) {
   photoFiles = [];
   renderPhotoStep();
   goPage('page-rekap');
+ } catch (errRDS) {
+  _showDebugError('redoPhotoStep(' + stepId + ')', errRDS);
+ }
 }
 
 function renderPhotoStep() {
+ try {
   const step = currentPhotoSteps[currentPhotoStepIdx];
   const total = currentPhotoSteps.length;
   const stepNum = currentPhotoStepIdx + 1;
+  if (!step) throw new Error('currentPhotoSteps[' + currentPhotoStepIdx + '] kosong/undefined (total step: ' + total + ')');
 
   // Header rekap
   document.getElementById('rekap-id').textContent = currentRekapInfo.id;
@@ -938,21 +949,33 @@ function renderPhotoStep() {
         (isLast ? '✅ Selesai &amp; Kirim' : '📤 Kirim &amp; Lanjut') + '</button>'
       + (!isLast ? '<button onclick="skipPhotoStep()" style="padding:9px 16px;background:#f3f4f6;color:#555;border:1px solid #ddd;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">Lewati ›</button>' : '')
       + '</div>';
+  } else {
+    throw new Error('#rekap-btn-wrap tidak ditemukan di DOM — tombol submit/kembali/lewati TIDAK terpasang.');
   }
+ } catch (errRPS) {
+  _showDebugError('renderPhotoStep (idx=' + currentPhotoStepIdx + ', jenis=' + currentJenis + ')', errRPS);
+ }
 }
 
 // Kembali ke step foto sebelumnya untuk melihat/mengganti foto yang sudah diunggah.
 // Tidak menghapus foto lama — hanya dihapus jika pemohon pilih foto baru lalu kirim.
 function goBackPhotoStep() {
+ try {
   if (currentPhotoStepIdx <= 0) return;
   currentPhotoStepIdx--;
   photoFiles = [];
   renderPhotoStep();
   goPage('page-rekap');
+ } catch (errGBP) {
+  _showDebugError('goBackPhotoStep (idx=' + currentPhotoStepIdx + ')', errGBP);
+ }
 }
 
 async function submitPhotoStep() {
+  let btn = null;
+ try {
   const step = currentPhotoSteps[currentPhotoStepIdx];
+  if (!step) throw new Error('currentPhotoSteps[' + currentPhotoStepIdx + '] kosong/undefined saat submit');
   const fname = step.id;
   const hasNewPhoto = photoFiles.some(function(p){ return p.name === fname; });
   const hasExisting = !!galleryPhotos[fname];
@@ -980,7 +1003,8 @@ async function submitPhotoStep() {
     stepIdx: currentPhotoStepIdx,
     foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; })
   };
-  const btn = document.getElementById('btn-submit-complete');
+  btn = document.getElementById('btn-submit-complete');
+  if (!btn) throw new Error('#btn-submit-complete tidak ditemukan di DOM — kemungkinan besar ini penyebab tombol "tidak responsif" (klik tidak melakukan apa-apa karena fungsi berhenti di sini, sebelum sempat fetch ke server).');
   btn.disabled = true; btn.classList.add('loading'); btn.textContent = 'Mengirim...';
   try {
     const res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
@@ -1001,9 +1025,16 @@ async function submitPhotoStep() {
       showToast('Gagal: ' + (result.error || 'Unknown error'), true);
     }
   } catch(e) {
+    // PATCH DEBUG: tampilkan pesan error ASLI juga (bukan cuma "tidak dapat terhubung"),
+    // supaya kalau penyebabnya BUKAN masalah jaringan (mis. JSON tidak valid), ketahuan.
     showToast('Tidak dapat terhubung ke server.', true);
+    _showDebugError('submitPhotoStep -> fetch/json', e);
   }
   btn.disabled = false; btn.classList.remove('loading');
+ } catch (errSPS) {
+  _showDebugError('submitPhotoStep (idx=' + currentPhotoStepIdx + ')', errSPS);
+  if (btn) { btn.disabled = false; btn.classList.remove('loading'); }
+ }
 }
 
 function skipPhotoStep() {
@@ -1082,6 +1113,32 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
 function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
+
+/* ── PATCH DEBUG: jaring penangkap error untuk alur PhotoStep ──────────────
+   Box error persisten di layar (tidak auto-hilang seperti toast), supaya
+   error yang muncul di HP lapangan bisa langsung difoto/disalin tanpa
+   perlu sambung DevTools. Tap kotak teks untuk select-all lalu copy.
+   AMAN: hanya menangkap & menampilkan error, tidak mengubah alur normal
+   sama sekali kalau tidak ada error. Boleh dihapus kapan saja setelah
+   bug ketemu, tidak berpengaruh ke logic manapun. ── */
+function _showDebugError(context, err) {
+  try { console.error('[PTSP-DEBUG] ' + context + ':', err); } catch(e0) {}
+  try {
+    let box = document.getElementById('ptsp-debug-error');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'ptsp-debug-error';
+      box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;background:#fff3f3;border:2px solid #c0392b;border-radius:10px;padding:10px 12px;font-size:11px;color:#7a1a1a;box-shadow:0 4px 16px rgba(0,0,0,.25)';
+      document.body.appendChild(box);
+    }
+    const msg = context + ': ' + (err && err.message ? err.message : String(err)) + (err && err.stack ? '\n' + err.stack : '');
+    box.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'
+      + '<strong>\u26A0\uFE0F Debug Error (PTSP)</strong>'
+      + '<button onclick="document.getElementById(\'ptsp-debug-error\').remove()" style="background:#c0392b;color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:10px;cursor:pointer">Tutup</button></div>'
+      + '<textarea readonly style="width:100%;min-height:70px;font-size:10.5px;font-family:monospace;border:1px solid #e2b0b0;border-radius:6px;padding:6px;box-sizing:border-box" onclick="this.select()">' + msg.replace(/</g,'&lt;') + '</textarea>'
+      + '<div style="margin-top:4px;font-size:10px;color:#999">Tap kotak teks di atas untuk pilih semua, lalu salin & kirim ke Claude.</div>';
+  } catch (e2) { /* jangan sampai error handler sendiri ikut crash */ }
+}
 
 
 /* ── CALLBACK PHOTO STEP ────────────────────────────────────────────── */
@@ -1167,11 +1224,15 @@ function loadPendingPhotoDropdown() {
 }
 
 async function resumeFromDropdown() {
+ try {
   const sel = document.getElementById('callback-dropdown');
   if (!sel || !sel.value) { showToast('Pilih pendaftaran dulu.', true); return; }
   const opt = sel.options[sel.selectedIndex];
   if (!opt || !opt.dataset.rec) { showToast('Data tidak ditemukan.', true); return; }
   _doResumePhotoStep(JSON.parse(opt.dataset.rec));
+ } catch (errRFD) {
+  _showDebugError('resumeFromDropdown', errRFD);
+ }
 }
 
 async function resumeFromKode() {
@@ -1205,6 +1266,7 @@ async function resumeFromKode() {
 }
 
 function _doResumePhotoStep(rec) {
+ try {
   currentJenis = rec.jenis_layanan || 'nikah_alur_lengkap';
   currentLayananId = rec.id;
   currentRekapInfo = {
@@ -1233,6 +1295,9 @@ function _doResumePhotoStep(rec) {
   currentPhotoStepIdx = 0;
   renderPhotoStep();
   goPage('page-rekap');
+ } catch (errDRPS) {
+  _showDebugError('_doResumePhotoStep', errDRPS);
+ }
 }
 /* ── END CALLBACK PHOTO STEP ────────────────────────────────────────────── */
 
