@@ -12,6 +12,7 @@ let currentLayananId = null;
 let currentRekapInfo = null;
 let currentPhotoSteps = [];   // array step foto tambahan (photoSteps dari config)
 let currentPhotoStepIdx = 0;  // index step foto yang sedang aktif
+let stepPetugasValues = {};   // { [step.id]: namaPetugasTerpilih } — persist selama sesi form, dipulihkan saat back/forward antar step foto
 let session = null;
 let photoFiles = [];
 let galleryPhotos = {}; // { fieldId: srcUrlAtauDataURL } — riwayat foto kumulatif utk galeri verifikasi Mode Petugas
@@ -1082,6 +1083,13 @@ function renderPhotoStep() {
   body.appendChild(progress);
 
   renderPhotoGallery(body);
+
+  if (step.petugasField) {
+    renderField(body, Object.assign({ type: 'select', required: true }, step.petugasField));
+    const pfEl = document.getElementById('field_' + step.petugasField.id);
+    if (pfEl && stepPetugasValues[step.id]) pfEl.value = stepPetugasValues[step.id];
+  }
+
   renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
 
   if (galleryPhotos[step.id]) {
@@ -1138,6 +1146,16 @@ async function submitPhotoStep() {
     showToast('Foto wajib diunggah sebelum melanjutkan.', true);
     return;
   }
+  let namaPetugasTahap = '';
+  if (step.petugasField) {
+    const pfEl = document.getElementById('field_' + step.petugasField.id);
+    namaPetugasTahap = pfEl ? pfEl.value : '';
+    if (!namaPetugasTahap) {
+      showToast((step.petugasField.label || 'Nama petugas') + ' wajib dipilih sebelum melanjutkan.', true);
+      return;
+    }
+    stepPetugasValues[step.id] = namaPetugasTahap;
+  }
   // isLast dihitung dinamis: true jika SEMUA step lain (selain yang sedang disubmit)
   // sudah punya foto — ini menangani kasus redo step tengah setelah step-step
   // berikutnya sudah lebih dulu selesai (lihat redoPhotoStep).
@@ -1168,7 +1186,9 @@ async function submitPhotoStep() {
     action: isLast ? 'submitComplete' : 'submitPhotoStep',
     id: currentLayananId,
     stepIdx: currentPhotoStepIdx,
-    foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; })
+    foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; }),
+    stepFieldId: step.petugasField ? step.id : undefined,
+    namaPetugas: step.petugasField ? namaPetugasTahap : undefined
   };
   btn = document.getElementById('btn-submit-complete');
   if (!btn) throw new Error('#btn-submit-complete tidak ditemukan di DOM — kemungkinan besar ini penyebab tombol "tidak responsif" (klik tidak melakukan apa-apa karena fungsi berhenti di sini, sebelum sempat fetch ke server).');
@@ -1284,7 +1304,7 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
   goPage('page-success');
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; _clearPendingMultiStep(); renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; stepPetugasValues={}; _clearPendingMultiStep(); renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
