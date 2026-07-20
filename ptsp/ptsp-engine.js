@@ -13,6 +13,7 @@ let currentRekapInfo = null;
 let currentPhotoSteps = [];   // array step foto tambahan (photoSteps dari config)
 let currentPhotoStepIdx = 0;  // index step foto yang sedang aktif
 let stepPetugasValues = {};   // { [step.id]: namaPetugasTerpilih } — persist selama sesi form, dipulihkan saat back/forward antar step foto
+let stepExtraValues = {};     // { [step.id]: { [extraFieldId]: value } } — persist nilai extraFields antar step foto
 let session = null;
 let photoFiles = [];
 let galleryPhotos = {}; // { fieldId: srcUrlAtauDataURL } — riwayat foto kumulatif utk galeri verifikasi Mode Petugas
@@ -1117,6 +1118,16 @@ function renderPhotoStep() {
     if (pfEl && stepPetugasValues[step.id]) pfEl.value = stepPetugasValues[step.id];
   }
 
+  if (step.extraFields && step.extraFields.length) {
+    step.extraFields.forEach(function(ef) {
+      renderField(body, ef);
+      const efEl = document.getElementById('field_' + ef.id);
+      if (efEl && stepExtraValues[step.id] && stepExtraValues[step.id][ef.id] !== undefined) {
+        efEl.value = stepExtraValues[step.id][ef.id];
+      }
+    });
+  }
+
   renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
 
   if (galleryPhotos[step.id]) {
@@ -1183,6 +1194,20 @@ async function submitPhotoStep() {
     }
     stepPetugasValues[step.id] = namaPetugasTahap;
   }
+  let extraData = null;
+  if (step.extraFields && step.extraFields.length) {
+    extraData = {};
+    for (const ef of step.extraFields) {
+      const efEl = document.getElementById('field_' + ef.id);
+      const val = efEl ? efEl.value.trim() : '';
+      if (ef.required !== false && !val) {
+        showToast((ef.label || 'Field') + ' wajib diisi sebelum melanjutkan.', true);
+        return;
+      }
+      extraData[ef.id] = val;
+    }
+    stepExtraValues[step.id] = extraData;
+  }
   // isLast dihitung dinamis: true jika SEMUA step lain (selain yang sedang disubmit)
   // sudah punya foto — ini menangani kasus redo step tengah setelah step-step
   // berikutnya sudah lebih dulu selesai (lihat redoPhotoStep).
@@ -1215,7 +1240,8 @@ async function submitPhotoStep() {
     stepIdx: currentPhotoStepIdx,
     foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; }),
     stepFieldId: step.petugasField ? step.id : undefined,
-    namaPetugas: step.petugasField ? namaPetugasTahap : undefined
+    namaPetugas: step.petugasField ? namaPetugasTahap : undefined,
+    stepData: extraData || undefined
   };
   btn = document.getElementById('btn-submit-complete');
   if (!btn) throw new Error('#btn-submit-complete tidak ditemukan di DOM — kemungkinan besar ini penyebab tombol "tidak responsif" (klik tidak melakukan apa-apa karena fungsi berhenti di sini, sebelum sempat fetch ke server).');
@@ -1331,7 +1357,7 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
   goPage('page-success');
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; stepPetugasValues={}; _clearPendingMultiStep(); renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; stepPetugasValues={}; stepExtraValues={}; _clearPendingMultiStep(); renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
