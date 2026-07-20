@@ -12,7 +12,6 @@ let currentLayananId = null;
 let currentRekapInfo = null;
 let currentPhotoSteps = [];   // array step foto tambahan (photoSteps dari config)
 let currentPhotoStepIdx = 0;  // index step foto yang sedang aktif
-let stepPetugasValues = {};   // { [step.id]: namaPetugasTerpilih } — persist selama sesi form, dipulihkan saat back/forward antar step foto
 let session = null;
 let photoFiles = [];
 let galleryPhotos = {}; // { fieldId: srcUrlAtauDataURL } — riwayat foto kumulatif utk galeri verifikasi Mode Petugas
@@ -123,6 +122,11 @@ async function engineInit() {
   try { const s = sessionStorage.getItem('ptsp_session'); if (s) { session = JSON.parse(s); applySessionUI(); } } catch(e) {}
   await loadConfig();
   const params = new URLSearchParams(window.location.search);
+  const resumeKode = params.get('resume');
+  if (resumeKode) {
+    const berhasil = await _tryAutoResumeFromUrl(resumeKode);
+    if (berhasil) return; // sudah pindah ke halaman foto, tidak perlu render layanan list
+  }
   const jenis = params.get('jenis');
   if (jenis && CONFIG.forms && CONFIG.forms[jenis]) { showForm(jenis); } else { renderLayananList(); }
   // PATCH: auto-popup resume dimatikan sementara — terlalu mudah mengganggu sesi
@@ -130,6 +134,25 @@ async function engineInit() {
   // di localStorage (_savePendingTahap2/_clearPendingTahap2), tinggal disambungkan
   // ke pemicu yang lebih aman (mis. tombol manual) kalau sudah siap.
   // _checkPendingTahap2();
+}
+
+// Dipanggil dari engineInit() saat halaman kategori dibuka dengan ?resume=KODE
+// (redirect dari panel "Lanjutkan Layanan yang Tertunda" di index.html).
+// Return true kalau berhasil pindah ke tahap foto, false kalau gagal (fallback ke renderLayananList biasa).
+async function _tryAutoResumeFromUrl(kode) {
+  try {
+    const res = await fetch(API_URL + '?action=cekstatuspublik&kode=' + encodeURIComponent(kode) + '&_=' + Date.now(), { cache: 'no-store' });
+    const data = await res.json();
+    if (!data.ok || data.status_submit !== 'Menunggu Foto Tahap 2') {
+      showToast(data.ok ? 'Kode ini sudah selesai atau tidak membutuhkan foto tambahan.' : (data.error || 'Kode tidak ditemukan.'), true);
+      return false;
+    }
+    _doResumePhotoStep(data);
+    return true;
+  } catch (e) {
+    showToast('Tidak dapat memuat data lanjutan. Coba lagi.', true);
+    return false;
+  }
 }
 
 async function loadConfig() {
@@ -238,7 +261,10 @@ function renderLayananList() {
     list.appendChild(item);
   });
   if (currentKatLabel === 'Layanan Nikah') renderBannerEcoteologyLuar(list);
-  if (currentKatLabel === 'Layanan Nikah') renderCallbackPanel(list);
+  // PATCH: panel "Lanjutkan Layanan yang Tertunda" dipindah ke index.html
+  // (halaman utama PTSP) karena mekanismenya generik untuk semua kategori,
+  // bukan cuma Nikah. renderCallbackPanel() masih ada di bawah (dormant,
+  // tidak dipanggil) kalau suatu saat mau dipakai lagi di halaman kategori.
   goPage('page-layanan');
 }
 
@@ -1083,13 +1109,6 @@ function renderPhotoStep() {
   body.appendChild(progress);
 
   renderPhotoGallery(body);
-
-  if (step.petugasField) {
-    renderField(body, Object.assign({ type: 'select', required: true }, step.petugasField));
-    const pfEl = document.getElementById('field_' + step.petugasField.id);
-    if (pfEl && stepPetugasValues[step.id]) pfEl.value = stepPetugasValues[step.id];
-  }
-
   renderField(body, { id: step.id, label: step.label, type: 'photo', required: step.required !== false });
 
   if (galleryPhotos[step.id]) {
@@ -1146,16 +1165,6 @@ async function submitPhotoStep() {
     showToast('Foto wajib diunggah sebelum melanjutkan.', true);
     return;
   }
-  let namaPetugasTahap = '';
-  if (step.petugasField) {
-    const pfEl = document.getElementById('field_' + step.petugasField.id);
-    namaPetugasTahap = pfEl ? pfEl.value : '';
-    if (!namaPetugasTahap) {
-      showToast((step.petugasField.label || 'Nama petugas') + ' wajib dipilih sebelum melanjutkan.', true);
-      return;
-    }
-    stepPetugasValues[step.id] = namaPetugasTahap;
-  }
   // isLast dihitung dinamis: true jika SEMUA step lain (selain yang sedang disubmit)
   // sudah punya foto — ini menangani kasus redo step tengah setelah step-step
   // berikutnya sudah lebih dulu selesai (lihat redoPhotoStep).
@@ -1186,9 +1195,7 @@ async function submitPhotoStep() {
     action: isLast ? 'submitComplete' : 'submitPhotoStep',
     id: currentLayananId,
     stepIdx: currentPhotoStepIdx,
-    foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; }),
-    stepFieldId: step.petugasField ? step.id : undefined,
-    namaPetugas: step.petugasField ? namaPetugasTahap : undefined
+    foto: photoFiles.filter(function(p){ return p.name === fname; }).map(function(p){ return { field: p.name, mimeType: p.mimeType, base64: p.base64 }; })
   };
   btn = document.getElementById('btn-submit-complete');
   if (!btn) throw new Error('#btn-submit-complete tidak ditemukan di DOM — kemungkinan besar ini penyebab tombol "tidak responsif" (klik tidak melakukan apa-apa karena fungsi berhenti di sini, sebelum sempat fetch ke server).');
@@ -1304,7 +1311,7 @@ function tampilkanSuksesSelesai(id, fotoUrls) {
   goPage('page-success');
 }
 
-function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; stepPetugasValues={}; _clearPendingMultiStep(); renderLayananList(); }
+function resetAll() { currentJenis=null; photoFiles=[]; galleryPhotos={}; currentTahap2Field=null; currentLayananId=null; currentRekapInfo=null; _clearPendingMultiStep(); renderLayananList(); }
 var _tt;
 function showToast(msg,isError) { isError=isError||false; const t=document.getElementById('toast'); t.textContent=msg; t.className='toast show'+(isError?' error':''); clearTimeout(_tt); _tt=setTimeout(function(){t.classList.remove('show');},3500); }
 
@@ -1344,8 +1351,8 @@ function renderCallbackPanel(containerEl) {
   const header = document.createElement('div');
   header.style.cssText = 'padding:12px 16px;background:var(--green-light,#e8f5ee);cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none';
   header.innerHTML = '<span style="font-size:18px">\uD83D\uDCF7</span>'
-    + '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--green,#1a6b45)">Lanjutkan Foto yang Tertunda</div>'
-    + '<div style="font-size:11px;color:#555;margin-top:1px">Sudah dapat kode layanan? Lanjutkan langkah foto di sini.</div></div>'
+    + '<div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--green,#1a6b45)">Lanjutkan Layanan yang Tertunda</div>'
+    + '<div style="font-size:11px;color:#555;margin-top:1px">Sudah dapat kode layanan? Lanjutkan layanan Anda di sini.</div></div>'
     + '<span id="callback-toggle-icon" style="font-size:16px;color:var(--green,#1a6b45)">\uFF0B</span>';
   const body = document.createElement('div');
   body.id = 'callback-body';

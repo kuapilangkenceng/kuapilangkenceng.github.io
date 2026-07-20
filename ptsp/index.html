@@ -118,6 +118,26 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 .kat-count{position:absolute;top:8px;right:8px;background:var(--gold);color:var(--ink);font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px}
 @media(max-width:600px){.kategori-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
+<style>
+.review-card{background:linear-gradient(135deg,var(--gold-light) 0%,var(--white) 100%);border:1.5px solid #e5c84a;border-radius:var(--radius);padding:22px 20px;text-align:center;margin-bottom:22px}
+.review-stars{font-size:26px;letter-spacing:4px;margin-bottom:8px;color:var(--gold)}
+.review-title{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.review-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;line-height:1.5}
+.review-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#1a1a1a;border:1.5px solid var(--border);padding:11px 22px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:var(--transition)}
+.review-btn:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.review-btn img{width:18px;height:18px}
+.review-qr-toggle{display:block;margin:14px auto 0;background:none;border:none;color:var(--green);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-main);text-decoration:underline}
+.review-qr-box{display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border-mid)}
+.review-qr-box.show{display:block}
+.review-qr-box img{width:150px;height:150px;border-radius:var(--radius-sm);border:1.5px solid var(--border)}
+.review-qr-caption{font-size:11px;color:var(--ink-muted);margin-top:6px}
+.review-qr-download{display:inline-block;margin-top:8px;font-size:11.5px;color:var(--green);font-weight:600;text-decoration:none}
+.floating-review-btn{position:fixed;bottom:20px;right:16px;z-index:200;display:flex;align-items:center;gap:8px;background:var(--white);color:var(--ink);border:1.5px solid var(--border);padding:11px 16px;border-radius:50px;font-size:13px;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,.18);transition:var(--transition)}
+.floating-review-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.22)}
+.floating-review-btn img{width:20px;height:20px}
+.floating-review-close{position:absolute;top:-6px;right:-6px;width:18px;height:18px;background:var(--ink-muted);color:#fff;border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700;border:2px solid var(--cream)}
+@media(max-width:480px){.floating-review-btn{padding:9px 13px;font-size:12px;bottom:14px;right:12px}.floating-review-btn span.fr-label{display:none}.review-card{padding:18px 14px}}
+</style>
 </head>
 <body>
 <div class="session-bar" id="session-bar"><span class="session-dot"></span><span id="session-info">Petugas: -</span><a href="post-artikel.html" id="btn-post-artikel" style="display:none;align-items:center;gap:5px;padding:4px 11px;background:rgba(255,255,255,.18);color:#fff;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;font-family:var(--font-main)">✏️ Post Artikel</a><a href="galeri-upload.html" id="btn-upload-galeri" style="display:none;align-items:center;gap:5px;padding:4px 11px;background:rgba(201,160,48,.85);color:#1b5e35;border-radius:6px;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap;font-family:var(--font-main)">🖼️ Upload Galeri</a><button onclick="logout()">Keluar</button></div>
@@ -142,16 +162,93 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 </div>
 <div class="section-label">PTSP Digital</div>
 <div class="section-title">Pilih Kategori Layanan</div>
+
 <div class="kategori-grid" id="kategori-grid">
 <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
 </div>
+
+<div id="resume-panel" style="margin-bottom:22px;border:1.5px solid var(--green-mid);border-radius:var(--radius);overflow:hidden">
+  <div id="resume-header" style="padding:12px 16px;background:var(--green-light);cursor:pointer;display:flex;align-items:center;gap:10px;user-select:none">
+    <span style="font-size:18px">📋</span>
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:700;color:var(--green)">Lanjutkan Layanan yang Tertunda</div>
+      <div style="font-size:11px;color:#555;margin-top:1px">Sudah dapat kode layanan? Lanjutkan layanan Anda di sini.</div>
+    </div>
+    <span id="resume-toggle-icon" style="font-size:16px;color:var(--green)">＋</span>
+  </div>
+  <div id="resume-body" style="display:none;padding:16px">
+    <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:6px">Masukkan Kode Layanan Anda:</div>
+    <input id="resume-kode-input" class="form-control" type="text" placeholder="Contoh: LYN-20240624-001"
+      style="margin-bottom:8px" onkeydown="if(event.key==='Enter')resumeLayanan()"/>
+    <div id="resume-kode-error" style="display:none;color:var(--red);font-size:12px;margin-bottom:8px"></div>
+    <button class="btn-submit" onclick="resumeLayanan()" id="btn-resume-kode" style="padding:10px">🔍 Cari &amp; Lanjutkan</button>
+  </div>
+</div>
+
+<div class="review-card">
+  <div class="review-stars">★★★★★</div>
+  <div class="review-title">Puas dengan Pelayanan Kami?</div>
+  <div class="review-sub">Bantu kami berkembang dengan memberikan ulasan &amp; rating di Google Maps. Masukan Anda sangat berarti.</div>
+  <a class="review-btn" href="https://search.google.com/local/writereview?placeid=ChIJEbcMjz7GeS4RXqX1HeIL4o4" target="_blank" rel="noopener">
+    <img src="https://www.google.com/favicon.ico" alt="Google" onerror="this.style.display='none'"/>
+    Beri Ulasan di Google
+  </a>
+  <button class="review-qr-toggle" onclick="toggleReviewQR()" id="btn-review-qr-toggle">📱 Tampilkan QR Code</button>
+  <div class="review-qr-box" id="review-qr-box">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fsearch.google.com%2Flocal%2Fwritereview%3Fplaceid%3DChIJEbcMjz7GeS4RXqX1HeIL4o4" alt="QR Code Ulasan Google KUA Pilangkenceng"/>
+    <div class="review-qr-caption">Scan untuk memberi ulasan langsung dari HP</div><br/>
+    <a class="review-qr-download" href="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https%3A%2F%2Fsearch.google.com%2Flocal%2Fwritereview%3Fplaceid%3DChIJEbcMjz7GeS4RXqX1HeIL4o4" download="QR-Ulasan-KUA-Pilangkenceng.png" target="_blank" rel="noopener">⬇️ Download QR (untuk dicetak)</a>
+  </div>
+</div>
 </main>
+
+<a class="floating-review-btn" id="floating-review-btn" href="https://search.google.com/local/writereview?placeid=ChIJEbcMjz7GeS4RXqX1HeIL4o4" target="_blank" rel="noopener">
+  <img src="https://www.google.com/favicon.ico" alt="" onerror="this.style.display='none'"/>
+  <span class="fr-label">Beri Ulasan</span>
+  <span class="floating-review-close" onclick="event.preventDefault();event.stopPropagation();document.getElementById('floating-review-btn').style.display='none';sessionStorage.setItem('hideFloatingReview','1')">✕</span>
+</a>
 <div class="toast" id="toast"></div>
 <script>const API_URL=(typeof KUA_CONFIG!=="undefined"&&KUA_CONFIG.API_URL)?KUA_CONFIG.API_URL:"https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec";
 var session=null;
 try{var _s=sessionStorage.getItem("ptsp_session");if(_s){session=JSON.parse(_s);var _btn=document.getElementById("btn-login-header");if(_btn){_btn.textContent="\u2705 "+session.nama;_btn.classList.add("active");}var _bar=document.getElementById("session-bar");if(_bar){_bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";var _ba=document.getElementById("btn-post-artikel");if(_ba)_ba.style.display="inline-flex";var _bg=document.getElementById("btn-upload-galeri");if(_bg)_bg.style.display="inline-flex";}}}catch(e){}
 var KAT_PAGES={"Layanan Nikah":"nikah.html","Layanan Wakaf":"wakaf.html","Layanan Kiblat":"kiblat.html","SKT Masjid / Musholla":"skt.html","Konseling & Rekomendasi":"konseling.html","Konsultasi Umum":"konsultasi-umum.html"};
 var KAT_ICONS={"Layanan Nikah":"\uD83D\uDC8D","Layanan Wakaf":"\uD83C\uDFE0","Layanan Kiblat":"\uD83E\uDDED","SKT Masjid / Musholla":"\uD83D\uDD4B","Konseling & Rekomendasi":"\uD83E\uDD1D","Konsultasi Umum":"\uD83D\uDCAC"};
+document.getElementById("resume-header").onclick=function(){
+  var body=document.getElementById("resume-body");
+  var open=body.style.display!=="none";
+  body.style.display=open?"none":"block";
+  document.getElementById("resume-toggle-icon").textContent=open?"\uFF0B":"\uFF0D";
+};
+async function resumeLayanan(){
+  var input=document.getElementById("resume-kode-input");
+  var kode=input.value.trim().toUpperCase();
+  var errEl=document.getElementById("resume-kode-error");
+  var btn=document.getElementById("btn-resume-kode");
+  if(!kode){errEl.textContent="Masukkan kode layanan.";errEl.style.display="block";return;}
+  errEl.style.display="none";
+  btn.disabled=true;btn.textContent="Mencari...";
+  try{
+    var res=await fetch(API_URL+"?action=cekstatuspublik&kode="+encodeURIComponent(kode)+"&_="+Date.now(),{cache:"no-store"});
+    var data=await res.json();
+    if(!data.ok){
+      errEl.textContent=data.error||"Kode tidak ditemukan.";errEl.style.display="block";
+      btn.disabled=false;btn.textContent="\uD83D\uDD0D Cari & Lanjutkan";return;
+    }
+    if(data.status_submit!=="Menunggu Foto Tahap 2"){
+      errEl.textContent="Kode ini sudah selesai atau tidak membutuhkan foto tambahan.";errEl.style.display="block";
+      btn.disabled=false;btn.textContent="\uD83D\uDD0D Cari & Lanjutkan";return;
+    }
+    var page=KAT_PAGES[data.kategori];
+    if(!page){
+      errEl.textContent="Kategori layanan tidak dikenali. Hubungi petugas KUA.";errEl.style.display="block";
+      btn.disabled=false;btn.textContent="\uD83D\uDD0D Cari & Lanjutkan";return;
+    }
+    window.location.href=page+"?resume="+encodeURIComponent(data.id);
+  }catch(e){
+    errEl.textContent="Tidak dapat terhubung ke server. Coba lagi.";errEl.style.display="block";
+    btn.disabled=false;btn.textContent="\uD83D\uDD0D Cari & Lanjutkan";
+  }
+}
 async function init(){
   try{var res=await fetch(API_URL+"?action=getConfig&_="+Date.now());var cfg=await res.json();renderGrid(cfg);}catch(e){renderGridFallback();}
 }
@@ -179,6 +276,8 @@ function toggleLoginPanel(){var box=document.getElementById("login-box");var ope
 async function doLogin(){var u=document.getElementById("inp-username").value.trim();var p=document.getElementById("inp-password").value;var err=document.getElementById("login-error");var btn=document.getElementById("btn-do-login");if(!u||!p){err.style.display="block";err.textContent="Isi username dan password.";return;}btn.disabled=true;btn.textContent="Memverifikasi...";try{var res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"login",username:u,password:p})});var d=await res.json();if(d.ok){session=Object.assign({},d.user,{token:d.token});sessionStorage.setItem("ptsp_session",JSON.stringify(session));err.style.display="none";document.getElementById("login-box").style.display="none";var btn2=document.getElementById("btn-login-header");btn2.textContent="\u2705 "+session.nama;btn2.classList.add("active");var bar=document.getElementById("session-bar");bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";showToast("Login berhasil!");}else{err.style.display="block";err.textContent=d.error||"Login gagal.";}}catch(e){err.style.display="block";err.textContent="Tidak dapat terhubung ke server. Coba lagi beberapa saat.";}btn.disabled=false;btn.textContent="Masuk";}
 function logout(){if(session&&session.token){try{fetch(API_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"logout",token:session.token})});}catch(e){}}session=null;sessionStorage.removeItem("ptsp_session");document.getElementById("btn-login-header").textContent="\uD83D\uDD10 Petugas";document.getElementById("btn-login-header").classList.remove("active");document.getElementById("session-bar").classList.remove("show");showToast("Anda telah keluar.");}
 var _tt;function showToast(msg,isError){isError=isError||false;var t=document.getElementById("toast");t.textContent=msg;t.className="toast show"+(isError?" error":"");clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove("show");},3500);}
+function toggleReviewQR(){var box=document.getElementById("review-qr-box");var open=box.classList.toggle("show");document.getElementById("btn-review-qr-toggle").textContent=open?"📱 Sembunyikan QR Code":"📱 Tampilkan QR Code";}
+try{if(sessionStorage.getItem("hideFloatingReview")==="1"){var _fb=document.getElementById("floating-review-btn");if(_fb)_fb.style.display="none";}}catch(e){}
 init();</script>
 
 <!-- KUA-SECURITY-DETERRENT -->
