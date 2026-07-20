@@ -74,6 +74,19 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 .success-id{display:inline-block;background:var(--green-light);color:var(--green);font-size:22px;font-weight:800;padding:12px 28px;border-radius:var(--radius);border:2px solid var(--green-mid);margin:12px 0 8px;letter-spacing:1px}
 .success-screen p{color:var(--ink-soft);font-size:14px;margin-bottom:20px}
 .btn-ulang{background:var(--green);color:white;padding:12px 28px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-main);transition:var(--transition)}.btn-ulang:hover{opacity:.9}
+.review-card{background:linear-gradient(135deg,var(--gold-light) 0%,var(--white) 100%);border:1.5px solid #e5c84a;border-radius:var(--radius);padding:22px 20px;text-align:center;margin-top:20px}
+.review-stars{font-size:26px;letter-spacing:4px;margin-bottom:8px;color:var(--gold)}
+.review-title{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.review-sub{font-size:12.5px;color:var(--ink-soft);margin-bottom:16px;line-height:1.5}
+.review-btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#1a1a1a;border:1.5px solid var(--border);padding:11px 22px;border-radius:var(--radius-sm);font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:var(--transition)}
+.review-btn:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.review-btn img{width:18px;height:18px}
+.review-qr-toggle{display:block;margin:14px auto 0;background:none;border:none;color:var(--green);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-main);text-decoration:underline}
+.review-qr-box{display:none;margin-top:14px;padding-top:14px;border-top:1px dashed var(--border-mid)}
+.review-qr-box.show{display:block}
+.review-qr-box img{width:150px;height:150px;border-radius:var(--radius-sm);border:1.5px solid var(--border)}
+.review-qr-caption{font-size:11px;color:var(--ink-muted);margin-top:6px}
+.review-qr-download{display:inline-block;margin-top:8px;font-size:11.5px;color:var(--green);font-weight:600;text-decoration:none}
 .field-error{font-size:11.5px;color:var(--red);margin-top:4px;display:none}.form-control.invalid{border-color:var(--red);box-shadow:0 0 0 3px rgba(192,57,43,.1)}
 .session-bar{background:linear-gradient(90deg,#0d4d2e 0%,var(--green) 100%);color:rgba(255,255,255,.9);padding:9px 24px;display:none;align-items:center;gap:10px;font-size:12.5px}
 .session-bar.show{display:flex}.session-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;flex-shrink:0}
@@ -160,12 +173,28 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
 <div class="success-id" id="success-id">LYN-...</div>
 <p>Simpan nomor ini sebagai bukti pengajuan.</p>
 <button class="btn-ulang" onclick="resetAll()">+ Ajukan Layanan Lain</button>
+<div class="review-card">
+  <div class="review-stars">★★★★★</div>
+  <div class="review-title">Puas dengan Pelayanan Kami?</div>
+  <div class="review-sub">Bantu kami berkembang dengan memberikan ulasan &amp; rating di Google Maps. Masukan Anda sangat berarti.</div>
+  <a class="review-btn" href="https://search.google.com/local/writereview?placeid=ChIJEbcMjz7GeS4RXqX1HeIL4o4" target="_blank" rel="noopener">
+    <img src="https://www.google.com/favicon.ico" alt="Google" onerror="this.style.display='none'"/>
+    Beri Ulasan di Google
+  </a>
+  <button class="review-qr-toggle" onclick="toggleReviewQR()" id="btn-review-qr-toggle">📱 Tampilkan QR Code</button>
+  <div class="review-qr-box" id="review-qr-box">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https%3A%2F%2Fsearch.google.com%2Flocal%2Fwritereview%3Fplaceid%3DChIJEbcMjz7GeS4RXqX1HeIL4o4" alt="QR Code Ulasan Google KUA Pilangkenceng"/>
+    <div class="review-qr-caption">Scan untuk memberi ulasan langsung dari HP</div><br/>
+    <a class="review-qr-download" href="https://api.qrserver.com/v1/create-qr-code/?size=600x600&data=https%3A%2F%2Fsearch.google.com%2Flocal%2Fwritereview%3Fplaceid%3DChIJEbcMjz7GeS4RXqX1HeIL4o4" download="QR-Ulasan-KUA-Pilangkenceng.png" target="_blank" rel="noopener">⬇️ Download QR (untuk dicetak)</a>
+  </div>
+</div>
 </div></div></div></div>
 </main>
 <div class="toast" id="toast"></div>
 <script>window.PTSP_KATEGORI_ID="nikah";window.PTSP_KATEGORI_LABEL="Layanan Nikah";</script>
 <script src="ptsp-engine.js"></script>
 <script>
+function toggleReviewQR(){var box=document.getElementById("review-qr-box");var open=box.classList.toggle("show");document.getElementById("btn-review-qr-toggle").textContent=open?"📱 Sembunyikan QR Code":"📱 Tampilkan QR Code";}
 document.getElementById('kat-label-el').textContent = window.PTSP_KATEGORI_LABEL;
 engineInit();
 </script>
