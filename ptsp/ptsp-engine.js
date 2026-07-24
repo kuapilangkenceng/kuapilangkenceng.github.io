@@ -589,7 +589,7 @@ function triggerAutofillBimwin() {
       list.forEach(function(r) {
         var opt = document.createElement('option');
         opt.value = r.id;
-        opt.textContent = r.label;
+        opt.textContent = r.id + ' | ' + r.label;
         opt.dataset.payload = JSON.stringify(r.data);
         sel.appendChild(opt);
       });
@@ -678,7 +678,7 @@ function _loadCatinRecall() {
       list.forEach(function(r) {
         var opt = document.createElement('option');
         opt.value = r.id;
-        opt.textContent = r.label;
+        opt.textContent = r.id + ' | ' + r.label;
         sel.appendChild(opt);
       });
       var infoEl = document.getElementById('catin-recall-info');
