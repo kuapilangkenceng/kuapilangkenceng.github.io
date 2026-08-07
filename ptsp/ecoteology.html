@@ -673,14 +673,14 @@ document.getElementById('formEco').addEventListener('submit', async e => {
     const res  = await fetch(API_URL, { method:'POST', body: JSON.stringify(payload) });
     const json = await res.json();
 
-    if (json.success) {
+    if (json.ok || json.success) {
       document.getElementById('noLayanan').textContent = json.id || 'Terkirim';
       document.getElementById('formEco').style.display = 'none';
       document.querySelector('.info-box').style.display = 'none';
       document.getElementById('screenSukses').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      throw new Error(json.message || 'Gagal mengirim data');
+      throw new Error(json.error || json.message || 'Gagal mengirim data');
     }
   } catch(err) {
     showToast('Gagal: ' + err.message, 'gagal');
