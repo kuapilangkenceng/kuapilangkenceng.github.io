@@ -560,7 +560,28 @@ textarea.form-control {
 
 <script>
 // ── Konfigurasi ──────────────────────────────────────────────
-const API_URL = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec'; // ← ganti dengan URL Apps Script
+const API_URL = 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+
+// ── reCAPTCHA v3 (wajib — backend menolak submit tanpa recaptchaToken) ──
+const RECAPTCHA_SITE_KEY = '6LfzESwtAAAAAFrIA4vXokZz15-1CW5_CGIWwr6E';
+let _recaptchaReady = false;
+(function () {
+  const s = document.createElement('script');
+  s.src = 'https://www.google.com/recaptcha/api.js?render=' + RECAPTCHA_SITE_KEY;
+  s.onload = function () { _recaptchaReady = true; };
+  document.head.appendChild(s);
+})();
+
+async function getRecaptchaToken(action) {
+  if (!_recaptchaReady || typeof grecaptcha === 'undefined') return '';
+  try {
+    return await new Promise(function (resolve) {
+      grecaptcha.ready(function () {
+        grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: action || 'submit' }).then(resolve).catch(function () { resolve(''); });
+      });
+    });
+  } catch (e) { return ''; }
+}
 
 // ── Upload Foto ──────────────────────────────────────────────
 let fotosBase64 = [];
@@ -630,6 +651,8 @@ document.getElementById('formEco').addEventListener('submit', async e => {
   document.getElementById('btnText').style.display = 'none';
   document.getElementById('spinner').style.display = 'block';
 
+  const recaptchaToken = await getRecaptchaToken('submit_layanan');
+
   const payload = {
     action: 'submit',
     kategori: 'nikah',
@@ -642,7 +665,8 @@ document.getElementById('formEco').addEventListener('submit', async e => {
     desa_ijab: g('desa_ijab'),
     nama_pohon: g('nama_pohon'),
     keterangan_pohon: g('keterangan_pohon'),
-    fotos: fotosBase64
+    fotos: fotosBase64,
+    recaptchaToken: recaptchaToken
   };
 
   try {
@@ -679,8 +703,8 @@ function showToast(msg, type='') {
   setTimeout(() => t.className = 'toast', 3000);
 }
 
-// ── Set tanggal max = hari ini ────────────────────────────────
-document.getElementById('tgl_ijab').max = new Date().toISOString().split('T')[0];
+// ── Set tanggal min = hari ini (tanggal lampau off, mendatang on) ──
+document.getElementById('tgl_ijab').min = new Date().toISOString().split('T')[0];
 </script>
 
 <!-- KUA-SECURITY-DETERRENT -->
