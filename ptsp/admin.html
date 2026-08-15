@@ -246,6 +246,26 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
 .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
+/* ── STATISTIK BULANAN ── */
+.stat-bulan-picker {
+  padding: 7px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 12.5px; font-family: var(--font); color: var(--ink); background: var(--white);
+}
+.stat-bulan-total {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg, #f6f8f6); border-radius: var(--radius-sm);
+  padding: 12px 16px; margin-bottom: 16px;
+}
+.stat-bulan-total .big { font-size: 26px; font-weight: 800; color: var(--green); }
+.stat-bulan-total .lbl { font-size: 12px; color: var(--ink-muted); }
+.hbar-section-title { font-size: 12px; font-weight: 700; color: var(--ink-muted); margin: 4px 0 10px; text-transform: uppercase; letter-spacing: .3px; }
+.hbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.hbar-lbl { flex: 0 0 130px; font-size: 12px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hbar-track { flex: 1; height: 9px; background: #eef2ee; border-radius: 5px; overflow: hidden; }
+.hbar-fill { height: 100%; background: var(--green); border-radius: 5px; transition: width .5s ease; }
+.hbar-val { flex: 0 0 26px; font-size: 12px; font-weight: 700; color: var(--green); text-align: right; }
+.stat-bulan-empty { text-align: center; color: var(--ink-muted); font-size: 12.5px; padding: 20px 0; }
+
 /* ── FILTER BAR ── */
 .filter-bar {
   background: var(--white); border: 1.5px solid var(--border);
@@ -736,6 +756,34 @@ nav { flex: 1; padding: 10px 0; overflow-y: auto; }
             </table>
           </div>
         </div>
+
+        <!-- Statistik Bulanan -->
+        <div class="table-card" id="statistik-bulanan-card">
+          <div class="table-header">
+            <h3>&#128202; Statistik Layanan Bulanan</h3>
+            <input type="month" id="statistik-bulan-picker" class="stat-bulan-picker" onchange="loadStatistikBulanan(this.value)">
+          </div>
+
+          <div class="stat-bulan-total">
+            <div class="big" id="statbln-total">&mdash;</div>
+            <div class="lbl">layanan selesai dilayani bulan ini</div>
+          </div>
+
+          <div id="statbln-kategori-wrap">
+            <div class="hbar-section-title">Per Kategori</div>
+            <div id="statbln-kategori"></div>
+          </div>
+
+          <div id="statbln-jenis-wrap" style="margin-top:18px">
+            <div class="hbar-section-title">Per Jenis Layanan</div>
+            <div style="overflow-x:auto">
+              <table class="tbl">
+                <thead><tr><th>Jenis Layanan</th><th style="text-align:right">Jumlah Selesai</th></tr></thead>
+                <tbody id="statbln-jenis-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- ═══ PAGE: DATA LAYANAN ═══ -->
@@ -1222,6 +1270,10 @@ function startSession(user) {
   applyMenuAkses(user.menu_akses);
   document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   document.getElementById('stat-hari-ini-tgl').textContent = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+  // Statistik Bulanan: default ke bulan berjalan (format YYYY-MM)
+  var bulanSekarang = new Date().toISOString().slice(0, 7);
+  var pickerBln = document.getElementById('statistik-bulan-picker');
+  if (pickerBln) pickerBln.value = bulanSekarang;
   // Tampilkan burger menu jika mobile
   if (window.innerWidth <= 900) document.getElementById('btn-menu').style.display = 'block';
   loadAll();
@@ -1243,7 +1295,7 @@ function logout() {
    LOAD DATA
 ══════════════════════════════════════════════ */
 async function loadAll() {
-  await Promise.all([loadStats(), loadData()]);
+  await Promise.all([loadStats(), loadData(), loadStatistikBulanan()]);
 }
 
 async function loadStats() {
@@ -1323,6 +1375,66 @@ function renderStats() {
   renderTrenChart(stats.trenHarian || []);
   // Status donut (canvas)
   renderStatusChart(stats.byStatus);
+}
+
+/* ══════════════════════════════════════════════
+   STATISTIK BULANAN
+══════════════════════════════════════════════ */
+const NAMA_BULAN_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+async function loadStatistikBulanan(bulan) {
+  var pickerBln = document.getElementById('statistik-bulan-picker');
+  var target = bulan || (pickerBln ? pickerBln.value : '') || new Date().toISOString().slice(0, 7);
+  try {
+    const res = await fetch(`${API_URL}?action=getstatistikbulanan&bulan=${target}&_=${Date.now()}`);
+    const data = await res.json();
+    if (data.ok) renderStatistikBulanan(data);
+  } catch (e) {
+    console.error('Gagal memuat statistik bulanan:', e);
+  }
+}
+
+function renderStatistikBulanan(data) {
+  document.getElementById('statbln-total').textContent = data.totalSelesai || 0;
+
+  var lblEl = document.querySelector('.stat-bulan-total .lbl');
+  if (lblEl && data.bulan) {
+    var parts = data.bulan.split('-');
+    var namaBulan = NAMA_BULAN_ID[parseInt(parts[1], 10) - 1] || '';
+    lblEl.textContent = 'layanan selesai dilayani ' + namaBulan + ' ' + parts[0];
+  }
+
+  // Breakdown per kategori (horizontal bar)
+  var katWrap = document.getElementById('statbln-kategori');
+  var perKat = data.perKategori || [];
+  if (!perKat.length) {
+    katWrap.innerHTML = '<div class="stat-bulan-empty">Belum ada layanan selesai bulan ini.</div>';
+  } else {
+    var maxKat = Math.max.apply(null, perKat.map(function(k) { return k.jumlah; }));
+    katWrap.innerHTML = perKat.map(function(k) {
+      var pct = maxKat > 0 ? Math.round((k.jumlah / maxKat) * 100) : 0;
+      return '<div class="hbar-row">' +
+        '<div class="hbar-lbl">' + escapeHtmlAdmin(k.kategori) + '</div>' +
+        '<div class="hbar-track"><div class="hbar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="hbar-val">' + k.jumlah + '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  // Breakdown per jenis (tabel)
+  var jenisBody = document.getElementById('statbln-jenis-tbody');
+  var perJenis = data.perJenis || [];
+  if (!perJenis.length) {
+    jenisBody.innerHTML = '<tr><td colspan="2" style="text-align:center;color:var(--ink-muted)">Belum ada data.</td></tr>';
+  } else {
+    jenisBody.innerHTML = perJenis.map(function(j) {
+      return '<tr><td>' + escapeHtmlAdmin(j.jenis) + '</td><td style="text-align:right;font-weight:700">' + j.jumlah + '</td></tr>';
+    }).join('');
+  }
+}
+
+function escapeHtmlAdmin(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function renderTrenChart(tren) {
