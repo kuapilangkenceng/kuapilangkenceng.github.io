@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pengumuman Kehendak Nikah — KUA Pilangkenceng</title>
+<meta name="description" content="Pengumuman kehendak nikah KUA Kecamatan Pilangkenceng — jadwal akad nikah yang akan datang.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --hijau-tua:#1b5e35;--hijau:#237a3e;--hijau-muda:#2ea04f;
+  --hijau-terang:#eaf5ee;--hijau-border:#c3dfc9;
+  --emas:#c9a030;--putih:#ffffff;--abu:#f4f6f4;
+  --teks:#1a2b1e;--teks-abu:#536356;--teks-ringan:#8fa392;
+  --merah-muda:#f2b8c6;--merah-tua:#7b2d3e;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --font-display:'Playfair Display',serif;
+  --radius:10px;--radius-lg:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);color:var(--teks);background:var(--abu);font-size:14px;line-height:1.65}
+
+/* ── NAV ── */
+.navbar{background:var(--hijau-tua);padding:.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:36px;height:36px;border-radius:8px;object-fit:cover}
+.nav-brand-text .nav-title{color:#fff;font-weight:700;font-size:14px;line-height:1.2}
+.nav-brand-text .nav-sub{color:rgba(255,255,255,.7);font-size:11px}
+.nav-back{color:rgba(255,255,255,.85);font-size:12.5px;font-weight:600;text-decoration:none;padding:6px 14px;border:1.5px solid rgba(255,255,255,.3);border-radius:8px;transition:all .15s}
+.nav-back:hover{background:rgba(255,255,255,.15);color:#fff}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#7b2d3e 0%,#a13a52 60%,#c0546a 100%);padding:2.5rem 1.5rem 2rem;text-align:center}
+.hero h1{font-family:var(--font-display);font-size:clamp(22px,4vw,32px);color:#fff;margin-bottom:.5rem}
+.hero p{color:rgba(255,255,255,.85);font-size:13.5px;max-width:520px;margin:0 auto}
+
+/* ── MAIN ── */
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+
+/* ── SKELETON ── */
+.skeleton-main{aspect-ratio:5/7;max-width:400px;margin:0 auto;background:linear-gradient(90deg,#f2dde2 25%,#f8ecee 50%,#f2dde2 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius-lg)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── STATS ── */
+.stats-bar{text-align:center;margin-bottom:1.25rem}
+.stats-count{font-size:12.5px;color:var(--teks-abu);font-weight:500}
+.stats-count strong{color:var(--merah-tua)}
+
+/* ── SLIDESHOW BESAR ── */
+.poster-slide-wrap{position:relative;overflow:hidden;border-radius:var(--radius-lg);background:#fff8f5;border:1.5px solid var(--merah-muda);max-width:400px;margin:0 auto;box-shadow:0 8px 32px rgba(123,45,62,.12)}
+.poster-slide-track{position:relative;aspect-ratio:5/7}
+.poster-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;cursor:pointer}
+.poster-slide.active{opacity:1}
+.poster-slide img{width:100%;height:100%;object-fit:cover;display:block}
+/* fallback (record lama tanpa poster_url) */
+.poster-slide-fallback{width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px 28px;background:url('assets/img/kehendakNikah.webp') center/cover no-repeat}
+.pf-tgl{font-size:10.5px;font-weight:700;letter-spacing:1px;color:#8b3a52;text-transform:uppercase;margin-bottom:8px;background:rgba(255,255,255,.6);padding:2px 10px;border-radius:20px}
+.pf-nama{font-size:19px;font-weight:800;color:#5a1a2e;line-height:1.4;font-family:Georgia,'Times New Roman',serif;text-shadow:0 1px 3px rgba(255,255,255,.8)}
+.pf-amp{font-size:26px;color:#c0546a;margin:2px 0;display:block;font-family:Georgia,serif}
+.pf-desa{font-size:11.5px;color:#7b2d3e;margin-top:10px;background:rgba(255,255,255,.65);padding:3px 10px;border-radius:20px}
+.pf-note{font-size:10px;color:#a15a6d;margin-top:14px;font-style:italic}
+
+.poster-slide-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.75);border:none;border-radius:50%;width:34px;height:34px;font-size:19px;color:#c0546a;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.poster-slide-nav:hover{background:rgba(255,255,255,.95)}
+.poster-slide-nav.prev{left:10px}
+.poster-slide-nav.next{right:10px}
+.poster-slide-dots{display:flex;justify-content:center;gap:6px;padding:10px 0 6px;background:rgba(255,240,245,.7)}
+.psd{width:7px;height:7px;border-radius:50%;background:var(--merah-muda);cursor:pointer;transition:background .3s,transform .3s;border:none;padding:0}
+.psd.active{background:#c0546a;transform:scale(1.35)}
+.poster-slide-counter{font-size:10.5px;color:#c0546a;text-align:center;padding-bottom:6px;font-weight:600;background:rgba(255,240,245,.7)}
+
+/* ── INFO STRIP DI BAWAH SLIDE ── */
+.poster-info{max-width:400px;margin:.875rem auto 0;text-align:center}
+.poster-info .pi-nama{font-size:14px;font-weight:700;color:var(--merah-tua)}
+.poster-info .pi-sub{font-size:11.5px;color:var(--teks-abu);margin-top:2px}
+.poster-info .pi-zoom-hint{font-size:10.5px;color:var(--teks-ringan);margin-top:6px}
+
+/* ── THUMBNAIL STRIP ── */
+.thumb-strip{display:flex;gap:.625rem;overflow-x:auto;padding:1.5rem .25rem .5rem;scroll-behavior:smooth}
+.thumb-item{flex:0 0 auto;width:64px;aspect-ratio:5/7;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;opacity:.55;transition:all .2s;background:var(--hijau-terang)}
+.thumb-item.active{border-color:#c0546a;opacity:1;transform:scale(1.05)}
+.thumb-item img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb-item .thumb-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--hijau-terang)}
+
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--teks-ringan)}
+.empty-state .icon{font-size:52px;margin-bottom:1rem;display:block}
+.empty-state h3{font-family:var(--font-display);font-size:18px;color:var(--teks-abu);margin-bottom:.5rem}
+.empty-state p{font-size:13px;line-height:1.6}
+
+/* ── LIGHTBOX ── */
+.lb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;flex-direction:column;align-items:center;justify-content:center}
+.lb-overlay.open{display:flex}
+.lb-img-wrap{max-width:92vw;max-height:85vh;display:flex;align-items:center;justify-content:center}
+.lb-overlay img{max-width:92vw;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.lb-close{position:fixed;top:16px;right:20px;color:#fff;font-size:30px;cursor:pointer;background:none;border:none;line-height:1;padding:4px;opacity:.8;transition:opacity .15s}
+.lb-close:hover{opacity:1}
+.lb-nav{position:fixed;top:50%;transform:translateY(-50%);color:#fff;font-size:36px;cursor:pointer;background:rgba(255,255,255,.1);border:none;padding:8px 14px;border-radius:8px;transition:background .15s;line-height:1}
+.lb-nav:hover{background:rgba(255,255,255,.2)}
+.lb-prev{left:12px}.lb-next{right:12px}
+.lb-counter{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:12px}
+
+/* ── FOOTER ── */
+footer{background:var(--hijau-tua);color:rgba(255,255,255,.7);text-align:center;padding:1.25rem;font-size:12px;margin-top:2rem}
+footer a{color:rgba(255,255,255,.85);text-decoration:none}
+
+@media(max-width:600px){
+  .navbar{padding:.75rem 1rem}
+  .hero{padding:1.75rem 1rem 1.5rem}
+  .container{padding:1.5rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <img src="assets/img/Gedung.jpg" alt="KUA" class="nav-logo" onerror="this.style.display='none'">
+    <div class="nav-brand-text">
+      <div class="nav-title">KUA Pilangkenceng</div>
+      <div class="nav-sub">Kab. Madiun</div>
+    </div>
+  </a>
+  <a href="index.html" class="nav-back">← Beranda</a>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <h1>&#128140; Pengumuman Kehendak Nikah</h1>
+  <p>Jadwal akad nikah yang akan datang di KUA Kecamatan Pilangkenceng. Pengumuman ini sesuai ketentuan syariat, minimal 10 hari sebelum akad dilaksanakan.</p>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="container">
+  <div class="stats-bar" id="statsBar">
+    <span class="stats-count">Memuat data...</span>
+  </div>
+
+  <div id="mainWrap">
+    <div class="skeleton-main" id="skeleton"></div>
+  </div>
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lb-overlay" id="lbOverlay">
+  <button class="lb-close" onclick="lbClose()">×</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <div class="lb-img-wrap">
+    <img id="lbImg" src="" alt="">
+  </div>
+  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
+  <div class="lb-counter" id="lbCounter"></div>
+</div>
+
+<footer>
+  <p>© 2026 KUA Kecamatan Pilangkenceng &nbsp;·&nbsp; <a href="index.html">Beranda</a> &nbsp;·&nbsp; <a href="ptsp/">PTSP Digital</a></p>
+</footer>
+
+<script>
+const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.apiUrl)
+  ? KUA_CONFIG.apiUrl
+  : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+
+let list = [];   // hasil filter (tanggal akad belum lewat), urut terdekat dulu
+let idx  = 0;
+let autoTimer = null;
+let lbIdx = 0;
+
+const BLN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function fmtTgl(s) {
+  if (!s) return '-';
+  const d = new Date(s);
+  if (isNaN(d)) return s;
+  return d.getDate() + ' ' + BLN[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── LOAD DATA ── */
+async function loadPengumuman() {
+  try {
+    const res  = await fetch(API_URL + '?action=getJadwalNikah&_=' + Date.now(), { cache: 'no-store' });
+    const data = await res.json();
+    const raw  = data.jadwal || [];
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    list = raw
+      .filter(function(r) {
+        const tglStr = r.tanggal_akad || r.tgl_akad || r.tanggal;
+        const d = new Date(tglStr);
+        return !isNaN(d) && d >= today; // sembunyikan yang tanggal akadnya sudah lewat
+      })
+      .sort(function(a, b) {
+        return new Date(a.tanggal_akad || a.tgl_akad) - new Date(b.tanggal_akad || b.tgl_akad);
+      });
+  } catch (e) {
+    list = null; // tandai gagal fetch, beda dari "kosong"
+  }
+  render();
+}
+
+/* ── RENDER UTAMA ── */
+function render() {
+  const skeleton = document.getElementById('skeleton');
+  if (skeleton) skeleton.remove();
+
+  const statsBar = document.getElementById('statsBar');
+  const mainWrap = document.getElementById('mainWrap');
+
+  if (list === null) {
+    statsBar.innerHTML = '<span class="stats-count">Gagal memuat data.</span>';
+    mainWrap.innerHTML = '<div class="empty-state"><span class="icon">&#9888;&#65039;</span><h3>Gagal Memuat</h3><p>Tidak dapat terhubung ke server. Coba muat ulang halaman.</p></div>';
+    return;
+  }
+
+  if (!list.length) {
+    statsBar.innerHTML = '<span class="stats-count">Tidak ada jadwal akad mendatang</span>';
+    mainWrap.innerHTML = '<div class="empty-state"><span class="icon">&#128140;</span><h3>Belum Ada Pengumuman</h3><p>Belum ada jadwal akad nikah yang akan datang untuk saat ini.</p></div>';
+    return;
+  }
+
+  statsBar.innerHTML = '<span class="stats-count">Menampilkan <strong>' + list.length + '</strong> pengumuman akad mendatang</span>';
+
+  mainWrap.innerHTML =
+    '<div class="poster-slide-wrap">' +
+      '<div class="poster-slide-track" id="slideTrack"></div>' +
+      (list.length > 1 ?
+        '<button class="poster-slide-nav prev" onclick="slideNav(-1)">&#8249;</button>' +
+        '<button class="poster-slide-nav next" onclick="slideNav(1)">&#8250;</button>' : '') +
+    '</div>' +
+    (list.length > 1 ? '<div class="poster-slide-dots" id="slideDots"></div><div class="poster-slide-counter" id="slideCounter"></div>' : '') +
+    '<div class="poster-info" id="posterInfo"></div>' +
+    (list.length > 1 ? '<div class="thumb-strip" id="thumbStrip"></div>' : '');
+
+  idx = 0;
+  renderSlides();
+  renderThumbs();
+  goTo(0);
+}
+
+function renderSlides() {
+  const track = document.getElementById('slideTrack');
+  track.innerHTML = list.map(function(r, i) {
+    const pa = r.nama_pa || r.nama_calon_suami || '-';
+    const pi = r.nama_pi || r.nama_calon_istri || '-';
+    if (r.poster_url) {
+      return '<div class="poster-slide' + (i === 0 ? ' active' : '') + '" onclick="lbOpen(' + i + ')">' +
+        '<img src="' + escHtml(r.poster_url) + '" alt="Pengumuman ' + escHtml(pa) + ' & ' + escHtml(pi) + '" loading="lazy">' +
+      '</div>';
+    }
+    // fallback untuk record yang belum punya poster_url
+    const desa = r.desa || r.desa_pa || r.desa_akad || '-';
+    const tmpt = r.tempat_akad || '';
+    return '<div class="poster-slide' + (i === 0 ? ' active' : '') + '">' +
+      '<div class="poster-slide-fallback">' +
+        '<div class="pf-tgl">' + fmtTgl(r.tanggal_akad || r.tgl_akad) + '</div>' +
+        '<div class="pf-nama">' + escHtml(pa.split(' ').slice(0,3).join(' ')) + '<span class="pf-amp">&amp;</span>' + escHtml(pi.split(' ').slice(0,3).join(' ')) + '</div>' +
+        '<div class="pf-desa">&#128205; ' + escHtml(desa) + (tmpt ? ' &mdash; ' + escHtml(tmpt) : '') + '</div>' +
+        '<div class="pf-note">Poster belum tersedia</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderThumbs() {
+  const strip = document.getElementById('thumbStrip');
+  if (!strip) return;
+  strip.innerHTML = list.map(function(r, i) {
+    if (r.poster_url) {
+      return '<div class="thumb-item' + (i === 0 ? ' active' : '') + '" data-i="' + i + '" onclick="goTo(' + i + ')">' +
+        '<img src="' + escHtml(r.poster_url) + '" alt="" loading="lazy"></div>';
+    }
+    return '<div class="thumb-item' + (i === 0 ? ' active' : '') + '" data-i="' + i + '" onclick="goTo(' + i + ')">' +
+      '<div class="thumb-fallback">&#128140;</div></div>';
+  }).join('');
+}
+
+function updatePosterInfo() {
+  const el = document.getElementById('posterInfo');
+  if (!el) return;
+  const r = list[idx];
+  if (!r) { el.innerHTML = ''; return; }
+  const pa = (r.nama_pa || r.nama_calon_suami || '-');
+  const pi = (r.nama_pi || r.nama_calon_istri || '-');
+  el.innerHTML =
+    '<div class="pi-nama">' + escHtml(pa) + ' &amp; ' + escHtml(pi) + '</div>' +
+    '<div class="pi-sub">' + fmtTgl(r.tanggal_akad || r.tgl_akad) + (r.tempat_akad ? ' &middot; ' + escHtml(r.tempat_akad) : '') + '</div>' +
+    (r.poster_url ? '<div class="pi-zoom-hint">Klik poster untuk memperbesar</div>' : '');
+}
+
+function goTo(i) {
+  const slides = document.querySelectorAll('.poster-slide');
+  const dots   = document.querySelectorAll('.psd');
+  const thumbs = document.querySelectorAll('.thumb-item');
+  const ctr    = document.getElementById('slideCounter');
+  if (!slides.length) return;
+  idx = (i + slides.length) % slides.length;
+  slides.forEach(function(s, j) { s.classList.toggle('active', j === idx); });
+  dots.forEach(function(d, j) { d.classList.toggle('active', j === idx); });
+  thumbs.forEach(function(t, j) { t.classList.toggle('active', j === idx); });
+  if (ctr) ctr.textContent = (idx + 1) + ' / ' + list.length;
+
+  const activeThumb = document.querySelector('.thumb-item.active');
+  if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+  updatePosterInfo();
+  startAuto();
+}
+function slideNav(dir) { goTo(idx + dir); }
+
+function startAuto() {
+  if (autoTimer) clearInterval(autoTimer);
+  if (list.length < 2) return;
+  autoTimer = setInterval(function() { goTo(idx + 1); }, 5000);
+}
+
+function renderDotsOnce() {
+  const dotsWrap = document.getElementById('slideDots');
+  if (!dotsWrap) return;
+  dotsWrap.innerHTML = list.map(function(_, i) {
+    return '<button class="psd' + (i === 0 ? ' active' : '') + '" onclick="goTo(' + i + ')" aria-label="Slide ' + (i + 1) + '"></button>';
+  }).join('');
+}
+
+/* ── LIGHTBOX (khusus poster, bukan fallback) ── */
+function lbOpen(i) {
+  if (!list[i] || !list[i].poster_url) return;
+  lbIdx = i;
+  lbShow();
+  document.getElementById('lbOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function lbShow() {
+  const r = list[lbIdx];
+  if (!r) return;
+  document.getElementById('lbImg').src = r.poster_url || '';
+  document.getElementById('lbCounter').textContent = (lbIdx + 1) + ' / ' + list.length;
+}
+function lbClose() {
+  document.getElementById('lbOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbNav(dir) {
+  let next = lbIdx;
+  for (let k = 0; k < list.length; k++) {
+    next = (next + dir + list.length) % list.length;
+    if (list[next].poster_url) { lbIdx = next; break; }
+  }
+  lbShow();
+}
+document.getElementById('lbOverlay').addEventListener('click', function(e) {
+  if (e.target === this) lbClose();
+});
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('lbOverlay').classList.contains('open')) return;
+  if (e.key === 'Escape')     lbClose();
+  if (e.key === 'ArrowLeft')  lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  loadPengumuman().then(function() {
+    renderDotsOnce();
+  });
+});
+</script>
+
+<!-- KUA-SECURITY-DETERRENT -->
+<script>
+(function() {
+  'use strict';
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+  document.addEventListener('keydown', function(e) {
+    var key = e.key ? e.key.toLowerCase() : '';
+    if (e.ctrlKey && ['u', 's', 'a'].indexOf(key) !== -1) { e.preventDefault(); return false; }
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].indexOf(key) !== -1) { e.preventDefault(); return false; }
+  });
+  document.addEventListener('dragstart', function(e) { e.preventDefault(); return false; });
+  if (window.console && window.console.log) {
+    console.log(
+      '%c\u26d4 Konten website ini milik KUA Kecamatan Pilangkenceng.\n%cPenyalinan tanpa izin melanggar hak cipta.\nKepentingan resmi: kuapilangkenceng@gmail.com',
+      'color:#c0392b;font-size:18px;font-weight:bold;',
+      'color:#555;font-size:13px;'
+    );
+  }
+  var devOpen = false;
+  setInterval(function() {
+    var wDiff = window.outerWidth - window.innerWidth;
+    var hDiff = window.outerHeight - window.innerHeight;
+    if ((wDiff > 200 || hDiff > 200) && !devOpen) {
+      devOpen = true;
+      console.warn('\u26a0\ufe0f KUA Pilangkenceng: Konten ini dilindungi. Penggunaan tanpa izin dilarang.');
+    } else if (wDiff <= 200 && hDiff <= 200) {
+      devOpen = false;
+    }
+  }, 2000);
+})();
+</script>
+<!-- END KUA-SECURITY-DETERRENT -->
+</body>
+</html>
