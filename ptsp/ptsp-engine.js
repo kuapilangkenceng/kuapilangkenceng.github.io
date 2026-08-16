@@ -1,7 +1,7 @@
 /* ptsp-engine.js — Shared Form Engine PTSP KUA Pilangkenceng */
 const API_URL = (typeof KUA_CONFIG !== 'undefined' && KUA_CONFIG.API_URL)
   ? KUA_CONFIG.API_URL
-  : 'https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec';
+  : 'https://script.google.com/macros/s/AKfycbz1mnLlTdBDAWswFnqRbgg7LIuzBF4H2K2RNs1MCbB2H1eGSTFGTwKoAoBMb7oLX2A/exec';
 
 let CONFIG = null;
 let currentKat = window.PTSP_KATEGORI_ID || null;

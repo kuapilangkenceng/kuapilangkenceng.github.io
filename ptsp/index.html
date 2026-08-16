@@ -208,7 +208,7 @@ textarea.form-control{resize:vertical;min-height:80px}select.form-control{cursor
   <span class="floating-review-close" onclick="event.preventDefault();event.stopPropagation();document.getElementById('floating-review-btn').style.display='none';sessionStorage.setItem('hideFloatingReview','1')">✕</span>
 </a>
 <div class="toast" id="toast"></div>
-<script>const API_URL=(typeof KUA_CONFIG!=="undefined"&&KUA_CONFIG.API_URL)?KUA_CONFIG.API_URL:"https://script.google.com/macros/s/AKfycbwi1lkhvBIsB8zNo4A7OexF9ujN4K5BK_cIhEUcKhIyDiIV-lSYrmGJE7V09s0I9qwr/exec";
+<script>const API_URL=(typeof KUA_CONFIG!=="undefined"&&KUA_CONFIG.API_URL)?KUA_CONFIG.API_URL:"https://script.google.com/macros/s/AKfycbz1mnLlTdBDAWswFnqRbgg7LIuzBF4H2K2RNs1MCbB2H1eGSTFGTwKoAoBMb7oLX2A/exec";
 var session=null;
 try{var _s=sessionStorage.getItem("ptsp_session");if(_s){session=JSON.parse(_s);var _btn=document.getElementById("btn-login-header");if(_btn){_btn.textContent="\u2705 "+session.nama;_btn.classList.add("active");}var _bar=document.getElementById("session-bar");if(_bar){_bar.classList.add("show");document.getElementById("session-info").textContent="Petugas: "+session.nama+" ("+session.role+")";var _ba=document.getElementById("btn-post-artikel");if(_ba)_ba.style.display="inline-flex";var _bg=document.getElementById("btn-upload-galeri");if(_bg)_bg.style.display="inline-flex";}}}catch(e){}
 var KAT_PAGES={"Layanan Nikah":"nikah.html","Layanan Wakaf":"wakaf.html","Layanan Kiblat":"kiblat.html","SKT Masjid / Musholla":"skt.html","Konseling & Rekomendasi":"konseling.html","Konsultasi Umum":"konsultasi-umum.html"};
