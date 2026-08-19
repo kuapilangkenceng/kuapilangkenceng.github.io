@@ -2178,13 +2178,14 @@ function renderUsers() {
     wrap.innerHTML = '<div class="empty-state"><span class="icon">👤</span>Belum ada user.</div>';
     return;
   }
-  wrap.innerHTML = '<table class="tbl"><thead><tr><th>Username</th><th>Nama</th><th>Role</th><th>Status</th><th>Aksi</th></tr></thead><tbody>' +
+  wrap.innerHTML = '<table class="tbl"><thead><tr><th>Username</th><th>Nama</th><th>Role</th><th>Status</th><th>Hapus?</th><th>Aksi</th></tr></thead><tbody>' +
     usersData.map(u => `
       <tr>
         <td style="font-weight:700;color:var(--green)">${escHtml(u.username)}</td>
         <td>${escHtml(u.nama)}</td>
         <td><span class="badge ${u.role === 'admin' ? 'selesai' : 'baru'}">${escHtml(u.role)}</span></td>
         <td><span class="badge ${u.aktif ? 'selesai' : 'ditolak'}">${u.aktif ? 'Aktif' : 'Nonaktif'}</span></td>
+        <td>${u.role === 'admin' ? '<span class="badge selesai">Admin</span>' : (u.izin_hapus === true || u.izin_hapus === 'true' ? '<span class="badge selesai">Ya</span>' : '<span class="badge ditolak">Tidak</span>')}</td>
         <td>
           <button onclick="toggleUserStatus('${escJsAttr(u.username)}',${u.aktif})"
             style="padding:4px 10px;border-radius:6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:var(--font);
@@ -2220,6 +2221,16 @@ function bukaAksesMenu(username) {
   document.getElementById('modal-subtitle').textContent = (u.nama || '') + ' (' + u.role + ')';
   document.getElementById('modal-body').innerHTML = `
     <div style="padding:4px 0">
+      <div style="margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+        <label style="font-weight:700;font-size:12.5px;display:block;margin-bottom:6px">Data User</label>
+        <input type="text" id="edit-user-username" value="${escHtml(u.username)}" placeholder="Username" ${isAdminUser ? 'readonly' : ''}
+               style="width:100%;padding:8px 10px;margin-bottom:8px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;${isAdminUser ? 'background:var(--cream);cursor:not-allowed' : ''}">
+        <input type="text" id="edit-user-nama" value="${escHtml(u.nama || '')}" placeholder="Nama Lengkap"
+               style="width:100%;padding:8px 10px;margin-bottom:8px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px">
+        <input type="text" id="edit-user-role" value="${escHtml(u.role || '')}" placeholder="Role (huruf kecil/angka/_)" ${isAdminUser ? 'readonly' : ''}
+               style="width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-family:var(--font);font-size:13px;${isAdminUser ? 'background:var(--cream);cursor:not-allowed' : ''}">
+        ${isAdminUser ? '<p style="font-size:11px;color:var(--ink-muted);margin-top:6px">Username &amp; role admin utama tidak dapat diubah.</p>' : ''}
+      </div>
       <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-weight:700;border-bottom:1px solid var(--border);margin-bottom:6px">
         <input type="checkbox" id="akses-semua" ${semua ? 'checked' : ''} onchange="toggleAksesSemua(this.checked)"> Akses Semua Menu (default)
       </label>
@@ -2235,6 +2246,12 @@ function bukaAksesMenu(username) {
           <input type="checkbox" id="akses-layanan-semua" ${semuaLayanan ? 'checked' : ''} onchange="toggleAksesLayananSemua(this.checked)"> Akses Semua Layanan (default)
         </label>
         <div id="akses-layanan-list" style="display:${semuaLayanan ? 'none' : 'flex'};flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;padding-right:4px"></div>
+      </div>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
+        <label style="display:flex;align-items:center;gap:8px;padding:8px 0;font-weight:700;font-size:13px">
+          <input type="checkbox" id="edit-user-izin-hapus" ${(u.izin_hapus === true || u.izin_hapus === 'true') ? 'checked' : ''}> Izin Hapus Layanan
+        </label>
+        <p style="font-size:11px;color:var(--ink-muted);margin:2px 0 0">Kalau dicentang, user ini boleh menghapus data layanan (tindakan permanen).</p>
       </div>` : ''}
       <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border)">
         <label style="font-weight:700;font-size:12.5px;display:block;margin-bottom:6px">Ubah Password (opsional)</label>
@@ -2256,6 +2273,14 @@ function toggleAksesSemua(checked) {
 }
 
 async function simpanAksesMenu(username) {
+  const newUsername = (document.getElementById('edit-user-username').value || '').trim();
+  const nama = (document.getElementById('edit-user-nama').value || '').trim();
+  const role = (document.getElementById('edit-user-role').value || '').trim();
+  if (!nama || !role) {
+    showToast('Nama dan role wajib diisi.', true);
+    return;
+  }
+
   const semua = document.getElementById('akses-semua').checked;
   let menuAkses = '';
   if (!semua) {
@@ -2269,27 +2294,45 @@ async function simpanAksesMenu(username) {
     layananAkses = semuaLayanan ? '' : Array.from(document.querySelectorAll('.layanan-item-akses-layanan-list:checked')).map(el => el.value).join(',');
   }
 
+  const izinHapusEl = document.getElementById('edit-user-izin-hapus');
+  const izinHapus = izinHapusEl ? izinHapusEl.checked : null; // null = tidak diubah (user admin, checkbox tidak dirender)
+
   const newPass = (document.getElementById('edit-user-password').value || '').trim();
   if (newPass && newPass.length < 6) {
     showToast('Password baru minimal 6 karakter.', true);
     return;
   }
+
+  const gantiUsername = newUsername && newUsername !== username;
+
   try {
+    const resU = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'updateUser', username, new_username: newUsername, nama, role, pelaku: session.username })
+    });
+    const dataU = await resU.json();
+    if (!dataU.ok) {
+      showToast(dataU.error || 'Gagal menyimpan data user.', true);
+      return;
+    }
+    const usernameAktif = dataU.username || username; // username yang berlaku sekarang untuk panggilan berikutnya
+
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'updateMenuAkses', username, menu_akses: menuAkses, pelaku: session.username })
+      body: JSON.stringify({ action: 'updateMenuAkses', username: usernameAktif, menu_akses: menuAkses, pelaku: session.username })
     });
     const data = await res.json();
     if (!data.ok) {
-      showToast(data.error || 'Gagal menyimpan akses menu.', true);
+      showToast(data.error || 'Data user tersimpan, tapi gagal menyimpan akses menu.', true);
       return;
     }
     if (layananAkses !== null) {
       const resL = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'updateLayananAkses', username, layanan_akses: layananAkses, pelaku: session.username })
+        body: JSON.stringify({ action: 'updateLayananAkses', username: usernameAktif, layanan_akses: layananAkses, pelaku: session.username })
       });
       const dataL = await resL.json();
       if (!dataL.ok) {
@@ -2297,11 +2340,23 @@ async function simpanAksesMenu(username) {
         return;
       }
     }
+    if (izinHapus !== null) {
+      const resH = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'setIzinHapus', username: usernameAktif, izin_hapus: izinHapus, pelaku: session.username })
+      });
+      const dataH = await resH.json();
+      if (!dataH.ok) {
+        showToast(dataH.error || 'Akses tersimpan, tapi gagal simpan izin hapus layanan.', true);
+        return;
+      }
+    }
     if (newPass) {
       const res2 = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'changePassword', username, password: newPass, pelaku: session.username })
+        body: JSON.stringify({ action: 'changePassword', username: usernameAktif, password: newPass, pelaku: session.username })
       });
       const data2 = await res2.json();
       if (!data2.ok) {
@@ -2309,14 +2364,20 @@ async function simpanAksesMenu(username) {
         return;
       }
     }
-    const u = usersData.find(x => x.username === username);
-    if (u) {
-      u.menu_akses = menuAkses;
-      if (layananAkses !== null) u.layanan_akses = layananAkses;
-    }
+
+    const editingSelf = session && session.username === username;
+    await loadUsers();
     closeModalDirect();
-    showToast('✅ Perubahan untuk "' + username + '" disimpan.');
-    if (session && session.username === username) {
+    showToast('✅ Perubahan untuk "' + usernameAktif + '" disimpan.');
+
+    if (editingSelf) {
+      if (gantiUsername) {
+        alert('Username Anda diubah menjadi "' + usernameAktif + '". Silakan login ulang.');
+        logout();
+        return;
+      }
+      session.nama = nama;
+      session.role = role;
       session.menu_akses = menuAkses;
       applyMenuAkses(menuAkses);
     }
