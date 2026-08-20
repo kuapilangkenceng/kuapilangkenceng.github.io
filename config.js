@@ -8,7 +8,7 @@ const KUA = {
     // ⚠️ CATATAN KEAMANAN: URL API ini memang publik (sifat GAS webapp).
     // Proteksi utama ada di backend: reCAPTCHA, token auth, rate limiting.
     // Jangan tambahkan logika sensitif yang tidak terlindungi token di GAS.
-    api    : 'https://script.google.com/macros/s/AKfycbz1mnLlTdBDAWswFnqRbgg7LIuzBF4H2K2RNs1MCbB2H1eGSTFGTwKoAoBMb7oLX2A/exec',
+    api    : 'https://script.google.com/macros/s/AKfycbzJNO6PqGKH5AGpnaK_yJXPvqpdoVAkHpFZAVGXF57vDD8VavkCOG0smsF56nWquX3b/exec',
 
     // ⛔ sheetsId DIHAPUS dari config.js publik.
     // Jika ada kode frontend yang perlu sheetsId, ambil via API:
