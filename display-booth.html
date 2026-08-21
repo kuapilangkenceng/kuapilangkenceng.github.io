@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Display Booth — PTSP KUA Pilangkenceng</title>
+<style>
+  :root{
+    --hijau-tua:   #0B4432;
+    --hijau:       #10593F;
+    --hijau-muda:  #1B7A56;
+    --emas:        #C9A24B;
+    --emas-terang: #E6C878;
+    --krem:        #F4EFE2;
+    --teks:        #F4EFE2;
+    --teks-redup:  #9FC2AE;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{
+    width:100vw;height:100vh;overflow:hidden;
+    background:var(--hijau-tua);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  }
+  .stage{
+    display:grid;
+    grid-template-columns:68% 32%;
+    width:100vw;height:100vh;
+  }
+
+  /* ===== KIRI — POSTER (iframe halaman publik yang sudah ada) ===== */
+  .panel-poster{
+    position:relative;
+    background:#000;
+    border-right:3px solid var(--emas);
+  }
+  .panel-poster iframe{
+    width:100%;height:100%;border:0;display:block;
+  }
+
+  /* ===== KANAN — RUNNING TEXT LAYANAN TERBARU ===== */
+  .panel-info{
+    position:relative;
+    display:flex;flex-direction:column;
+    background:
+      radial-gradient(circle at 85% 8%, rgba(230,200,120,0.10), transparent 45%),
+      linear-gradient(165deg, var(--hijau) 0%, var(--hijau-tua) 65%);
+    overflow:hidden;
+  }
+  .panel-info::before{
+    /* motif kubah/geometris tipis, khas identitas keagamaan, sangat samar */
+    content:"";
+    position:absolute;inset:0;
+    opacity:.05;
+    background-image:
+      repeating-radial-gradient(circle at 0 0, transparent 0, transparent 38px, var(--emas-terang) 39px, transparent 40px);
+    background-size:80px 80px;
+    pointer-events:none;
+  }
+
+  .info-header{
+    padding:2.2vh 2vw 1.4vh;
+    border-bottom:1px solid rgba(230,200,120,0.25);
+    position:relative;z-index:1;
+  }
+  .info-eyebrow{
+    display:flex;align-items:center;gap:.6vw;
+    font-size:1.05vw;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--emas-terang);font-weight:600;
+  }
+  .dot-live{
+    width:.7vw;height:.7vw;border-radius:50%;
+    background:var(--emas-terang);
+    box-shadow:0 0 0 0 rgba(230,200,120,.6);
+    animation:pulse 1.8s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(230,200,120,.55)}
+    70%{box-shadow:0 0 0 .9vw rgba(230,200,120,0)}
+    100%{box-shadow:0 0 0 0 rgba(230,200,120,0)}
+  }
+  .info-title{
+    margin-top:.6vh;
+    font-size:2vw;font-weight:700;color:var(--teks);
+    letter-spacing:.01em;
+  }
+  .info-sub{
+    margin-top:.3vh;font-size:1vw;color:var(--teks-redup);font-weight:400;
+  }
+
+  /* Kartu ringkas layanan terbaru */
+  .info-body{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    padding:2vh 2vw;position:relative;z-index:1;gap:2.4vh;
+  }
+  .kartu-nomor{
+    font-size:3.4vw;font-weight:800;color:var(--emas-terang);
+    line-height:1;letter-spacing:.01em;
+    text-shadow:0 0.2vh 1.2vh rgba(230,200,120,.25);
+  }
+  .kartu-nama{
+    font-size:1.9vw;font-weight:700;color:var(--teks);line-height:1.25;
+  }
+  .kartu-jenis{
+    display:inline-block;
+    margin-top:.4vh;
+    padding:.6vh 1vw;
+    font-size:1vw;font-weight:600;color:var(--hijau-tua);
+    background:var(--emas-terang);
+    border-radius:999px;
+  }
+  .kartu-waktu{
+    font-size:.9vw;color:var(--teks-redup);margin-top:.6vh;
+  }
+
+  /* Marquee klasik — running text horizontal */
+  .marquee-wrap{
+    border-top:1px solid rgba(230,200,120,0.25);
+    background:rgba(0,0,0,0.18);
+    padding:1.6vh 0;
+    overflow:hidden;
+    position:relative;z-index:1;
+    white-space:nowrap;
+  }
+  .marquee-track{
+    display:inline-block;
+    padding-left:100%;
+    animation:scroll-left 18s linear infinite;
+    font-size:1.35vw;font-weight:600;color:var(--teks);
+    letter-spacing:.01em;
+  }
+  .marquee-track b{color:var(--emas-terang);font-weight:800}
+  @keyframes scroll-left{
+    0%{transform:translateX(0)}
+    100%{transform:translateX(-100%)}
+  }
+
+  .clock{
+    position:absolute;top:2.2vh;right:2vw;z-index:2;
+    text-align:right;font-variant-numeric:tabular-nums;
+  }
+  .clock .jam{font-size:1.4vw;font-weight:700;color:var(--emas-terang)}
+  .clock .tgl{font-size:.75vw;color:var(--teks-redup)}
+
+  .kosong{
+    font-size:1.3vw;color:var(--teks-redup);font-style:italic;
+  }
+
+  @media (max-width:900px){
+    .stage{grid-template-columns:1fr}
+    .panel-poster{height:60vh}
+    .panel-info{height:40vh}
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- KIRI: Poster Pengumuman Kehendak Nikah (halaman publik yang sudah ada) -->
+  <section class="panel-poster">
+    <iframe
+      src="pengumumankehendaknikah.html"
+      title="Poster Pengumuman Kehendak Nikah"
+      loading="eager"></iframe>
+  </section>
+
+  <!-- KANAN: Layanan terbaru + running text -->
+  <section class="panel-info">
+    <div class="clock">
+      <div class="jam" id="jamSkrg">--:--</div>
+      <div class="tgl" id="tglSkrg">-</div>
+    </div>
+
+    <div class="info-header">
+      <div class="info-eyebrow"><span class="dot-live"></span> Sedang Dilayani</div>
+      <div class="info-title">PTSP KUA Pilangkenceng</div>
+      <div class="info-sub">Layanan terbaru diperbarui otomatis</div>
+    </div>
+
+    <div class="info-body" id="infoBody">
+      <div class="kosong">Memuat data layanan…</div>
+    </div>
+
+    <div class="marquee-wrap">
+      <div class="marquee-track" id="marqueeText">Memuat informasi layanan…</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  const API_URL = 'https://script.google.com/macros/s/AKfycbz1mnLlTdBDAWswFnqRbgg7LIuzBF4H2K2RNs1MCbB2H1eGSTFGTwKoAoBMb7oLX2A/exec';
+  const POLL_MS = 15000; // 15 detik — cukup real-time, tidak membebani quota Apps Script
+
+  // ── Jam & tanggal lokal (WIB asumsikan device sudah di zona benar) ──
+  function tickClock(){
+    const now = new Date();
+    document.getElementById('jamSkrg').textContent =
+      now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('tglSkrg').textContent =
+      now.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  }
+  tickClock();
+  setInterval(tickClock, 15000);
+
+  // ── Fetch dengan retry + no-cache, pola standar project ini ──
+  async function fetchJsonRetry(url, tries){
+    tries = tries || 2;
+    for (let i = 0; i < tries; i++){
+      try{
+        const res = await fetch(url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + Date.now(), { cache:'no-store' });
+        const text = await res.text();
+        return JSON.parse(text); // kalau cold-start balikin HTML, JSON.parse akan throw -> retry
+      }catch(err){
+        if (i === tries - 1) throw err;
+        await new Promise(r => setTimeout(r, 1200));
+      }
+    }
+  }
+
+  function fmtWaktu(iso){
+    if (!iso) return '';
+    try{
+      const d = new Date(iso);
+      return d.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' }) + ' WIB';
+    }catch(e){ return ''; }
+  }
+
+  let lastId = null;
+
+  async function refresh(){
+    try{
+      const json = await fetchJsonRetry(API_URL + '?action=getlatestlayanan');
+      if (!json || !json.ok || !json.data){
+        renderKosong();
+        return;
+      }
+      const d = json.data;
+      renderData(d);
+    }catch(err){
+      // Diam-diam gagal sekali — jangan bikin layar kosong cuma karena 1 request gagal,
+      // biarkan data lama tetap tampil sampai poll berikutnya berhasil.
+      console.warn('getlatestlayanan gagal:', err);
+    }
+  }
+
+  function renderKosong(){
+    document.getElementById('infoBody').innerHTML =
+      '<div class="kosong">Belum ada layanan yang tersubmit hari ini.</div>';
+    document.getElementById('marqueeText').innerHTML =
+      'Selamat datang di PTSP KUA Kecamatan Pilangkenceng — Silakan ambil nomor layanan di meja petugas';
+  }
+
+  function renderData(d){
+    document.getElementById('infoBody').innerHTML =
+      '<div class="kartu-nomor">' + esc(d.id) + '</div>' +
+      '<div>' +
+        '<div class="kartu-nama">' + esc(d.nama_pemohon) + '</div>' +
+        '<span class="kartu-jenis">' + esc(d.jenis_label) + '</span>' +
+        '<div class="kartu-waktu">Diterima ' + fmtWaktu(d.timestamp) + '</div>' +
+      '</div>';
+
+    document.getElementById('marqueeText').innerHTML =
+      '<b>' + esc(d.id) + '</b> &nbsp;•&nbsp; ' + esc(d.nama_pemohon) +
+      ' &nbsp;•&nbsp; ' + esc(d.jenis_label) +
+      ' &nbsp;•&nbsp; Selamat datang di PTSP KUA Kecamatan Pilangkenceng &nbsp;•&nbsp; ';
+
+    // Restart animasi marquee tiap data berubah supaya konsisten mulai dari kanan
+    if (d.id !== lastId){
+      const track = document.getElementById('marqueeText');
+      track.style.animation = 'none';
+      void track.offsetWidth;
+      track.style.animation = '';
+      lastId = d.id;
+    }
+  }
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  refresh();
+  setInterval(refresh, POLL_MS);
+})();
+</script>
+
+</body>
+</html>
