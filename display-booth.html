@@ -74,7 +74,10 @@
     background:#000;
   }
   .video-frame iframe{
-    position:absolute;inset:0;width:100%;height:100%;border:0;
+    position:absolute;top:50%;left:50%;
+    width:180%;height:180%;
+    transform:translate(-50%,-50%);
+    border:0;
   }
 
   .info-body{
@@ -295,9 +298,16 @@
   // memenuhi seluruh tinggi panel kanan.
   const posterFrame = document.getElementById('posterFrame');
   posterFrame.addEventListener('load', function(){
+    // Selalu tampilkan iframe dulu — jangan sampai poster "hilang" hanya
+    // karena penyuntikan CSS gagal (mis. dibuka via file:// sehingga
+    // beda origin dan contentDocument tidak bisa diakses).
+    posterFrame.classList.add('ready');
     try{
       const doc = posterFrame.contentDocument;
-      if (!doc) return;
+      if (!doc) {
+        console.warn('Tidak bisa mengakses isi iframe poster (kemungkinan beda origin — buka lewat web server, bukan file:// langsung).');
+        return;
+      }
       const style = doc.createElement('style');
       style.textContent =
         /* Sembunyikan chrome halaman + navigasi galeri — hanya sisakan
@@ -335,11 +345,10 @@
         '.poster-info .pi-sub{font-size:1vw!important;color:#9FC2AE!important}' +
         '.poster-info .pi-zoom-hint{display:none!important}';
       doc.head.appendChild(style);
-      posterFrame.classList.add('ready');
     }catch(e){
-      // Beda origin (mis. dites dari file:// lokal) — biarkan tampil apa adanya.
+      // Beda origin (mis. dites dari file:// lokal) — iframe tetap
+      // tampil (di-set 'ready' di atas), hanya tanpa CSS full-bleed.
       console.warn('Tidak bisa suntik CSS ke iframe (kemungkinan beda origin):', e);
-      posterFrame.classList.add('ready');
     }
   });
 })();
