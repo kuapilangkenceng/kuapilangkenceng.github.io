@@ -49,57 +49,57 @@
   }
 
   .info-header{
-    padding:2.2vh 2.2vw 1.4vh;
+    padding:2vh 2.2vw 1.2vh;
     border-bottom:1px solid rgba(230,200,120,0.25);
     position:relative;z-index:1;
   }
-  .info-eyebrow{
-    display:flex;align-items:center;gap:.6vw;
-    font-size:1vw;letter-spacing:.18em;text-transform:uppercase;
-    color:var(--emas-terang);font-weight:600;
-  }
-  .dot-live{
-    width:.65vw;height:.65vw;border-radius:50%;
-    background:var(--emas-terang);
-    box-shadow:0 0 0 0 rgba(230,200,120,.6);
-    animation:pulse 1.8s infinite;
-  }
-  @keyframes pulse{
-    0%{box-shadow:0 0 0 0 rgba(230,200,120,.55)}
-    70%{box-shadow:0 0 0 .8vw rgba(230,200,120,0)}
-    100%{box-shadow:0 0 0 0 rgba(230,200,120,0)}
-  }
   .info-title{
-    margin-top:.6vh;
-    font-size:1.9vw;font-weight:700;color:var(--teks);
+    font-size:1.7vw;font-weight:700;color:var(--teks);
     letter-spacing:.01em;
   }
-  .info-sub{
-    margin-top:.3vh;font-size:.9vw;color:var(--teks-redup);font-weight:400;
+
+  /* ===== VIDEO PROFIL / FOOTAGE YOUTUBE KUA ===== */
+  .video-wrap{
+    flex:1.5 1 0;
+    min-height:0;
+    position:relative;z-index:1;
+    padding:1.8vh 2.2vw 0;
+    display:flex;
+  }
+  .video-frame{
+    position:relative;width:100%;height:100%;
+    border-radius:.8vw;overflow:hidden;
+    border:1px solid rgba(230,200,120,0.35);
+    box-shadow:0 1vh 2.5vh rgba(0,0,0,.25);
+    background:#000;
+  }
+  .video-frame iframe{
+    position:absolute;inset:0;width:100%;height:100%;border:0;
   }
 
   .info-body{
-    flex:1;display:flex;flex-direction:column;justify-content:center;
-    padding:2vh 2.2vw;position:relative;z-index:1;gap:2.4vh;
+    flex:1 1 0;min-height:0;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:1.6vh 2.2vw;position:relative;z-index:1;gap:1.4vh;
   }
   .kartu-nomor{
-    font-size:3.2vw;font-weight:800;color:var(--emas-terang);
+    font-size:2.6vw;font-weight:800;color:var(--emas-terang);
     line-height:1;letter-spacing:.01em;
     text-shadow:0 0.2vh 1.2vh rgba(230,200,120,.25);
   }
   .kartu-nama{
-    font-size:1.8vw;font-weight:700;color:var(--teks);line-height:1.25;
+    font-size:1.5vw;font-weight:700;color:var(--teks);line-height:1.25;
   }
   .kartu-jenis{
     display:inline-block;
     margin-top:.5vh;
     padding:.6vh 1vw;
-    font-size:.95vw;font-weight:600;color:var(--hijau-tua);
+    font-size:.85vw;font-weight:600;color:var(--hijau-tua);
     background:var(--emas-terang);
     border-radius:999px;
   }
   .kartu-waktu{
-    font-size:.85vw;color:var(--teks-redup);margin-top:.7vh;
+    font-size:.75vw;color:var(--teks-redup);margin-top:.5vh;
   }
 
   .marquee-wrap{
@@ -138,7 +138,8 @@
   .panel-poster{
     position:relative;
     background:var(--hijau-tua);
-    display:flex;align-items:center;justify-content:center;
+    display:flex;align-items:stretch;justify-content:center;
+    overflow:hidden;
   }
   .panel-poster iframe{
     width:100%;height:100%;border:0;display:block;
@@ -165,9 +166,19 @@
     </div>
 
     <div class="info-header">
-      <div class="info-eyebrow"><span class="dot-live"></span> Sedang Dilayani</div>
       <div class="info-title">PTSP KUA Pilangkenceng</div>
-      <div class="info-sub">Layanan terbaru diperbarui otomatis</div>
+    </div>
+
+    <!-- Video profil KUA Pilangkenceng (autoplay, mute, loop) -->
+    <div class="video-wrap">
+      <div class="video-frame">
+        <iframe
+          src="https://www.youtube.com/embed/vwn_A_TGvAs?autoplay=1&mute=1&loop=1&playlist=vwn_A_TGvAs&controls=0&modestbranding=1&rel=0&playsinline=1"
+          title="Video Profil KUA Pilangkenceng"
+          allow="autoplay; encrypted-media"
+          muted
+          allowfullscreen></iframe>
+      </div>
     </div>
 
     <div class="info-body" id="infoBody">
@@ -289,14 +300,39 @@
       if (!doc) return;
       const style = doc.createElement('style');
       style.textContent =
+        /* Sembunyikan chrome halaman + navigasi galeri — hanya sisakan
+           poster (slide aktif) dan caption nama/tanggal DI BAWAHNYA. */
         '.navbar,.hero,.stats-bar,.poster-slide-dots,.poster-slide-counter,.thumb-strip,footer{display:none!important}' +
-        'body{background:#0B4432!important;margin:0!important}' +
-        '.container{max-width:none!important;padding:0!important;min-height:100vh;display:flex;align-items:center;justify-content:center}' +
-        '#mainWrap{width:100%;display:flex;justify-content:center}' +
-        '.poster-slide-wrap{max-width:min(86%,64vh)!important;width:100%!important;box-shadow:0 1.5vh 4vh rgba(0,0,0,.35)!important}' +
-        '.poster-info{max-width:min(86%,64vh)!important;margin-top:1.6vh!important}' +
-        '.poster-info .pi-nama{font-size:1.5vw!important;color:#F4EFE2!important}' +
-        '.poster-info .pi-sub{font-size:.95vw!important;color:#9FC2AE!important}' +
+        'html,body{background:#0B4432!important;margin:0!important;height:100%!important;overflow:hidden!important}' +
+        '.container{' +
+          'max-width:none!important;width:100%!important;height:100vh!important;' +
+          'padding:0!important;margin:0!important;' +
+          'display:flex!important;flex-direction:column!important;' +
+          'align-items:center!important;justify-content:center!important;' +
+        '}' +
+        /* PENTING: flex-direction:column eksplisit — tanpa ini elemen di
+           dalam #mainWrap (poster + info nama) berjejer ke SAMPING,
+           bukan menumpuk ke bawah. */
+        '#mainWrap{' +
+          'width:100%!important;' +
+          'display:flex!important;flex-direction:column!important;' +
+          'align-items:center!important;justify-content:center!important;' +
+          'gap:1.6vh!important;' +
+        '}' +
+        '.poster-slide-wrap{' +
+          'aspect-ratio:5/7!important;' +
+          'height:80vh!important;width:auto!important;' +
+          'max-width:94vw!important;max-height:80vh!important;' +
+          'margin:0!important;' +
+          'box-shadow:0 1.5vh 4vh rgba(0,0,0,.35)!important;' +
+        '}' +
+        '.poster-slide-track{width:100%!important;height:100%!important}' +
+        '.poster-info{' +
+          'max-width:94vw!important;width:100%!important;' +
+          'margin:0!important;text-align:center!important;' +
+        '}' +
+        '.poster-info .pi-nama{font-size:1.6vw!important;color:#F4EFE2!important}' +
+        '.poster-info .pi-sub{font-size:1vw!important;color:#9FC2AE!important}' +
         '.poster-info .pi-zoom-hint{display:none!important}';
       doc.head.appendChild(style);
       posterFrame.classList.add('ready');
