@@ -82,8 +82,27 @@
 
   .info-body{
     flex:1 1 0;min-height:0;
-    display:flex;flex-direction:column;justify-content:center;
-    padding:1.6vh 2.2vw;position:relative;z-index:1;gap:1.4vh;
+    display:flex;align-items:center;justify-content:space-between;gap:1.6vw;
+    padding:1.6vh 2.2vw;position:relative;z-index:1;
+  }
+  .info-body-teks{
+    flex:1 1 0;min-width:0;
+    display:flex;flex-direction:column;gap:.8vh;
+  }
+  .info-body-foto{
+    flex:0 0 auto;
+    width:38%;aspect-ratio:4/3;
+    border-radius:.7vw;overflow:hidden;
+    border:1px solid rgba(230,200,120,0.35);
+    box-shadow:0 1vh 2.5vh rgba(0,0,0,.25);
+    background:rgba(0,0,0,.2);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .info-body-foto img{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
+  .info-body-foto .foto-kosong{
+    font-size:.75vw;color:var(--teks-redup);text-align:center;padding:1vw;
   }
   .kartu-nomor{
     font-size:2.6vw;font-weight:800;color:var(--emas-terang);
@@ -256,19 +275,27 @@
 
   function renderKosong(){
     document.getElementById('infoBody').innerHTML =
-      '<div class="kosong">Belum ada layanan yang tersubmit hari ini.</div>';
+      '<div class="info-body-teks"><div class="kosong">Belum ada layanan yang tersubmit hari ini.</div></div>' +
+      '<div class="info-body-foto"><div class="foto-kosong">Menunggu layanan berikutnya</div></div>';
     document.getElementById('marqueeText').innerHTML =
       'Selamat datang di PTSP KUA Kecamatan Pilangkenceng — Silakan ambil nomor layanan di meja petugas';
   }
 
   function renderData(d){
+    const fotoHtml = d.foto
+      ? '<img src="' + esc(d.foto) + '" alt="Foto layanan ' + esc(d.id) + '" referrerpolicy="no-referrer">'
+      : '<div class="foto-kosong">Foto belum tersedia</div>';
+
     document.getElementById('infoBody').innerHTML =
-      '<div class="kartu-nomor">' + esc(d.id) + '</div>' +
-      '<div>' +
-        '<div class="kartu-nama">' + esc(d.nama_pemohon) + '</div>' +
-        '<span class="kartu-jenis">' + esc(d.jenis_label) + '</span>' +
-        '<div class="kartu-waktu">Diterima ' + fmtWaktu(d.timestamp) + '</div>' +
-      '</div>';
+      '<div class="info-body-teks">' +
+        '<div class="kartu-nomor">' + esc(d.id) + '</div>' +
+        '<div>' +
+          '<div class="kartu-nama">' + esc(d.nama_pemohon) + '</div>' +
+          '<span class="kartu-jenis">' + esc(d.jenis_label) + '</span>' +
+          '<div class="kartu-waktu">Diterima ' + fmtWaktu(d.timestamp) + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="info-body-foto">' + fotoHtml + '</div>';
 
     document.getElementById('marqueeText').innerHTML =
       '<b>' + esc(d.id) + '</b> &nbsp;•&nbsp; ' + esc(d.nama_pemohon) +
