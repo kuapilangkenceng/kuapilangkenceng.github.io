@@ -350,20 +350,29 @@
            dalam #mainWrap (poster + info nama) berjejer ke SAMPING,
            bukan menumpuk ke bawah. */
         '#mainWrap{' +
-          'width:100%!important;' +
+          'width:100%!important;height:100%!important;' +
           'display:flex!important;flex-direction:column!important;' +
           'align-items:center!important;justify-content:center!important;' +
-          'gap:1.6vh!important;' +
+          'gap:1vh!important;' +
         '}' +
         '.poster-slide-wrap{' +
-          'aspect-ratio:5/7!important;' +
-          'height:80vh!important;width:auto!important;' +
-          'max-width:94vw!important;max-height:80vh!important;' +
+          'flex:1 1 auto!important;min-height:0!important;' +
+          'width:100%!important;height:auto!important;' +
+          'max-width:none!important;max-height:none!important;' +
+          'aspect-ratio:auto!important;' +
           'margin:0!important;' +
           'box-shadow:0 1.5vh 4vh rgba(0,0,0,.35)!important;' +
         '}' +
         '.poster-slide-track{width:100%!important;height:100%!important}' +
+        '.poster-slide-wrap img,.poster-slide-track img{' +
+          'width:100%!important;height:100%!important;' +
+          'object-fit:cover!important;object-position:center!important;display:block!important;' +
+        '}' +
+        '.poster-slide-wrap,.poster-slide-track{' +
+          'background-size:cover!important;background-position:center!important;' +
+        '}' +
         '.poster-info{' +
+          'flex:0 0 auto!important;' +
           'max-width:94vw!important;width:100%!important;' +
           'margin:0!important;text-align:center!important;' +
         '}' +
