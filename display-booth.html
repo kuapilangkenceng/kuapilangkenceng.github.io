@@ -84,7 +84,19 @@
     flex:1 1 0;min-height:0;
     display:flex;align-items:center;justify-content:space-between;gap:1.6vw;
     padding:1.6vh 2.2vw;position:relative;z-index:1;
+    opacity:1;transition:opacity .4s ease;
   }
+  .info-body.fading{opacity:0}
+  .slide-dots{
+    display:flex;gap:.5vw;justify-content:center;
+    padding:0 0 1.2vh;position:relative;z-index:1;
+  }
+  .slide-dots span{
+    width:.6vw;height:.6vw;border-radius:50%;
+    background:rgba(230,200,120,0.3);
+    transition:background .3s ease;
+  }
+  .slide-dots span.aktif{background:var(--emas-terang)}
   .info-body-teks{
     flex:1 1 0;min-width:0;
     display:flex;flex-direction:column;gap:.8vh;
@@ -205,9 +217,10 @@
     <div class="info-body" id="infoBody">
       <div class="kosong">Memuat data layanan…</div>
     </div>
+    <div class="slide-dots" id="slideDots"></div>
 
     <div class="marquee-wrap">
-      <div class="marquee-track" id="marqueeText">Memuat informasi layanan…</div>
+      <div class="marquee-track" id="marqueeText">Selamat Datang di PTSP KUA Kecamatan Pilangkenceng</div>
     </div>
   </section>
 
@@ -226,7 +239,8 @@
 (function(){
   // ── ID deployment TERVERIFIKASI dari config production (pengumumankehendaknikah.html) ──
   const API_URL = 'https://script.google.com/macros/s/AKfycbzJNO6PqGKH5AGpnaK_yJXPvqpdoVAkHpFZAVGXF57vDD8VavkCOG0smsF56nWquX3b/exec';
-  const POLL_MS = 15000;
+  const POLL_MS   = 15000; // ambil data terbaru dari server tiap 15 detik
+  const SLIDE_MS  = 6000;  // ganti kartu yang ditampilkan tiap 6 detik
 
   function tickClock(){
     const now = new Date();
@@ -260,54 +274,73 @@
     }catch(e){ return ''; }
   }
 
-  let lastId = null;
+  let daftarLayanan = []; // hasil terbaru dari server (maks 5)
+  let slideIdx = 0;
 
   async function refresh(){
     try{
       const json = await fetchJsonRetry(API_URL + '?action=getlatestlayanan');
-      if (!json || !json.ok || !json.data){ renderKosong(); return; }
-      renderData(json.data);
+      if (!json || !json.ok || !json.data || !json.data.length){
+        daftarLayanan = [];
+        renderSlide();
+        return;
+      }
+      daftarLayanan = json.data;
+      if (slideIdx >= daftarLayanan.length) slideIdx = 0;
+      renderSlide();
     }catch(err){
+      // Data lama tetap tampil kalau 1x polling gagal — jangan sampai layar kosong.
       console.warn('getlatestlayanan gagal:', err);
     }
   }
 
-  function renderKosong(){
-    document.getElementById('infoBody').innerHTML =
-      '<div class="info-body-teks"><div class="kosong">Belum ada layanan yang tersubmit hari ini.</div></div>' +
-      '<div class="info-body-foto"><div class="foto-kosong">Menunggu layanan berikutnya</div></div>';
-    document.getElementById('marqueeText').innerHTML =
-      'Selamat datang di PTSP KUA Kecamatan Pilangkenceng — Silakan ambil nomor layanan di meja petugas';
+  function renderDots(){
+    const dotsEl = document.getElementById('slideDots');
+    if (daftarLayanan.length <= 1){ dotsEl.innerHTML = ''; return; }
+    dotsEl.innerHTML = daftarLayanan.map(function(_, i){
+      return '<span class="' + (i === slideIdx ? 'aktif' : '') + '"></span>';
+    }).join('');
   }
 
-  function renderData(d){
+  function renderSlide(){
+    const infoBody = document.getElementById('infoBody');
+
+    if (!daftarLayanan.length){
+      infoBody.innerHTML =
+        '<div class="info-body-teks"><div class="kosong">Belum ada layanan yang tersubmit hari ini.</div></div>' +
+        '<div class="info-body-foto"><div class="foto-kosong">Menunggu layanan berikutnya</div></div>';
+      renderDots();
+      return;
+    }
+
+    const d = daftarLayanan[slideIdx];
     const fotoHtml = d.foto
       ? '<img src="' + esc(d.foto) + '" alt="Foto layanan ' + esc(d.id) + '" referrerpolicy="no-referrer">'
       : '<div class="foto-kosong">Foto belum tersedia</div>';
 
-    document.getElementById('infoBody').innerHTML =
+    infoBody.innerHTML =
       '<div class="info-body-teks">' +
         '<div class="kartu-nomor">' + esc(d.id) + '</div>' +
         '<div>' +
           '<div class="kartu-nama">' + esc(d.nama_pemohon) + '</div>' +
           '<span class="kartu-jenis">' + esc(d.jenis_label) + '</span>' +
-          '<div class="kartu-waktu">Diterima ' + fmtWaktu(d.timestamp) + '</div>' +
+          '<div class="kartu-waktu">Foto diupload ' + fmtWaktu(d.foto_updated_at || d.timestamp) + '</div>' +
         '</div>' +
       '</div>' +
       '<div class="info-body-foto">' + fotoHtml + '</div>';
 
-    document.getElementById('marqueeText').innerHTML =
-      '<b>' + esc(d.id) + '</b> &nbsp;•&nbsp; ' + esc(d.nama_pemohon) +
-      ' &nbsp;•&nbsp; ' + esc(d.jenis_label) +
-      ' &nbsp;•&nbsp; Selamat datang di PTSP KUA Kecamatan Pilangkenceng &nbsp;•&nbsp; ';
+    renderDots();
+  }
 
-    if (d.id !== lastId){
-      const track = document.getElementById('marqueeText');
-      track.style.animation = 'none';
-      void track.offsetWidth;
-      track.style.animation = '';
-      lastId = d.id;
-    }
+  function majuSlide(){
+    if (daftarLayanan.length <= 1) return; // cuma 1 (atau 0) data, tidak perlu rotasi
+    const infoBody = document.getElementById('infoBody');
+    infoBody.classList.add('fading');
+    setTimeout(function(){
+      slideIdx = (slideIdx + 1) % daftarLayanan.length;
+      renderSlide();
+      infoBody.classList.remove('fading');
+    }, 400);
   }
 
   function esc(s){
@@ -317,6 +350,7 @@
 
   refresh();
   setInterval(refresh, POLL_MS);
+  setInterval(majuSlide, SLIDE_MS);
 
   // ── Suntik CSS ke iframe poster (aman, satu domain/same-origin) ──
   // Sembunyikan navbar, hero banner, stats-bar, dots+counter, thumbnail strip,
