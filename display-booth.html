@@ -73,11 +73,12 @@
     box-shadow:0 1vh 2.5vh rgba(0,0,0,.25);
     background:#000;
   }
-  .video-frame iframe{
-    position:absolute;top:50%;left:50%;
-    width:180%;height:180%;
-    transform:translate(-50%,-50%);
-    border:0;
+  .video-frame video{
+    position:absolute;top:0;left:0;
+    width:100%;height:100%;
+    object-fit:cover;
+    display:block;
+    background:#000;
   }
 
   .info-body{
@@ -144,17 +145,27 @@
     position:relative;z-index:1;
     white-space:nowrap;
   }
+  /* Track berisi 2 salinan teks identik berdampingan (lihat markup).
+     Animasi cuma geser 50% lebar track, jadi begitu sampai titik itu
+     tampilannya SAMA PERSIS dengan posisi awal -> loop tanpa jeda/space
+     kosong. Jarak antar salinan diatur via padding-right di tiap <span>,
+     bukan cuma spasi teks biasa, supaya jeda visualnya konsisten lebar. */
   .marquee-track{
+    display:inline-flex;
+    animation:scroll-left 42s linear infinite;
+    will-change:transform;
+  }
+  .marquee-track span{
     display:inline-block;
-    padding-left:100%;
-    animation:scroll-left 20s linear infinite;
+    padding-right:8vw;
     font-size:1.25vw;font-weight:600;color:var(--teks);
-    letter-spacing:.01em;
+    letter-spacing:.02em;
+    white-space:nowrap;
   }
   .marquee-track b{color:var(--emas-terang);font-weight:800}
   @keyframes scroll-left{
     0%{transform:translateX(0)}
-    100%{transform:translateX(-100%)}
+    100%{transform:translateX(-50%)}
   }
 
   .clock{
@@ -203,14 +214,17 @@
       <div class="info-title">PTSP KUA Pilangkenceng</div>
     </div>
 
-    <!-- Video profil KUA Pilangkenceng (autoplay, mute, loop) -->
+    <!-- Video profil KUA Pilangkenceng — asset LOKAL (bukan YouTube), supaya
+         tidak tergantung koneksi internet. preload="auto" supaya browser
+         langsung buffer video begitu halaman dibuka (device nyala terus). -->
     <div class="video-wrap">
       <div class="video-frame">
-        <iframe
-          src="https://www.youtube.com/embed/vwn_A_TGvAs?autoplay=1&loop=1&playlist=vwn_A_TGvAs&controls=0&modestbranding=1&rel=0&playsinline=1"
-          title="Video Profil KUA Pilangkenceng"
-          allow="autoplay; encrypted-media"
-          allowfullscreen></iframe>
+        <video
+          id="videoProfil"
+          autoplay muted loop playsinline preload="auto"
+          poster="assets/video-profil-kua-poster.jpg">
+          <source src="assets/video-profil-kua.mp4" type="video/mp4">
+        </video>
       </div>
     </div>
 
@@ -220,7 +234,10 @@
     <div class="slide-dots" id="slideDots"></div>
 
     <div class="marquee-wrap">
-      <div class="marquee-track" id="marqueeText">Selamat Datang di PTSP KUA Kecamatan Pilangkenceng</div>
+      <div class="marquee-track" id="marqueeTrack">
+        <span id="marqueeText">Selamat Datang di PTSP KUA Kecamatan Pilangkenceng</span>
+        <span id="marqueeText2" aria-hidden="true">Selamat Datang di PTSP KUA Kecamatan Pilangkenceng</span>
+      </div>
     </div>
   </section>
 
