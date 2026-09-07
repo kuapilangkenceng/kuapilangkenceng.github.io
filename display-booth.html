@@ -257,6 +257,7 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbzJNO6PqGKH5AGpnaK_yJXPvqpdoVAkHpFZAVGXF57vDD8VavkCOG0smsF56nWquX3b/exec';
   const POLL_MS   = 15000; // ambil data terbaru dari server tiap 15 detik
   const SLIDE_MS  = 6000;  // ganti kartu yang ditampilkan tiap 6 detik
+  const POSTER_REFRESH_MS = 5 * 60 * 1000; // reload panel poster tiap 5 menit
 
   function tickClock(){
     const now = new Date();
@@ -367,6 +368,17 @@
   refresh();
   setInterval(refresh, POLL_MS);
   setInterval(majuSlide, SLIDE_MS);
+
+  // ── Auto-refresh panel poster ──
+  // Poster (pengumumankehendaknikah.html) tetap harus online (gambar
+  // di-hosting di Google Drive), jadi kalau koneksi lagi lambat saat
+  // load pertama, sebagian gambar bisa gagal (ikon rusak). Reload
+  // periodik ini otomatis mencoba ulang tanpa perlu refresh manual.
+  function reloadPoster(){
+    const pf = document.getElementById('posterFrame');
+    if (pf) pf.src = 'pengumumankehendaknikah.html?_=' + Date.now();
+  }
+  setInterval(reloadPoster, POSTER_REFRESH_MS);
 
   // ── Suntik CSS ke iframe poster (aman, satu domain/same-origin) ──
   // Sembunyikan navbar, hero banner, stats-bar, dots+counter, thumbnail strip,
